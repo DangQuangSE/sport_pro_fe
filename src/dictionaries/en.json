@@ -1,0 +1,27 @@
+{
+  "auth": {
+    "loginTitle": "SPORT PRO",
+    "loginSubtitle": "Sign in to your athlete profile",
+    "registerTitle": "JOIN THE ELITE",
+    "registerSubtitle": "Create your athlete profile",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "athlete@sportpro.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "••••••••",
+    "forgotPassword": "Forgot?",
+    "signInButton": "SIGN IN",
+    "registerButton": "CREATE ACCOUNT",
+    "newToSportPro": "NEW TO SPORT PRO?",
+    "alreadyHaveAccount": "ALREADY HAVE AN ACCOUNT?",
+    "nameLabel": "Full Name",
+    "namePlaceholder": "John Doe",
+    "confirmPasswordLabel": "Confirm Password",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email address",
+    "passwordRequired": "Password is required",
+    "passwordMin": "Password must be at least 8 characters",
+    "passwordsMatch": "Passwords do not match",
+    "heroTitle": "ENGINEERED\nFOR SPEED.",
+    "heroSubtitle": "Join the elite. Access exclusive gear and training protocols."
+  }
+}
