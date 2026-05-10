@@ -90,5 +90,22 @@
       },
       "copyright": "© 2026 SPORT PRO. ENGINEERED FOR PERFORMANCE. ALL RIGHTS RESERVED."
     }
+  },
+  "product": {
+    "details": {
+      "inStock": "In Stock - Ready to Ship",
+      "outOfStock": "Out of Stock",
+      "color": "Color",
+      "sizeUs": "Size (US)",
+      "sizeGuide": "Size Guide",
+      "quantity": "Quantity",
+      "addToCart": "Add to Cart",
+      "newRelease": "New Release",
+      "specs": "Specs",
+      "shippingAndReturns": "Shipping & Returns"
+    },
+    "related": {
+      "title": "You May Also Like"
+    }
   }
 }

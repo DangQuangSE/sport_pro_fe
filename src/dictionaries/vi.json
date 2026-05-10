@@ -90,5 +90,22 @@
       },
       "copyright": "© 2026 SPORT PRO. THIẾT KẾ CHO HIỆU NĂNG. BẢO LƯU MỌI QUYỀN."
     }
+  },
+  "product": {
+    "details": {
+      "inStock": "Còn hàng - Sẵn sàng giao",
+      "outOfStock": "Hết hàng",
+      "color": "Màu sắc",
+      "sizeUs": "Kích cỡ (US)",
+      "sizeGuide": "Hướng dẫn chọn size",
+      "quantity": "Số lượng",
+      "addToCart": "Thêm vào giỏ hàng",
+      "newRelease": "Sản phẩm mới",
+      "specs": "Thông số kỹ thuật",
+      "shippingAndReturns": "Giao hàng & Đổi trả"
+    },
+    "related": {
+      "title": "Có thể bạn cũng thích"
+    }
   }
 }
