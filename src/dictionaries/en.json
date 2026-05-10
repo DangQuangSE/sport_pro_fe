@@ -23,5 +23,72 @@
     "passwordsMatch": "Passwords do not match",
     "heroTitle": "ENGINEERED\nFOR SPEED.",
     "heroSubtitle": "Join the elite. Access exclusive gear and training protocols."
+  },
+  "home": {
+    "nav": {
+      "men": "Men",
+      "women": "Women",
+      "running": "Running",
+      "training": "Training",
+      "sale": "Sale",
+      "searchPlaceholder": "Search ..."
+    },
+    "hero": {
+      "overline": "Spring / Summer 2026",
+      "title": "Built for Athletes",
+      "titlePunctuation": "Designed for the City.",
+      "subtitle": "Performance gear for runners, lifters, and weekend warriors — curated from the world's top sports brands.",
+      "ctaPrimary": "Shop New Drops",
+      "ctaSecondary": "Explore Collection",
+      "trust": {
+        "shipping": "Free Ship over 500k VND",
+        "authentic": "Authentic Guarantee",
+        "returns": "30-Day Returns"
+      },
+      "badge": "New Drop"
+    },
+    "categories": {
+      "running": "Running",
+      "training": "Training",
+      "basketball": "Basketball",
+      "football": "Football",
+      "outdoor": "Outdoor",
+      "sale": "Sale"
+    },
+    "featured": {
+      "title": "Featured This Week",
+      "subtitle": "Curated picks for your training goals.",
+      "viewAll": "View All"
+    },
+    "promo": {
+      "overline": "Limited Time",
+      "title": "Deals This Week",
+      "subtitle": "Up to 40% off selected professional gear. Equip yourself for less without compromising performance.",
+      "cta": "Shop Sale"
+    },
+    "footer": {
+      "description": "Engineered for athletes. Designed for the city. We provide high-performance gear for those who refuse to stop moving.",
+      "columns": {
+        "shop": "Shop",
+        "support": "Support",
+        "legal": "Legal"
+      },
+      "links": {
+        "menApparel": "Men's Apparel",
+        "womenApparel": "Women's Apparel",
+        "footwear": "Footwear",
+        "accessories": "Accessories",
+        "sale": "Sale",
+        "contact": "Contact",
+        "returns": "Returns",
+        "orderTracking": "Order Tracking",
+        "sizeGuide": "Size Guide",
+        "faq": "FAQ",
+        "privacy": "Privacy",
+        "terms": "Terms",
+        "careers": "Careers"
+      },
+      "copyright": "© 2026 SPORT PRO. ENGINEERED FOR PERFORMANCE. ALL RIGHTS RESERVED."
+    }
   }
 }

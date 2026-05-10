@@ -75,3 +75,12 @@ Những "vết xước" nghiệp dư này sẽ ngay lập tức làm giảm giá
 4. **Custom Cursor:** Không sử dụng con trỏ chuột tùy chỉnh (custom mouse cursors).
 5. **Cấu trúc Hero Section giữa (Centered Hero):** Bị hạn chế tối đa trong các giao diện đòi hỏi tính sáng tạo cao. Hãy ép dạt trái hoặc chia đôi màn hình (Split screen).
 6. **Hardcode Style:** Không hardcode màu sắc HEX trực tiếp trong component. Luôn dùng hệ thống Design Tokens (Tailwind classes) đã được mapping với Theme (`tailwind.config`).
+
+---
+
+## 6. Đa ngôn ngữ (Internationalization - i18n)
+
+- **Song ngữ mặc định (Bilingual by Default):** Mọi giao diện bắt buộc phải hỗ trợ song ngữ Anh - Việt. Tuyệt đối không hardcode văn bản hiển thị trực tiếp trong file `.tsx`.
+- **Quản lý Dictionary:** Toàn bộ văn bản phải được đưa vào hệ thống Dictionary (`src/dictionaries/`). Sử dụng các key có cấu trúc phân cấp (ví dụ: `home.hero.title`) để dễ quản lý.
+- **Tính linh hoạt (Scalability):** Khi thiết kế layout, luôn dự phòng không gian cho văn bản tiếng Việt (thường dài hơn tiếng Anh khoảng 20-30%) để tránh vỡ giao diện hoặc tràn text.
+
