@@ -1,26 +1,73 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: #0058bc;
+  --color-primary-container: #0070eb;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #fefcff;
+  
+  --color-secondary: #8c5000;
+  --color-secondary-container: #fe9400;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #633700;
+  
+  --color-surface: #f9f9fe;
+  --color-surface-dim: #d9dade;
+  --color-surface-bright: #f9f9fe;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f3f3f8;
+  --color-surface-container: #ededf2;
+  --color-surface-container-high: #e8e8ed;
+  --color-surface-container-highest: #e2e2e7;
+  
+  --color-on-surface: #1a1c1f;
+  --color-on-surface-variant: #414755;
+  --color-inverse-surface: #2e3034;
+  --color-inverse-on-surface: #f0f0f5;
+  
+  --color-outline: #717786;
+  --color-outline-variant: #c1c6d7;
+  
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  --color-surface-tint: #005bc1;
+
+  --color-background: var(--color-surface);
+  --color-foreground: var(--color-on-surface);
+
+  --font-lexend: var(--font-lexend), sans-serif;
+  --font-inter: var(--font-inter), sans-serif;
+
+  --font-display-xl: 48px;
+  --font-display-lg: 36px;
+  --font-headline-lg: 28px;
+  --font-headline-md: 24px;
+  --font-headline-sm: 20px;
+  --font-body-lg: 18px;
+  --font-body-md: 16px;
+  --font-body-sm: 14px;
+  --font-label-lg: 14px;
+  --font-label-md: 12px;
+  --font-label-sm: 10px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  *, ::after, ::before {
+    box-sizing: border-box;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-inter);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-lexend);
+  }
 }

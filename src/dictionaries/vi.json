@@ -1,0 +1,27 @@
+{
+  "auth": {
+    "loginTitle": "SPORT PRO",
+    "loginSubtitle": "Đăng nhập hồ sơ vận động viên",
+    "registerTitle": "GIA NHẬP ELITE",
+    "registerSubtitle": "Tạo hồ sơ vận động viên của bạn",
+    "emailLabel": "Địa chỉ Email",
+    "emailPlaceholder": "athlete@sportpro.com",
+    "passwordLabel": "Mật khẩu",
+    "passwordPlaceholder": "••••••••",
+    "forgotPassword": "Quên mật khẩu?",
+    "signInButton": "ĐĂNG NHẬP",
+    "registerButton": "TẠO TÀI KHOẢN",
+    "newToSportPro": "CHƯA CÓ TÀI KHOẢN?",
+    "alreadyHaveAccount": "ĐÃ CÓ TÀI KHOẢN?",
+    "nameLabel": "Họ và Tên",
+    "namePlaceholder": "Nguyễn Văn A",
+    "confirmPasswordLabel": "Xác nhận mật khẩu",
+    "emailRequired": "Vui lòng nhập email",
+    "emailInvalid": "Địa chỉ email không hợp lệ",
+    "passwordRequired": "Vui lòng nhập mật khẩu",
+    "passwordMin": "Mật khẩu phải có ít nhất 8 ký tự",
+    "passwordsMatch": "Mật khẩu không khớp",
+    "heroTitle": "THIẾT KẾ\nCHO TỐC ĐỘ.",
+    "heroSubtitle": "Gia nhập giới tinh hoa. Truy cập trang bị và giáo án độc quyền."
+  }
+}
