@@ -23,5 +23,89 @@
     "passwordsMatch": "Mật khẩu không khớp",
     "heroTitle": "THIẾT KẾ\nCHO TỐC ĐỘ.",
     "heroSubtitle": "Gia nhập giới tinh hoa. Truy cập trang bị và giáo án độc quyền."
+  },
+  "home": {
+    "nav": {
+      "men": "Nam",
+      "women": "Nữ",
+      "running": "Chạy bộ",
+      "training": "Tập luyện",
+      "sale": "Giảm giá",
+      "searchPlaceholder": "Tìm kiếm ..."
+    },
+    "hero": {
+      "overline": "Xuân / Hè 2026",
+      "title": "Dành cho Vận động viên",
+      "titlePunctuation": "Thiết kế cho Thành phố.",
+      "subtitle": "Trang bị hiệu năng cho người chạy bộ, tập gym và những chiến binh cuối tuần — tuyển chọn từ các thương hiệu thể thao hàng đầu thế giới.",
+      "ctaPrimary": "Mua sắm BST Mới",
+      "ctaSecondary": "Khám phá Thêm",
+      "trust": {
+        "shipping": "Miễn phí ship từ 500k",
+        "authentic": "Cam kết Chính hãng",
+        "returns": "Đổi trả 30 ngày"
+      },
+      "badge": "Hàng mới"
+    },
+    "categories": {
+      "running": "Chạy bộ",
+      "training": "Tập luyện",
+      "basketball": "Bóng rổ",
+      "football": "Bóng đá",
+      "outdoor": "Dã ngoại",
+      "sale": "Giảm giá"
+    },
+    "featured": {
+      "title": "Nổi bật Tuần này",
+      "subtitle": "Lựa chọn hàng đầu cho mục tiêu tập luyện của bạn.",
+      "viewAll": "Xem tất cả"
+    },
+    "promo": {
+      "overline": "Thời gian có hạn",
+      "title": "Ưu đãi trong Tuần",
+      "subtitle": "Giảm đến 40% cho các trang bị chuyên nghiệp. Sẵn sàng bứt phá với mức giá tối ưu.",
+      "cta": "Mua ngay"
+    },
+    "footer": {
+      "description": "Thiết kế cho vận động viên. Tối ưu cho thành phố. Chúng tôi cung cấp trang bị hiệu năng cao cho những ai không bao giờ dừng lại.",
+      "columns": {
+        "shop": "Cửa hàng",
+        "support": "Hỗ trợ",
+        "legal": "Pháp lý"
+      },
+      "links": {
+        "menApparel": "Thời trang Nam",
+        "womenApparel": "Thời trang Nữ",
+        "footwear": "Giày thể thao",
+        "accessories": "Phụ kiện",
+        "sale": "Giảm giá",
+        "contact": "Liên hệ",
+        "returns": "Đổi trả",
+        "orderTracking": "Theo dõi đơn hàng",
+        "sizeGuide": "Bảng size",
+        "faq": "Câu hỏi thường gặp",
+        "privacy": "Bảo mật",
+        "terms": "Điều khoản",
+        "careers": "Tuyển dụng"
+      },
+      "copyright": "© 2026 SPORT PRO. THIẾT KẾ CHO HIỆU NĂNG. BẢO LƯU MỌI QUYỀN."
+    }
+  },
+  "product": {
+    "details": {
+      "inStock": "Còn hàng - Sẵn sàng giao",
+      "outOfStock": "Hết hàng",
+      "color": "Màu sắc",
+      "sizeUs": "Kích cỡ (US)",
+      "sizeGuide": "Hướng dẫn chọn size",
+      "quantity": "Số lượng",
+      "addToCart": "Thêm vào giỏ hàng",
+      "newRelease": "Sản phẩm mới",
+      "specs": "Thông số kỹ thuật",
+      "shippingAndReturns": "Giao hàng & Đổi trả"
+    },
+    "related": {
+      "title": "Có thể bạn cũng thích"
+    }
   }
 }
