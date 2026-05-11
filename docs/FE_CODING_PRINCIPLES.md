@@ -84,3 +84,22 @@ Những "vết xước" nghiệp dư này sẽ ngay lập tức làm giảm giá
 - **Quản lý Dictionary:** Toàn bộ văn bản phải được đưa vào hệ thống Dictionary (`src/dictionaries/`). Sử dụng các key có cấu trúc phân cấp (ví dụ: `home.hero.title`) để dễ quản lý.
 - **Tính linh hoạt (Scalability):** Khi thiết kế layout, luôn dự phòng không gian cho văn bản tiếng Việt (thường dài hơn tiếng Anh khoảng 20-30%) để tránh vỡ giao diện hoặc tràn text.
 
+---
+
+## 7. Kiến trúc Data Fetching & State Management
+
+Đây là hệ thống tiêu chuẩn bắt buộc cho việc gọi API và quản lý trạng thái (State) nhằm đảm bảo bảo mật và hiệu năng cấp Production.
+
+### 7.1. Bảo mật Token (Security)
+- **Cấm dùng localStorage cho Token dài hạn:** Tuyệt đối không lưu trữ `accessToken` hoặc `refreshToken` ở `localStorage` để tránh tấn công XSS.
+- **HttpOnly Cookies:** Mọi Refresh Token phải được lưu và quản lý ngầm qua `HttpOnly Cookies` bởi Backend.
+- **In-Memory Access Token:** `accessToken` chỉ được phép lưu ở RAM (biến private trong file API client hoặc trong React Context) để đảm bảo an toàn tuyệt đối.
+
+### 7.2. Interceptors & API Client
+- **Credentials:** Mọi request gửi đi (`fetch` hoặc `axios`) phải có cấu hình `credentials: 'include'` để tự động gửi HttpOnly Cookies lên Backend.
+- **Silent Token Refresh:** API Client phải triển khai một **Interceptor** để bắt lỗi `401 Unauthorized`. Khi bắt được lỗi này, client phải tự động đóng băng các request hiện tại, ngầm gọi API `POST /refresh-token` để lấy token mới, và sau đó retry (thử lại) các request đã bị lỗi một cách trong suốt với người dùng.
+
+### 7.3. Global State (Quản lý trạng thái toàn cục)
+- **Tách biệt Form và State:** Không gộp chung logic xử lý form (như validation bằng Zod) vào cùng hook quản lý Global State (như trạng thái đăng nhập).
+- **React Context / Zustand:** Các trạng thái dùng chung toàn ứng dụng (User Session, Theme, Cart) phải được bọc trong React Context hoặc thư viện quản lý state. Tránh việc dùng `useState` cục bộ rồi chia sẻ qua lại gây mất đồng bộ giao diện.
+

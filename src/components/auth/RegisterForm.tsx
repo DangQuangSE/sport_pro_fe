@@ -1,7 +1,7 @@
 "use client"
 
 import { useTranslation } from "@/hooks/useTranslation"
-import { useAuth } from "@/hooks/useAuth"
+import { useAuthForms } from "@/hooks/useAuthForms"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -14,7 +14,7 @@ export function RegisterForm() {
     requestOtpForm, verifyOtpForm, registerForm, 
     onRequestOtp, onVerifyOtp, onRegister, 
     isLoading, step, email 
-  } = useAuth()
+  } = useAuthForms()
 
   return (
     <div className="w-full max-w-[440px] bg-surface-container-lowest rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-outline-variant p-8 lg:p-12 relative overflow-hidden">

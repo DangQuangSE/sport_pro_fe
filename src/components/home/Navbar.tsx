@@ -18,7 +18,7 @@ interface NavbarProps {
 export default function Navbar({ cartCount = 3 }: Readonly<NavbarProps>) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { t, locale } = useTranslation();
-  const { isLoggedIn, onLogout } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const router = useRouter();
 
   const NAV_LINKS = [
@@ -99,7 +99,7 @@ export default function Navbar({ cartCount = 3 }: Readonly<NavbarProps>) {
           {/* User Auth Actions */}
           {isLoggedIn ? (
             <button
-              onClick={onLogout}
+              onClick={logout}
               className="text-[12px] font-bold uppercase tracking-wider text-on-surface hover:text-primary transition-colors"
             >
               {t("auth.signOutButton")}
@@ -176,7 +176,7 @@ export default function Navbar({ cartCount = 3 }: Readonly<NavbarProps>) {
             {isLoggedIn ? (
               <button
                 onClick={() => {
-                  onLogout();
+                  logout();
                   setMobileOpen(false);
                 }}
                 className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary text-left transition-colors"

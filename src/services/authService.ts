@@ -28,15 +28,11 @@ export const authService = {
 
   login: async (data: any) => {
     const response = await apiClient.post<ApiResponse<LoginResponse>>("/auth/login", data);
-    if (response.data?.accessToken) {
-      localStorage.setItem("accessToken", response.data.accessToken);
-    }
     return response;
   },
 
   logout: async () => {
     await apiClient.post<ApiResponse<void>>("/auth/logout");
-    localStorage.removeItem("accessToken");
   },
 
   getMe: () => {
