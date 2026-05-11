@@ -22,7 +22,19 @@
     "passwordMin": "Mật khẩu phải có ít nhất 8 ký tự",
     "passwordsMatch": "Mật khẩu không khớp",
     "heroTitle": "THIẾT KẾ\nCHO TỐC ĐỘ.",
-    "heroSubtitle": "Gia nhập giới tinh hoa. Truy cập trang bị và giáo án độc quyền."
+    "heroSubtitle": "Gia nhập giới tinh hoa. Truy cập trang bị và giáo án độc quyền.",
+    "otpTitle": "XÁC MINH EMAIL",
+    "otpSubtitle": "Chúng tôi đã gửi mã xác thực 6 chữ số đến email của bạn",
+    "otpLabel": "Mã OTP",
+    "otpPlaceholder": "123456",
+    "otpRequired": "Vui lòng nhập mã OTP",
+    "otpInvalid": "Mã OTP phải có 6 chữ số",
+    "verifyButton": "XÁC NHẬN OTP",
+    "resendOtp": "Gửi lại mã",
+    "otpSent": "Mã OTP đã được gửi!",
+    "registerFinalTitle": "HOÀN TẤT HỒ SƠ",
+    "registerFinalSubtitle": "Thiết lập mật khẩu để gia nhập cộng đồng",
+    "signOutButton": "ĐĂNG XUẤT"
   },
   "home": {
     "nav": {
