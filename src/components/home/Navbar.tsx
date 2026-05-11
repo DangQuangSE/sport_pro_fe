@@ -6,6 +6,8 @@ import { Search, User, ShoppingCart, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import LanguageToggle from "@/components/ui/LanguageToggle";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface NavbarProps {
@@ -15,7 +17,9 @@ interface NavbarProps {
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function Navbar({ cartCount = 3 }: Readonly<NavbarProps>) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+  const { isLoggedIn, logout } = useAuth();
+  const router = useRouter();
 
   const NAV_LINKS = [
     { id: "men", label: t("home.nav.men"), href: "#", active: true },
@@ -92,7 +96,23 @@ export default function Navbar({ cartCount = 3 }: Readonly<NavbarProps>) {
             <Search className="w-5 h-5" />
           </button>
 
-          {/* User */}
+          {/* User Auth Actions */}
+          {isLoggedIn ? (
+            <button
+              onClick={logout}
+              className="text-[12px] font-bold uppercase tracking-wider text-on-surface hover:text-primary transition-colors"
+            >
+              {t("auth.signOutButton")}
+            </button>
+          ) : (
+            <Link
+              href={`/${locale}/login`}
+              className="text-[12px] font-bold uppercase tracking-wider text-on-surface hover:text-primary transition-colors"
+            >
+              {t("auth.signInButton")}
+            </Link>
+          )}
+
           <button
             aria-label="Account"
             className="text-on-surface hover:text-primary transition-colors"
@@ -152,6 +172,27 @@ export default function Navbar({ cartCount = 3 }: Readonly<NavbarProps>) {
               {link.label}
             </Link>
           ))}
+          <div className="border-t border-outline-variant mt-4 pt-4 flex flex-col gap-4">
+            {isLoggedIn ? (
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileOpen(false);
+                }}
+                className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary text-left transition-colors"
+              >
+                {t("auth.signOutButton")}
+              </button>
+            ) : (
+              <Link
+                href={`/${locale}/login`}
+                onClick={() => setMobileOpen(false)}
+                className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary transition-colors"
+              >
+                {t("auth.signInButton")}
+              </Link>
+            )}
+          </div>
         </div>
       )}
     </nav>

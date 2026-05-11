@@ -22,7 +22,19 @@
     "passwordMin": "Password must be at least 8 characters",
     "passwordsMatch": "Passwords do not match",
     "heroTitle": "ENGINEERED\nFOR SPEED.",
-    "heroSubtitle": "Join the elite. Access exclusive gear and training protocols."
+    "heroSubtitle": "Join the elite. Access exclusive gear and training protocols.",
+    "otpTitle": "VERIFY EMAIL",
+    "otpSubtitle": "We've sent a 6-digit code to your email",
+    "otpLabel": "OTP Code",
+    "otpPlaceholder": "123456",
+    "otpRequired": "OTP is required",
+    "otpInvalid": "OTP must be 6 digits",
+    "verifyButton": "VERIFY OTP",
+    "resendOtp": "Resend Code",
+    "otpSent": "OTP code has been sent!",
+    "registerFinalTitle": "FINALIZE PROFILE",
+    "registerFinalSubtitle": "Set your password to join the elite",
+    "signOutButton": "SIGN OUT"
   },
   "home": {
     "nav": {
