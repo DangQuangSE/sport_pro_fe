@@ -119,5 +119,79 @@
     "related": {
       "title": "You May Also Like"
     }
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "products": "Products",
+      "categories": "Categories",
+      "brands": "Brands",
+      "users": "Customers",
+      "system": "System",
+      "settings": "Settings"
+    },
+    "header": {
+      "searchPlaceholder": "Search...",
+      "today": "Today:"
+    },
+    "dashboard": {
+      "totalProducts": "Total Products",
+      "totalCategories": "Total Categories",
+      "totalBrands": "Total Brands",
+      "totalUsers": "New Customers",
+      "categoryDistribution": "Category Distribution",
+      "recentProducts": "Recently Added",
+      "bestSellers": "Best Sellers",
+      "viewAll": "View All",
+      "viewDetails": "View Details",
+      "table": {
+        "productId": "Product ID",
+        "productName": "Product",
+        "category": "Category",
+        "price": "Price",
+        "status": "Status",
+        "active": "Active",
+        "inactive": "Inactive"
+      }
+    }
+  },
+  "shop": {
+    "title": "Shop All Gear",
+    "filters": "Filters",
+    "clearAll": "Clear All",
+    "category": "Category",
+    "brand": "Brand",
+    "size": "Size (US)",
+    "priceRange": "Price Range",
+    "showing": "Showing",
+    "products": "products",
+    "sortBy": "Sort By",
+    "sortPopularity": "Popularity",
+    "sortNewest": "Newest Arrivals",
+    "sortPriceLowHigh": "Price: Low to High",
+    "sortPriceHighLow": "Price: High to Low",
+    "sale": "Sale",
+    "new": "New"
+  },
+  "cart": {
+    "title": "Your Bag",
+    "itemsInGearList": "items in your gear list",
+    "continueShopping": "Continue Shopping",
+    "color": "Color",
+    "size": "Size",
+    "orderSummary": "Order Summary",
+    "subtotal": "Subtotal",
+    "estimatedShipping": "Estimated Shipping",
+    "free": "Free",
+    "salesTax": "Sales Tax",
+    "total": "Total",
+    "promoCode": "Promo Code",
+    "enterCode": "Enter Code",
+    "apply": "Apply",
+    "proceedToCheckout": "Proceed to Checkout",
+    "securePay": "Secure Pay",
+    "expressShip": "Express Ship",
+    "completeYourLook": "Complete Your Look",
+    "bestSeller": "Best Seller"
   }
 }

@@ -119,5 +119,79 @@
     "related": {
       "title": "Có thể bạn cũng thích"
     }
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "Bảng điều khiển",
+      "products": "Sản phẩm",
+      "categories": "Danh mục",
+      "brands": "Thương hiệu",
+      "users": "Khách hàng",
+      "system": "Hệ thống",
+      "settings": "Cài đặt"
+    },
+    "header": {
+      "searchPlaceholder": "Tìm kiếm...",
+      "today": "Hôm nay:"
+    },
+    "dashboard": {
+      "totalProducts": "Tổng số sản phẩm",
+      "totalCategories": "Tổng số danh mục",
+      "totalBrands": "Tổng số thương hiệu",
+      "totalUsers": "Khách hàng mới",
+      "categoryDistribution": "Phân bổ danh mục",
+      "recentProducts": "Sản phẩm mới thêm",
+      "bestSellers": "Sản phẩm nổi bật",
+      "viewAll": "Xem tất cả",
+      "viewDetails": "Xem chi tiết",
+      "table": {
+        "productId": "Mã SP",
+        "productName": "Sản phẩm",
+        "category": "Danh mục",
+        "price": "Giá",
+        "status": "Trạng thái",
+        "active": "Đang bán",
+        "inactive": "Ngừng bán"
+      }
+    }
+  },
+  "shop": {
+    "title": "Tất cả sản phẩm",
+    "filters": "Bộ lọc",
+    "clearAll": "Xóa bộ lọc",
+    "category": "Danh mục",
+    "brand": "Thương hiệu",
+    "size": "Kích cỡ (US)",
+    "priceRange": "Khoảng giá",
+    "showing": "Đang hiển thị",
+    "products": "sản phẩm",
+    "sortBy": "Sắp xếp theo",
+    "sortPopularity": "Phổ biến nhất",
+    "sortNewest": "Mới nhất",
+    "sortPriceLowHigh": "Giá: Thấp đến Cao",
+    "sortPriceHighLow": "Giá: Cao đến Thấp",
+    "sale": "Giảm giá",
+    "new": "Mới"
+  },
+  "cart": {
+    "title": "Giỏ hàng của bạn",
+    "itemsInGearList": "sản phẩm trong giỏ hàng",
+    "continueShopping": "Tiếp tục mua sắm",
+    "color": "Màu",
+    "size": "Kích cỡ",
+    "orderSummary": "Tóm tắt đơn hàng",
+    "subtotal": "Tạm tính",
+    "estimatedShipping": "Phí vận chuyển",
+    "free": "Miễn phí",
+    "salesTax": "Thuế",
+    "total": "Tổng cộng",
+    "promoCode": "Mã giảm giá",
+    "enterCode": "Nhập mã",
+    "apply": "Áp dụng",
+    "proceedToCheckout": "Tiến hành thanh toán",
+    "securePay": "Thanh toán bảo mật",
+    "expressShip": "Giao hàng hỏa tốc",
+    "completeYourLook": "Gợi ý phối đồ",
+    "bestSeller": "Bán chạy"
   }
 }
