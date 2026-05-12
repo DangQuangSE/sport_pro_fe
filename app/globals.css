@@ -1,5 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
 @import "tailwindcss";
-
 @theme inline {
   --color-primary: #0058bc;
   --color-primary-container: #0070eb;
