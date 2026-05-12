@@ -11,29 +11,8 @@ export default async function CheckoutPage({
   const { lang } = await params;
   const dict = await getDictionary(lang as any);
 
-  // Mock data for cart items
-  const cartItems = [
-    {
-      id: 'cart-1',
-      name: 'AERO-KNIT PRO X1',
-      category: 'GIÀY DÉP',
-      price: '$185.00',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBTSPqFlndLnzWKZyqb_V36_gfsAG6Wz43Lpb4c-ddfkcXHdG5rvpJUEBDRQlZk66DLI3K2WPhfh_E-eYjeMIjDh-v42oKxDjfPrnVZRPSXwkSCTHueLR_7V8pt_298v-s-XK5Hxles54ZctuZ1AWH3o3oL-2vaG6cA1HjAtQqSWzE_zRihg3oNN7ZSeFlZt5I0O6LpLsHwGXdxr46ec3Ppvsg_w6yHtlZLAlefR2-S5tcleVr0DVm5RafUKICYR0eSRDU0iVdsGkc',
-      color: 'Đỏ hồng ngoại',
-      size: 'M 10.5',
-      quantity: 1,
-    },
-    {
-      id: 'cart-2',
-      name: 'CORE COMPRESSION TEE',
-      category: 'QUẦN ÁO',
-      price: '$90.00',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBmToZp5_UCjxxLKZ_7o0HQqIr9NVNQcXtGgTVApNpOGAlJRljvzjPAew4PaAnjR8a4Ks5NXlteGt6A42mx0Hn7okPs3g07yZFYex_wYZq-DIlD5qmsgRt1WFDBp3v4WPNPSdg3qsapPYbUqQ7rmWXqDejkJLeL3d0pvVLq645TFcNL351qXgjeRB3WR5A6zHTBBzXyTlMIS-J0cJkBuYKkCGqOyi0cLdFUzL2q8euo0kkThu5IBHykHRqUpxdwoC8tvHf9AaZGUls',
-      color: 'Đen tàng hình',
-      size: 'L',
-      quantity: 2,
-    }
-  ];
+  // Real data will be fetched or passed from state management
+  const cartItems: any[] = [];
 
   return (
     <div className="bg-surface text-on-surface font-body-md min-h-screen flex flex-col">
@@ -155,22 +134,22 @@ export default async function CheckoutPage({
             <h2 className="font-headline-md text-headline-md text-on-surface border-b border-surface-variant pb-2 uppercase">{dict.checkout.orderSummary}</h2>
             <div className="flex flex-col gap-2 font-body-md text-body-md text-on-surface-variant mt-2">
               <div className="flex justify-between">
-                <span>{dict.cart.subtotal} (3 {dict.checkout.items})</span>
-                <span className="font-bold text-on-surface">$275.00</span>
+                <span>{dict.cart.subtotal} (0 {dict.checkout.items})</span>
+                <span className="font-bold text-on-surface">$0.00</span>
               </div>
               <div className="flex justify-between">
                 <span>{dict.cart.estimatedShipping}</span>
-                <span className="font-bold text-on-surface">$15.00</span>
+                <span className="font-bold text-on-surface">$0.00</span>
               </div>
               <div className="flex justify-between">
                 <span>{dict.cart.salesTax}</span>
-                <span className="font-bold text-on-surface">$24.00</span>
+                <span className="font-bold text-on-surface">$0.00</span>
               </div>
             </div>
             <hr className="border-surface-variant my-2" />
             <div className="flex justify-between items-end mb-4">
               <span className="font-headline-sm text-headline-sm text-on-surface uppercase">{dict.cart.total}</span>
-              <span className="font-display-lg text-display-lg text-on-surface tracking-tighter leading-none">$314.00</span>
+              <span className="font-display-lg text-display-lg text-on-surface tracking-tighter leading-none">$0.00</span>
             </div>
             
             {/* Customization CTA */}

@@ -18,33 +18,33 @@ export default async function AdminDashboardPage({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
           title={dict.admin.dashboard.totalProducts}
-          value="1,248"
+          value="0"
           icon="inventory_2"
-          trend={{ value: 12.5, label: 'so với tháng trước', isPositive: true }}
+          trend={{ value: 0, label: dict.admin.dashboard.vsLastMonth, isPositive: true }}
           iconBgClass="bg-primary-fixed"
           iconColorClass="text-on-primary-fixed"
         />
         <StatCard 
           title={dict.admin.dashboard.totalCategories}
-          value="24"
+          value="0"
           icon="category"
-          trend={{ value: 4.2, label: 'so với tháng trước', isPositive: true }}
+          trend={{ value: 0, label: dict.admin.dashboard.vsLastMonth, isPositive: true }}
           iconBgClass="bg-surface-variant"
           iconColorClass="text-on-surface-variant"
         />
         <StatCard 
           title={dict.admin.dashboard.totalBrands}
-          value="156"
+          value="0"
           icon="sell"
-          trend={{ value: 8.1, label: 'so với tháng trước', isPositive: true }}
+          trend={{ value: 0, label: dict.admin.dashboard.vsLastMonth, isPositive: true }}
           iconBgClass="bg-secondary-fixed-dim"
           iconColorClass="text-on-secondary-fixed-variant"
         />
         <StatCard 
           title={dict.admin.dashboard.totalUsers}
-          value="3,420"
+          value="0"
           icon="group"
-          trend={{ value: 1.2, label: 'so với tháng trước', isPositive: false }}
+          trend={{ value: 0, label: dict.admin.dashboard.vsLastMonth, isPositive: true }}
           iconBgClass="bg-tertiary-fixed"
           iconColorClass="text-on-tertiary-fixed"
         />

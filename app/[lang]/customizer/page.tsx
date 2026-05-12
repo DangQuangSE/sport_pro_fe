@@ -143,7 +143,7 @@ export default async function CustomizerPage({
               {/* Editable Layer Overlay */}
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                 <div className="border border-dashed border-primary/50 w-[40%] h-[50%] flex items-center justify-center relative pointer-events-auto cursor-move hover:border-primary transition-colors bg-white/10 backdrop-blur-[2px]">
-                  <span className="font-headline-lg text-headline-lg text-on-surface font-bold uppercase tracking-wider text-center drop-shadow-md">SPORT<br />PRO</span>
+                  <span className="font-headline-lg text-headline-lg text-on-surface font-bold uppercase tracking-wider text-center drop-shadow-md">YOUR NAME<br />00</span>
                   <div className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-white border border-primary rounded-full"></div>
                   <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white border border-primary rounded-full"></div>
                   <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-white border border-primary rounded-full"></div>
@@ -167,7 +167,7 @@ export default async function CustomizerPage({
           <div className="flex items-center gap-4">
             <div>
               <p className="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">{dict.customizer.totalEstimate}</p>
-              <p className="font-headline-sm text-headline-sm text-on-surface">850.000 ₫</p>
+              <p className="font-headline-sm text-headline-sm text-on-surface">0 ₫</p>
             </div>
           </div>
           <div className="flex gap-4 w-full md:w-auto">

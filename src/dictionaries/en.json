@@ -127,6 +127,7 @@
       "categories": "Categories",
       "brands": "Brands",
       "users": "Customers",
+      "orders": "Orders",
       "system": "System",
       "settings": "Settings"
     },
@@ -152,6 +153,33 @@
         "status": "Status",
         "active": "Active",
         "inactive": "Inactive"
+      },
+      "orderDetails": {
+        "title": "ORDER MANAGEMENT",
+        "orderId": "Order",
+        "deposited": "Deposited",
+        "orderDate": "Order Date",
+        "actions": "Processing Actions",
+        "exportDesign": "Export Design File",
+        "updateStatus": "Update Status",
+        "startProduction": "Move to Production",
+        "requestedProducts": "Requested Products",
+        "classification": "Classification",
+        "unitPrice": "Unit Price",
+        "customDesignDetails": "Custom Printing Details",
+        "printingTech": "Printing Tech",
+        "printingPos": "Printing Position",
+        "printingColors": "Printing Colors",
+        "customerNotes": "Customer Notes",
+        "designPreview": "Design Preview",
+        "customer": "Customer",
+        "proMember": "Pro Member",
+        "payment": "Payment Summary",
+        "designFee": "Design & Print Fee",
+        "shippingFee": "Shipping Fee",
+        "total": "Total",
+        "deposit": "Deposit Paid",
+        "remaining": "Balance Due"
       }
     }
   },

@@ -127,6 +127,7 @@
       "categories": "Danh mục",
       "brands": "Thương hiệu",
       "users": "Khách hàng",
+      "orders": "Đơn hàng",
       "system": "Hệ thống",
       "settings": "Cài đặt"
     },
@@ -152,6 +153,33 @@
         "status": "Trạng thái",
         "active": "Đang bán",
         "inactive": "Ngừng bán"
+      },
+      "orderDetails": {
+        "title": "QUẢN LÝ ĐƠN HÀNG",
+        "orderId": "Đơn",
+        "deposited": "Đã Đặt Cọc",
+        "orderDate": "Ngày đặt",
+        "actions": "Thao tác xử lý",
+        "exportDesign": "Xuất File Thiết Kế",
+        "updateStatus": "Cập Nhật Trạng Thái",
+        "startProduction": "Chuyển Sản Xuất",
+        "requestedProducts": "Sản Phẩm Yêu Cầu",
+        "classification": "Phân loại",
+        "unitPrice": "Đơn giá",
+        "customDesignDetails": "Chi Tiết In Ấn Tùy Chỉnh",
+        "printingTech": "Kỹ thuật in",
+        "printingPos": "Vị trí in",
+        "printingColors": "Màu sắc in",
+        "customerNotes": "Ghi chú của khách",
+        "designPreview": "Bản xem trước thiết kế",
+        "customer": "Khách Hàng",
+        "proMember": "Thành viên hạng Pro",
+        "payment": "Thanh Toán",
+        "designFee": "Phí xử lý thiết kế & In ấn",
+        "shippingFee": "Phí vận chuyển",
+        "total": "Tổng cộng",
+        "deposit": "Đã Đặt Cọc",
+        "remaining": "Còn lại cần thu"
       }
     }
   },

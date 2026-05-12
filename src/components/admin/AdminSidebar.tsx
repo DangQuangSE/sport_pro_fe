@@ -38,6 +38,11 @@ export function AdminSidebar({ dict, lang }: AdminSidebarProps) {
       href: `/${lang}/admin/users`,
       icon: 'group',
     },
+    {
+      title: dict.admin.sidebar.orders,
+      href: `/${lang}/admin/orders`,
+      icon: 'shopping_bag',
+    },
   ];
 
   const systemItems = [

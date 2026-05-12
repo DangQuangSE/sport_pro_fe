@@ -1,42 +1,10 @@
 export interface BestSellingProductsProps {
   dict: any;
+  products?: any[];
 }
 
-export function BestSellingProducts({ dict }: BestSellingProductsProps) {
-  const products = [
-    {
-      id: '1',
-      name: 'Pro Racer X1 - Đỏ/Đen',
-      category: 'Giày chạy bộ Nam',
-      price: '₫3,200,000',
-      sold: '420',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBHQb2GRIncbG4uF0wpKfuS7kVj_ij6noTxZ1wdq5zcC1h6XF7jHh1n4QUpuM93s8op8r_5djsNlC333EzH0pdIWBluaxoqYdQ0oU7VOnbFk7c0Ex5YPin7yDOM0NOeyFqQ8rFwfF1nnlKJVaSyG1xMEdfH7Ag1O7zNdwVgb71Pbro5_B6Lmyr3ke4Q0Z8ocYmiPG5lj9j0qaWvWCRJ_7Jckb-vSZsTvNILSru5DMBaXQDR_exEntBn4QkRo0sU3iMbCLKbEJAcUmU'
-    },
-    {
-      id: '2',
-      name: 'Áo thun TechFit Pro',
-      category: 'Quần áo Nam',
-      price: '₫850,000',
-      sold: '385',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDkomHkGOvNO-7k3NAtcMCRba2YT9NB30Ox-Er4xCV2Kh36zv7DD_6F1WXvx2KTltnDpUHCNZ9vepK4LeBNuwG6QzIlBh1jgwPvaUHThLwicA1083rFUkhyIo9LeLZxm2jnDSFtZ0CUzDw_M88no2Ppi0bCZ0tXAI7jnzjnVgK8KsRvf9Oy7_YCfYwUXbGJVFhXh5Pu5U3h2aPw8LoiS1rb3nkuJtIolPvewJEGAmP8MMt6FbldxdjxbJffIttQH_9FcrqqgfogWlE'
-    },
-    {
-      id: '3',
-      name: 'Bình nước thể thao 1L',
-      category: 'Phụ kiện',
-      price: '₫350,000',
-      sold: '290',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA8DThB7Tjd2M7A-F0nccRAl00iEHqs5vtA86KZPOVQhAw2olw10JcI2SEEvMcWF25tL_I-ozLWLrcpdz8HqhdLoLW7uhZmzUw0MKE0P3KnUGgRgNLgjNtiE9rXPjQ_OQp_G6mSW-bTCMDDWl2XFAZnetqDNprdHw6X2I92mgMqFjDca69vzbtNG_7RJuydAsKXdqYE-B0t5gQbCHGKKrmCKeU12_8pN55nObEAeFfP4GRNHiWDeXwK680bdLNDjUClo8DWAXC9fvU'
-    },
-    {
-      id: '4',
-      name: 'Speedster Lite - Xanh lá',
-      category: 'Giày chạy bộ Nữ',
-      price: '₫2,900,000',
-      sold: '150',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBXp6ucCkuWT9f5MSOTMJ75DMQI8CfZnLysugvyxQCsHviAdHrP0t4Yf30g5RRrKWB_dCEvP_bSmozmK5oc0utypVSd34sNtMTaAtSsDf6eIyrh5T36byYxB88OykKdMo3P6AGiB_VJq8AzBczleCJhWF4xQf04ekJyhoGKN8ZL8VT_V8L0jz0O2PHcvUPX2ydkQFihMshRLQyW1CbCANfzXmUz9QQrl22vLrQo9_NX8TQx1reVoNGoL5KNeXZS1IZ3nd6R8p0u-Zw'
-    }
-  ];
+export function BestSellingProducts({ dict, products = [] }: BestSellingProductsProps) {
+
 
   return (
     <div className="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col">

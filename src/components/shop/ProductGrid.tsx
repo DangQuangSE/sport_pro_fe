@@ -5,71 +5,11 @@ export interface ProductGridProps {
   dict: any;
   lang: string;
   className?: string;
+  products: any[];
 }
 
-export function ProductGrid({ dict, lang, className }: ProductGridProps) {
-  // Mock data for the products grid
-  const products = [
-    {
-      id: 'prod-1',
-      name: 'Pro Glide Running Shoes',
-      brand: 'Velocity',
-      price: '$99.00',
-      originalPrice: '$120.00',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCWpWAFuph8buLwJKtHm4T6rJu2y7Ovmc5JZ8TApBoHFsOlG7zCnRCoXbylz5u02XD8-Zn_q09CuhqiPfn7XpX0Zr1dpL15ffphFvW9iFzWZP0BC3myBXcyP-1ZotM2mH_nGVXwyGGo1ikdQIFTm44RfPj1FWrzjTwBWCBtxl-CwAmemhA5jEoGTojTFQgTSuSpLD81jVbigEiF86Ya_xQM3V2F6xxAEMGx1J8rjndnTGLQqfoDT3OvXiX_tojarFNZ4hJTcr5GJP4',
-      rating: 4.5,
-      badge: { type: 'sale' as const, label: dict.shop.sale },
-      colors: ['#dc2626', '#000000', '#2563eb'],
-    },
-    {
-      id: 'prod-2',
-      name: 'Core Stability Trainer',
-      brand: 'Apex',
-      price: '$145.00',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCLL2V-mDygdhMYcgNAUNkf0O_1Q8FT8jbpl6muZBskRYXiH1dy5PHSUM7_aUM4IlhoTL9bQKDBLDjH780y8Yyz3q4D8QXX7rQq84PhxP-Mo9OrazjkIorWcyW0hdzoDHRNIJoDW_1VbwrDLZud27kplgQozsNtCcezmm-JRdiw95bVFRbXArRV7q67zw3HezbCbJo65n1zcj5I2S14CSUItRrIIkGmwGz4aSwio-rbrlxKtBPenSojbsEwYb-ZNBfYWYksNswWgtg',
-      rating: 4.8,
-      colors: ['#22c55e', '#27272a'],
-    },
-    {
-      id: 'prod-3',
-      name: 'AeroKnit Ultra Boost',
-      brand: 'ProFit',
-      price: '$180.00',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAzprl-dinoPic5ke3lZLrWE5wK_UwTsmErwVSbNWO1QWHChGYKU8ZixRrCot0rxLQr094loio5QjQeA9dmQu5wJP5ptvsAk-LJHRWhNRajgKPTBkNe2RiqUX4igPEHf5hJAbVIaEzSbLzPAU9XIPjqIc_efHra9f3kr0HJaIdMVXFPsboJr254gdK6wk93p_vhImHRRXR4PNlAt5SNp9icuHGkOuoaZ3HNlzMf5uvqBuUpLt8CVzQKsInAwb7hd1x-oQ32T1nejug',
-      rating: 4.9,
-      badge: { type: 'new' as const, label: dict.shop.new },
-      colors: ['#ffffff', '#bfdbfe'],
-    },
-    {
-      id: 'prod-4',
-      name: 'Elite Track Spikes',
-      brand: 'Velocity',
-      price: '$150.00',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDkomHkGOvNO-7k3NAtcMCRba2YT9NB30Ox-Er4xCV2Kh36zv7DD_6F1WXvx2KTltnDpUHCNZ9vepK4LeBNuwG6QzIlBh1jgwPvaUHThLwicA1083rFUkhyIo9LeLZxm2jnDSFtZ0CUzDw_M88no2Ppi0bCZ0tXAI7jnzjnVgK8KsRvf9Oy7_YCfYwUXbGJVFhXh5Pu5U3h2aPw8LoiS1rb3nkuJtIolPvewJEGAmP8MMt6FbldxdjxbJffIttQH_9FcrqqgfogWlE',
-      rating: 4.6,
-      colors: ['#f97316', '#000000'],
-    },
-    {
-      id: 'prod-5',
-      name: 'All-Weather Jacket',
-      brand: 'ProFit',
-      price: '$110.00',
-      originalPrice: '$140.00',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBXp6ucCkuWT9f5MSOTMJ75DMQI8CfZnLysugvyxQCsHviAdHrP0t4Yf30g5RRrKWB_dCEvP_bSmozmK5oc0utypVSd34sNtMTaAtSsDf6eIyrh5T36byYxB88OykKdMo3P6AGiB_VJq8AzBczleCJhWF4xQf04ekJyhoGKN8ZL8VT_V8L0jz0O2PHcvUPX2ydkQFihMshRLQyW1CbCANfzXmUz9QQrl22vLrQo9_NX8TQx1reVoNGoL5KNeXZS1IZ3nd6R8p0u-Zw',
-      rating: 4.3,
-      badge: { type: 'sale' as const, label: dict.shop.sale },
-      colors: ['#1e3a8a', '#475569'],
-    },
-    {
-      id: 'prod-6',
-      name: 'Performance Compression Top',
-      brand: 'Apex',
-      price: '$65.00',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCOX0XCMdaSxagxoyRBtLy_03H3dGYWoIeV_KUnY4UFbctOC4bl2afAynnZVhImW-C_s3T5dXnvkaMRvy-dO3elwGcBNNNS2xkwWNshKb2c1uiSGxF8kAk7QReo4hkLIVIa8e1b_vNza0b1EkdKJ0d7CRV-nvIBkT7_XCWTvbTRcVNCxcNWckmm4QiWOLT55OHEGYxtCR6Ss8Z7ZPkpS67N58CutkghhDPQYhUndN9czgX2NxHhyMk6GEPPYfebBdGAcxsEDRQKXbI',
-      rating: 4.7,
-      colors: ['#000000', '#94a3b8'],
-    }
-  ];
+export function ProductGrid({ dict, lang, className, products = [] }: ProductGridProps) {
+
 
   return (
     <section className={cn("md:col-span-9 space-y-lg", className)}>
