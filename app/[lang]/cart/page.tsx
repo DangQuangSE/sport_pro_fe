@@ -80,6 +80,7 @@ export default async function CartPage({
               shipping={dict.cart.free}
               tax="$25.60"
               total="$345.60"
+              lang={lang}
             />
           </div>
         </div>

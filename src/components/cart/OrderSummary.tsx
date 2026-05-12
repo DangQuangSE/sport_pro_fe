@@ -1,11 +1,14 @@
 'use client';
 
+import Link from 'next/link';
+
 export interface OrderSummaryProps {
   dict: any;
   subtotal: string;
   shipping: string;
   tax: string;
   total: string;
+  lang: string;
 }
 
 export function OrderSummary({
@@ -14,6 +17,7 @@ export function OrderSummary({
   shipping,
   tax,
   total,
+  lang,
 }: OrderSummaryProps) {
   return (
     <div className="bg-surface-container-lowest border-2 border-on-surface p-8 shadow-[8px_8px_0px_0px_rgba(0,88,188,0.1)] rounded-xl">
@@ -64,10 +68,13 @@ export function OrderSummary({
         </div>
         
         {/* Checkout CTA */}
-        <button className="w-full bg-secondary-container text-white py-4 rounded-xl font-headline-sm uppercase tracking-widest hover:bg-secondary active:scale-95 transform transition-all shadow-lg flex items-center justify-center gap-4">
+        <Link 
+          href={`/${lang}/checkout`}
+          className="w-full bg-secondary-container text-white py-4 rounded-xl font-headline-sm uppercase tracking-widest hover:bg-secondary active:scale-95 transform transition-all shadow-lg flex items-center justify-center gap-4 text-center"
+        >
           {dict.cart.proceedToCheckout}
           <span className="material-symbols-outlined">arrow_forward</span>
-        </button>
+        </Link>
       </div>
       
       {/* Trust Badges */}
