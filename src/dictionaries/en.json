@@ -119,5 +119,52 @@
     "related": {
       "title": "You May Also Like"
     }
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "products": "Products",
+      "categories": "Categories",
+      "brands": "Brands",
+      "orders": "Orders",
+      "users": "Users",
+      "analytics": "Analytics",
+      "logout": "Logout"
+    },
+    "products": {
+      "title": "Inventory Control",
+      "subtitle": "Manage your high-performance gear and stock levels.",
+      "create": "Create Product",
+      "edit": "Edit Product",
+      "delete": "Delete Product",
+      "search": "Search products...",
+      "table": {
+        "product": "Product",
+        "sku": "SKU",
+        "category": "Category",
+        "brand": "Brand",
+        "price": "Price",
+        "stock": "Stock",
+        "status": "Status",
+        "actions": "Actions"
+      }
+    },
+    "categories": {
+      "title": "Categories",
+      "subtitle": "Manage your product hierarchy.",
+      "add": "Add Category",
+      "search": "Search categories..."
+    },
+    "brands": {
+      "title": "Brands",
+      "subtitle": "Manage professional sports brands.",
+      "add": "Add Brand",
+      "search": "Search brands..."
+    },
+    "orders": {
+      "title": "Order Fulfillment",
+      "subtitle": "Track and process elite shipments.",
+      "search": "Search by ID or phone..."
+    }
   }
 }

@@ -120,18 +120,20 @@ class ApiClient {
   }
 
   async post<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    const isFormData = data instanceof FormData;
     return this.fetch<T>(endpoint, {
       ...options,
       method: "POST",
-      body: JSON.stringify(data),
+      body: isFormData ? data : JSON.stringify(data),
     });
   }
 
   async put<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    const isFormData = data instanceof FormData;
     return this.fetch<T>(endpoint, {
       ...options,
       method: "PUT",
-      body: JSON.stringify(data),
+      body: isFormData ? data : JSON.stringify(data),
     });
   }
 

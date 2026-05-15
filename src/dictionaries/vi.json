@@ -119,5 +119,52 @@
     "related": {
       "title": "Có thể bạn cũng thích"
     }
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "Bảng điều khiển",
+      "products": "Sản phẩm",
+      "categories": "Danh mục",
+      "brands": "Thương hiệu",
+      "orders": "Đơn hàng",
+      "users": "Người dùng",
+      "analytics": "Thống kê",
+      "logout": "Đăng xuất"
+    },
+    "products": {
+      "title": "Kiểm soát Kho hàng",
+      "subtitle": "Quản lý trang bị hiệu năng và mức tồn kho chuyên nghiệp.",
+      "create": "Tạo sản phẩm",
+      "edit": "Sửa sản phẩm",
+      "delete": "Xóa sản phẩm",
+      "search": "Tìm sản phẩm...",
+      "table": {
+        "product": "Sản phẩm",
+        "sku": "Mã SKU",
+        "category": "Danh mục",
+        "brand": "Thương hiệu",
+        "price": "Giá bán",
+        "stock": "Kho",
+        "status": "Trạng thái",
+        "actions": "Thao tác"
+      }
+    },
+    "categories": {
+      "title": "Danh mục",
+      "subtitle": "Quản lý hệ thống phân loại sản phẩm.",
+      "add": "Thêm danh mục",
+      "search": "Tìm danh mục..."
+    },
+    "brands": {
+      "title": "Thương hiệu",
+      "subtitle": "Quản lý các thương hiệu thể thao chuyên nghiệp.",
+      "add": "Thêm thương hiệu",
+      "search": "Tìm thương hiệu..."
+    },
+    "orders": {
+      "title": "Xử lý Đơn hàng",
+      "subtitle": "Theo dõi và xử lý các kiện hàng elite.",
+      "search": "Tìm theo ID hoặc số ĐT..."
+    }
   }
 }

@@ -72,10 +72,10 @@ export interface PageResponse<T> {
 export const adminService = {
   // Categories
   getCategories: () => {
-    return apiClient.get<ApiResponse<Category[]>>("/admin/categories");
+    return apiClient.get<ApiResponse<Category[]>>("/categories");
   },
   getCategoryTree: () => {
-    return apiClient.get<ApiResponse<any>>("/admin/categories/tree");
+    return apiClient.get<ApiResponse<any>>("/categories/tree");
   },
   createCategory: (data: CategoryRequest) => {
     return apiClient.post<ApiResponse<Category>>("/admin/categories", data);
@@ -90,7 +90,7 @@ export const adminService = {
   // Brands
   getBrands: (params?: any) => {
     const query = params ? `?${new URLSearchParams(params).toString()}` : "";
-    return apiClient.get<ApiResponse<PageResponse<Brand>>>(`/admin/brands${query}`);
+    return apiClient.get<ApiResponse<PageResponse<Brand>>>(`/brands${query}`);
   },
   createBrand: (data: BrandRequest) => {
     return apiClient.post<ApiResponse<Brand>>("/admin/brands", data);
