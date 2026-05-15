@@ -35,14 +35,19 @@ class ApiClient {
     const url = `${BASE_URL}${endpoint}`;
     
     // Always include credentials for HttpOnly cookies
+    const headers: Record<string, string> = {
+      ...this.getAuthHeader(),
+      ...options.headers as Record<string, string>,
+    };
+
+    if (!(options.body instanceof FormData) && !headers["Content-Type"]) {
+      headers["Content-Type"] = "application/json";
+    }
+
     const fetchOptions: RequestInit = {
       ...options,
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        ...this.getAuthHeader(),
-        ...options.headers,
-      },
+      headers,
     };
 
     let response = await fetch(url, fetchOptions);
@@ -118,6 +123,14 @@ class ApiClient {
     return this.fetch<T>(endpoint, {
       ...options,
       method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async put<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    return this.fetch<T>(endpoint, {
+      ...options,
+      method: "PUT",
       body: JSON.stringify(data),
     });
   }
