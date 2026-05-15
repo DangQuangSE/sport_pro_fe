@@ -26,12 +26,14 @@ interface ProductTableProps {
   readonly products: ProductListResponse[];
   readonly isLoading: boolean;
   readonly onDelete: (id: number) => void;
+  readonly onEdit: (id: number) => void;
 }
 
 export function ProductTable({ 
   products, 
   isLoading, 
-  onDelete 
+  onDelete,
+  onEdit
 }: ProductTableProps) {
   const getStatusVariant = (status: string) => {
     switch (status) {
@@ -143,7 +145,12 @@ export function ProductTable({
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button variant="outline" size="icon" className="h-8 w-8 rounded-lg border-outline-variant hover:border-primary hover:text-primary transition-all">
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-8 w-8 rounded-lg border-outline-variant hover:border-primary hover:text-primary transition-all"
+                      onClick={() => onEdit(product.id)}
+                    >
                       <Edit2 size={14} />
                     </Button>
                     <Button 

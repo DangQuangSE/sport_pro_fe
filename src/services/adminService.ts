@@ -119,15 +119,28 @@ export const adminService = {
   deleteProduct: (id: number) => {
     return apiClient.delete<ApiResponse<void>>(`/admin/products/${id}`);
   },
+  
+  // Variants
   createVariant: (productId: number, data: any) => {
     return apiClient.post<ApiResponse<any>>(`/admin/products/${productId}/variants`, data);
   },
+  updateVariant: (variantId: number, data: any) => {
+    return apiClient.put<ApiResponse<any>>(`/admin/product-variants/${variantId}`, data);
+  },
+  deleteVariant: (variantId: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/product-variants/${variantId}`);
+  },
+
+  // Images
   addImage: (productId: number, formData: FormData) => {
     return apiClient.fetch<ApiResponse<any>>(`/admin/products/${productId}/images`, {
       method: "POST",
       body: formData,
       headers: {} // Let browser set Content-Type for multipart
     });
+  },
+  deleteImage: (imageId: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/product-images/${imageId}`);
   },
 
   // Orders

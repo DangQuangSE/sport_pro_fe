@@ -54,8 +54,12 @@ export default function AdminProductsPage() {
     }
   };
 
+  const handleEdit = (id: number) => {
+    router.push(`/${locale}/admin/products/${id}`);
+  };
+
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-8">
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 text-xs font-medium text-on-surface-variant uppercase tracking-widest">
         <Link href={`/${locale}/admin`} className="hover:text-primary transition-colors flex items-center gap-1">
@@ -72,7 +76,7 @@ export default function AdminProductsPage() {
             Inventory <span className="text-primary">Control</span>
           </h2>
           <p className="text-on-surface-variant max-w-md font-medium text-sm tracking-tight">
-            Manage your high-performance gear, multi-dimensional variants, and real-time stock levels with professional precision.
+            Manage your elite athletic catalog with precision. Monitor stock, pricing, and performance.
           </p>
         </div>
         <Button 
@@ -80,7 +84,7 @@ export default function AdminProductsPage() {
           onClick={() => router.push(`/${locale}/admin/products/new`)}
         >
           <Plus size={20} />
-          Create Product
+          New Product
         </Button>
       </div>
 
@@ -90,19 +94,19 @@ export default function AdminProductsPage() {
           <div className="relative w-full md:w-[480px] group">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" size={20} />
             <Input 
-              placeholder="Search by name, SKU or slug..." 
+              placeholder="Search products by name, SKU or brand..." 
               className="pl-14 h-12 rounded-2xl bg-surface-container-highest/50 border-outline-variant/50 focus:bg-surface focus:border-primary transition-all font-inter text-sm shadow-inner" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <Button variant="outline" size="sm" className="gap-2 h-11 rounded-xl flex-grow md:flex-grow-0">
-              <Filter size={16} />
+          <div className="flex items-center gap-2">
+            <Button variant="outline" className="gap-2 h-12 rounded-2xl border-outline-variant hover:border-primary transition-all">
+              <Filter size={18} />
               Filters
             </Button>
-            <Button variant="outline" size="sm" className="gap-2 h-11 rounded-xl flex-grow md:flex-grow-0">
-              <ArrowUpDown size={16} />
+            <Button variant="outline" className="gap-2 h-12 rounded-2xl border-outline-variant hover:border-primary transition-all">
+              <ArrowUpDown size={18} />
               Sort
             </Button>
           </div>
@@ -113,6 +117,7 @@ export default function AdminProductsPage() {
           products={products}
           isLoading={isLoading}
           onDelete={handleDelete}
+          onEdit={handleEdit}
         />
 
         {/* Pagination */}
