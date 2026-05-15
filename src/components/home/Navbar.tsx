@@ -7,19 +7,18 @@ import { cn } from "@/lib/utils";
 import LanguageToggle from "@/components/ui/LanguageToggle";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/navigation";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-interface NavbarProps {
-  cartCount?: number;
-}
-
 // ─── Component ────────────────────────────────────────────────────────────────
-export default function Navbar({ cartCount = 3 }: Readonly<NavbarProps>) {
+export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { t, locale } = useTranslation();
   const { isLoggedIn, logout } = useAuth();
+  const { cart } = useCart();
   const router = useRouter();
+  
+  const cartCount = cart?.totalItems ?? 0;
 
   const NAV_LINKS = [
     { id: "men", label: t("home.nav.men"), href: "#", active: true },

@@ -1,49 +1,89 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
-import { RELATED_PRODUCTS } from "@/data/productData";
+import { productService, ProductListResponse } from "@/services/productService";
+import { Loader2 } from "lucide-react";
 
-export default function RelatedProducts() {
-  const { t } = useTranslation();
+interface RelatedProductsProps {
+  categoryId?: number;
+}
+
+export default function RelatedProducts({ categoryId }: Readonly<RelatedProductsProps>) {
+  const { t, locale } = useTranslation();
+  const [products, setProducts] = useState<ProductListResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRelated = async () => {
+      try {
+        setIsLoading(true);
+        // In a real scenario, we might have a dedicated "related" endpoint
+        // or just filter by category.
+        const params = categoryId ? { categoryId, pageSize: 4 } : { pageSize: 4 };
+        const response = await productService.getProducts(params);
+        setProducts(response.data.content);
+      } catch (error) {
+        console.error("Failed to fetch related products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchRelated();
+  }, [categoryId]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 className="animate-spin text-primary" size={32} />
+      </div>
+    );
+  }
+
+  if (products.length === 0) return null;
 
   return (
-    <section className="mt-12 pt-8 border-t border-outline-variant/30">
+    <section className="space-y-12">
       <h2
-        className="text-[24px] uppercase italic font-bold mb-6 text-on-surface tracking-tight"
+        className="text-[32px] uppercase italic font-black text-on-surface tracking-tighter text-center"
         style={{ fontFamily: "var(--font-lexend)" }}
       >
-        {t("product.related.title")}
+        Complete Your Look
       </h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {RELATED_PRODUCTS.map((product, idx) => (
-          <div
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        {products.map((product) => (
+          <Link
             key={product.id}
-            className={cn("group cursor-pointer", idx >= 2 && "hidden md:block")}
+            href={`/${locale}/product/${product.slug}`}
+            className="group cursor-pointer space-y-4"
           >
-            <div className="aspect-[4/5] bg-surface-container overflow-hidden mb-4 relative shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-outline-variant/50 group-hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] group-hover:border-outline-variant transition-all duration-300 rounded-2xl">
-              <Image
-                src={product.image}
+            <div className="aspect-[4/5] bg-surface-container overflow-hidden relative shadow-sm border border-outline-variant/50 transition-all duration-500 rounded-2xl group-hover:shadow-2xl group-hover:shadow-primary/5 group-hover:border-primary/20">
+              <img
+                src={product.imageUrl || "/placeholder-product.png"}
                 alt={product.name}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                sizes="(max-width: 768px) 50vw, 25vw"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
+              <div className="absolute top-4 left-4 bg-on-surface text-surface text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                Quick View
+              </div>
             </div>
-            <p className="font-bold text-[10px] text-on-surface-variant uppercase tracking-[0.08em] mb-1">
-              {product.category}
-            </p>
-            <h3
-              className="font-semibold text-[20px] text-on-surface truncate"
-              style={{ fontFamily: "var(--font-lexend)" }}
-            >
-              {product.name}
-            </h3>
-            <p className="text-[16px] text-on-surface font-medium mt-1">
-              ${product.price.toFixed(2)}
-            </p>
-          </div>
+            <div className="space-y-1">
+              <p className="font-bold text-[10px] text-on-surface-variant uppercase tracking-widest">
+                {product.categoryName}
+              </p>
+              <h3
+                className="font-bold text-lg text-on-surface uppercase tracking-tight truncate group-hover:text-primary transition-colors"
+              >
+                {product.name}
+              </h3>
+              <p className="text-base text-on-surface font-black italic tracking-tighter">
+                ${product.basePrice?.toLocaleString()}
+              </p>
+            </div>
+          </Link>
         ))}
       </div>
     </section>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Lexend, Inter } from "next/font/google";
 import "../globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { CartProvider } from "@/contexts/CartContext";
 
 const lexend = Lexend({
   variable: "--font-lexend",
@@ -31,7 +32,11 @@ export default function RootLayout({
       className={`${lexend.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <CartProvider>
+            {children}
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );
