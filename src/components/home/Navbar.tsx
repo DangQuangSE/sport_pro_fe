@@ -112,12 +112,14 @@ export default function Navbar() {
             </Link>
           )}
 
-          <button
+          {/* User Profile / Login Link */}
+          <Link
+            href={isLoggedIn ? `/${locale}/profile` : `/${locale}/login`}
             aria-label="Account"
             className="text-on-surface hover:text-primary transition-colors"
           >
             <User className="w-5 h-5" />
-          </button>
+          </Link>
 
           {/* Cart */}
           <button

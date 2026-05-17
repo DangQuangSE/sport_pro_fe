@@ -227,6 +227,37 @@
     "footerDesign": "DESIGNED FOR PERFORMANCE. ALL RIGHTS RESERVED."
   },
   "profile": {
+    "title": "Hồ Sơ Cá Nhân",
+    "subtitle": "Quản lý thông tin vận động viên & Hạng thành viên của bạn",
+    "personalInfo": "Thông Tin Cá Nhân",
+    "firstName": "Tên",
+    "lastName": "Họ",
+    "email": "Địa chỉ Email",
+    "save": "Lưu Thay Đổi",
+    "saving": "Đang lưu...",
+    "updateSuccess": "Cập nhật thông tin thành công!",
+    "updateError": "Cập nhật thất bại. Vui lòng thử lại.",
+    "avatar": {
+      "hoverChange": "Đổi Ảnh",
+      "uploading": "Đang tải ảnh lên...",
+      "success": "Cập nhật ảnh đại diện thành công!"
+    },
+    "membership": {
+      "cardTitle": "THẺ THÀNH VIÊN LOYALTY",
+      "totalSpending": "Chi tiêu tích lũy",
+      "currentTier": "Hạng hiện tại",
+      "bronze": "ĐỒNG (BRONZE)",
+      "silver": "BẠC (SILVER)",
+      "gold": "VÀNG (GOLD)",
+      "platinum": "BẠCH KIM (PLATINUM)",
+      "bronzeDesc": "Tự động kích hoạt khi tham gia Sport Pro. Bắt đầu hành trình chinh phục thử thách mới.",
+      "silverDesc": "Đạt mốc từ 5.000.000đ. Giảm ngay 5% cho mọi đơn hàng tiếp theo.",
+      "goldDesc": "Đạt mốc từ 15.000.000đ. Ưu đãi 10% và miễn phí dịch vụ in ấn cá nhân hóa độc quyền.",
+      "platinumDesc": "Hạng tối thượng từ 30.000.000đ. Ưu đãi 15% trọn đời cùng đặc quyền chăm sóc VIP.",
+      "nextProgress": "Cần tích lũy thêm {amount} để đạt hạng {nextTier}",
+      "maxTier": "Chúc mừng! Bạn đã đạt cấp độ thành viên cao nhất của Sport Pro Elite.",
+      "benefitsTitle": "Đặc Quyền Của Bạn"
+    },
     "orders": {
       "title": "Đơn Hàng Của Tôi",
       "subtitle": "Theo dõi và quản lý các đơn hàng hiệu năng cao",

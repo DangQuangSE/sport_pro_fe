@@ -227,6 +227,37 @@
     "footerDesign": "DESIGNED FOR PERFORMANCE. ALL RIGHTS RESERVED."
   },
   "profile": {
+    "title": "User Profile",
+    "subtitle": "Manage your athletic profile & membership details",
+    "personalInfo": "Personal Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email Address",
+    "save": "Save Changes",
+    "saving": "Saving...",
+    "updateSuccess": "Profile updated successfully!",
+    "updateError": "Failed to update profile. Please try again.",
+    "avatar": {
+      "hoverChange": "Change Image",
+      "uploading": "Uploading photo...",
+      "success": "Avatar updated successfully!"
+    },
+    "membership": {
+      "cardTitle": "LOYALTY MEMBERSHIP CARD",
+      "totalSpending": "Accumulated Spending",
+      "currentTier": "Current Tier",
+      "bronze": "BRONZE",
+      "silver": "SILVER",
+      "gold": "GOLD",
+      "platinum": "PLATINUM",
+      "bronzeDesc": "Automatically activated when you join Sport Pro. Start your athletic journey.",
+      "silverDesc": "Spend 5,000,000đ. Get a 5% discount on all subsequent orders.",
+      "goldDesc": "Spend 15,000,000đ. Get a 10% discount and free custom design printing.",
+      "platinumDesc": "Ultimate tier for 30,000,000đ spent. Get a 15% lifetime discount and dedicated VIP support.",
+      "nextProgress": "Spend {amount} more to unlock {nextTier}",
+      "maxTier": "Congratulations! You have reached the ultimate membership tier of Sport Pro Elite.",
+      "benefitsTitle": "Your Exclusive Benefits"
+    },
     "orders": {
       "title": "My Orders",
       "subtitle": "Track and manage your elite performance gear orders",

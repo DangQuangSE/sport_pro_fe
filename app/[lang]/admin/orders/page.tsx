@@ -15,12 +15,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTranslation } from "@/hooks/useTranslation";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 export default function AdminOrdersPage() {
   const { t, locale } = useTranslation();
   const params = useParams();
+  const router = useRouter();
   const { 
     orders, 
     isLoading, 
@@ -47,8 +48,7 @@ export default function AdminOrdersPage() {
   };
 
   const onViewDetails = (id: number) => {
-    // Logic for viewing details, e.g., open a modal or navigate
-    console.log("Viewing details for order", id);
+    router.push(`/${locale}/admin/orders/${id}`);
   };
 
   return (
