@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { 
   Package, 
@@ -10,6 +12,8 @@ import {
   ArrowUpRight,
   ArrowDownRight
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const stats = [
   { 
@@ -43,6 +47,8 @@ const stats = [
 ];
 
 export default function AdminDashboardPage() {
+  const params = useParams();
+  const locale = params?.lang as string || "en";
   return (
     <div className="space-y-8">
       {/* Welcome Header */}
@@ -123,9 +129,11 @@ export default function AdminDashboardPage() {
               Awaiting Elite Transactions
             </p>
           </div>
-          <Button variant="outline" className="mt-6 h-12 rounded-xl font-bold uppercase tracking-widest text-[10px]">
-            View All Orders
-          </Button>
+          <Link href={`/${locale}/admin/orders`} className="w-full mt-6">
+            <Button variant="outline" className="w-full h-12 rounded-xl font-bold uppercase tracking-widest text-[10px]">
+              View All Orders
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

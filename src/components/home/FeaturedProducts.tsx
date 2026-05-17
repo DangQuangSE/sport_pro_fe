@@ -137,7 +137,7 @@ function SmallCard({ product }: Readonly<SmallCardProps>) {
 
 // ─── FeaturedProducts ─────────────────────────────────────────────────────────
 export default function FeaturedProducts() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [large] = FEATURED_PRODUCTS.filter((p) => p.size === "large");
   const small = FEATURED_PRODUCTS.filter((p) => p.size === "small");
 

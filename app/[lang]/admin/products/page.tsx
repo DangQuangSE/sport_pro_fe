@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { useTranslation } from "@/hooks/useTranslation";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export default function AdminProductsPage() {
   const { t, locale } = useTranslation();

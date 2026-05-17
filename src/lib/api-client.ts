@@ -5,6 +5,15 @@ export type ApiResponse<T> = {
   data: T;
 };
 
+export type PageResponse<T> = {
+  content: T[];
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+};
+
 class ApiClient {
   private accessToken: string | null = null;
   private isRefreshing: boolean = false;
@@ -139,6 +148,15 @@ class ApiClient {
 
   async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
     return this.fetch<T>(endpoint, { ...options, method: "DELETE" });
+  }
+
+  async patch<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    const isFormData = data instanceof FormData;
+    return this.fetch<T>(endpoint, {
+      ...options,
+      method: "PATCH",
+      body: isFormData ? data : data !== undefined ? JSON.stringify(data) : undefined,
+    });
   }
 }
 

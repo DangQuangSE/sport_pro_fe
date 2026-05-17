@@ -4,6 +4,8 @@ import "../globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 
+import { use } from "react";
+
 const lexend = Lexend({
   variable: "--font-lexend",
   subsets: ["latin"],
@@ -21,11 +23,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params: { lang },
+  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { lang: string };
+  params: Promise<{ lang: string }>;
 }>) {
+  const { lang } = use(params);
   return (
     <html
       lang={lang}
