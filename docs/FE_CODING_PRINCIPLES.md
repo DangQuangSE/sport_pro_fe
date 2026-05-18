@@ -3,7 +3,7 @@
 Tài liệu này tổng hợp các tiêu chuẩn, quy chuẩn thẩm mỹ và kiến trúc Frontend bắt buộc phải tuân theo dựa trên hệ thống kỹ năng (skills) cốt lõi của dự án (React Components, Shadcn UI, Taste Design, Stitch Design). 
 
 Mục tiêu là xây dựng một hệ thống code **module hóa cao, an toàn kiểu dữ liệu (type-safe), hiệu năng tốt** và một giao diện **premium, mang tính thẩm mỹ cao, tránh xa các thiết kế rập khuôn (anti-slop)**.
-
+- Trước khi tiến hành code 1 chức năng mới thì phải tạo file MD lên kế hoạch chi tiết: cấu trúc, công nghệ sử dụng, các thư viện cần thiết, Logic nghiệp vụ, Bắt lỗi,...
 ---
 
 ## 1. Kiến trúc & Quản lý Component (React & Shadcn UI)

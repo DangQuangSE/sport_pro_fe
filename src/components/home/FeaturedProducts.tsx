@@ -19,8 +19,10 @@ interface SmallCardProps {
 
 // ─── LargeCard ───────────────────────────────────────────────────────────────
 function LargeCard({ product }: Readonly<LargeCardProps>) {
+  const { locale } = useTranslation();
   return (
-    <div
+    <Link
+      href={`/${locale}/product/${product.id}`}
       className={cn(
         "group md:col-span-7",
         "bg-surface-container-lowest border border-black/[0.04]",
@@ -66,8 +68,7 @@ function LargeCard({ product }: Readonly<LargeCardProps>) {
           >
             {product.price}
           </span>
-          <button
-            aria-label={`Add ${product.name} to cart`}
+          <div
             className={cn(
               "w-10 h-10 rounded-full flex items-center justify-center",
               "border-2 border-primary text-primary",
@@ -76,17 +77,19 @@ function LargeCard({ product }: Readonly<LargeCardProps>) {
             )}
           >
             <Plus className="w-4 h-4" />
-          </button>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
 // ─── SmallCard ────────────────────────────────────────────────────────────────
 function SmallCard({ product }: Readonly<SmallCardProps>) {
+  const { locale } = useTranslation();
   return (
-    <div
+    <Link
+      href={`/${locale}/product/${product.id}`}
       className={cn(
         "group",
         "bg-surface-container-lowest border border-black/[0.04]",
@@ -128,13 +131,13 @@ function SmallCard({ product }: Readonly<SmallCardProps>) {
           {product.price}
         </span>
       </div>
-    </div>
+    </Link>
   );
 }
 
 // ─── FeaturedProducts ─────────────────────────────────────────────────────────
 export default function FeaturedProducts() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [large] = FEATURED_PRODUCTS.filter((p) => p.size === "large");
   const small = FEATURED_PRODUCTS.filter((p) => p.size === "small");
 
@@ -157,7 +160,7 @@ export default function FeaturedProducts() {
           </p>
         </div>
         <Link
-          href="#"
+          href={`/${locale}/products`}
           className={cn(
             "hidden md:flex items-center gap-1",
             "text-[12px] font-semibold uppercase tracking-[0.05em]",

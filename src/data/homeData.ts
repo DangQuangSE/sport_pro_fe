@@ -40,11 +40,49 @@ export const NAV_LINKS: Readonly<NavLink[]> = [
 ];
 
 // ── Categories ───────────────────────────────────────────────────────────────
-export const CATEGORIES: Readonly<CategoryItem[]> = [];
+export const CATEGORIES: Readonly<CategoryItem[]> = [
+  { label: "Running", href: "#", icon: "Footprints", active: true },
+  { label: "Training", href: "#", icon: "Dumbbell" },
+  { label: "Basketball", href: "#", icon: "Circle" },
+  { label: "Football", href: "#", icon: "Trophy" },
+  { label: "Outdoor", href: "#", icon: "Mountain" },
+  { label: "Sale", href: "#", icon: "Tag" },
+];
 
 // ── Products ─────────────────────────────────────────────────────────────────
-export const FEATURED_PRODUCTS: Readonly<ProductCard[]> = [];
-
+export const FEATURED_PRODUCTS: Readonly<ProductCard[]> = [
+  {
+    id: "nike-pegasus-41",
+    category: "Running",
+    name: "Nike Air Zoom Pegasus 41",
+    price: "3.190.000₫",
+    imageUrl:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuBtpUfafK5MybY1UWBhz2CjP9H6H469wbuz-CIdmhKd3vkRz2lPC__vTccnZvVung8V_QozUKkrMGDHOTvXAywvMz2m5xn-g9qyKJf0Km9-c8sONnjElQ7_Al_fibhiNHFHL5Pe6JntxVpTeIZ_fQXLfUOVlqgMno673VjQxZrSv32NPiHAumx6GA-NGs1cxjBOri5Fpb9CfrPxi4sDVqLZzMx981ofCLS9Ci03nCavU85DHmdmHA0jMD4Y9Jih25sBWVjRMTT03GI",
+    imageAlt: "Nike Air Zoom Pegasus 41 running shoe — electric blue accents on light grey studio background",
+    size: "large",
+  },
+  {
+    id: "adidas-ultraboost-24",
+    category: "Training",
+    name: "adidas Ultraboost 24",
+    price: "4.650.000₫",
+    imageUrl:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuB12nKnhdLNG0oT_i-lrr076K-GSODQiDMiucuet8-SfKHzgNCw6H81GRkN9e8NjsTuej4HhD7rfHzykVl4lD6jD9pcIo2hLPPpzmWqtLDpA5ROkQ3RY0lX89soHG6_yGSIRmSbNf_smRJPnPPUTm8FaLYtX8OXNRFwPvUuLSk0rb8fTktUQR57WXhxpl5zgROdN9BKK2NfgHwkQ5f-MNkfJqTLwhY13TVX-7AQP8weRDt52vY2VzLBtKp7tFxpLS9E6HkQUCLMvy4",
+    imageAlt: "adidas Ultraboost 24 — electric blue Primeknit upper on white background",
+    badge: "Limited Edition",
+    size: "small",
+  },
+  {
+    id: "pro-training-duffel",
+    category: "Accessories",
+    name: "Under Armour Project Rock Duffel",
+    price: "1.590.000₫",
+    imageUrl:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuBs9-MGMbxmDUVoDEKtdXjOp6_SV8XzqF-XcJUElmVAU7BlZqQ_67b__2W64N4INhx0Xa_oVUvphDGuCq_1m-jNPBP5w-DcXi2w0T-AJ62NIPggE6XaCt1wahQzaID-avXl3v3X_o6fbZiUVSUlegxiGRK9ydTJle9MpzybPEsto8Fyy3BJp3OnR3BXtpz7Xrh7yRv0E6Rsmi9nyUPt1tRq5djtc62YebEUJkwMc6UF3dOxYVXOnzcjMeu1Lr3mRiydhhtKaQu28As",
+    imageAlt: "Under Armour Project Rock matte black duffel bag — studio lighting on white background",
+    size: "small",
+  },
+];
 
 // ── Footer ───────────────────────────────────────────────────────────────────
 export const FOOTER_COLUMNS: Readonly<FooterColumn[]> = [

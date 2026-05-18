@@ -5,6 +5,15 @@ export type ApiResponse<T> = {
   data: T;
 };
 
+export type PageResponse<T> = {
+  content: T[];
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+};
+
 class ApiClient {
   private accessToken: string | null = null;
   private isRefreshing: boolean = false;
@@ -35,14 +44,19 @@ class ApiClient {
     const url = `${BASE_URL}${endpoint}`;
     
     // Always include credentials for HttpOnly cookies
+    const headers: Record<string, string> = {
+      ...this.getAuthHeader(),
+      ...options.headers as Record<string, string>,
+    };
+
+    if (!(options.body instanceof FormData) && !headers["Content-Type"]) {
+      headers["Content-Type"] = "application/json";
+    }
+
     const fetchOptions: RequestInit = {
       ...options,
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        ...this.getAuthHeader(),
-        ...options.headers,
-      },
+      headers,
     };
 
     let response = await fetch(url, fetchOptions);
@@ -115,15 +129,34 @@ class ApiClient {
   }
 
   async post<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    const isFormData = data instanceof FormData;
     return this.fetch<T>(endpoint, {
       ...options,
       method: "POST",
-      body: JSON.stringify(data),
+      body: isFormData ? data : JSON.stringify(data),
+    });
+  }
+
+  async put<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    const isFormData = data instanceof FormData;
+    return this.fetch<T>(endpoint, {
+      ...options,
+      method: "PUT",
+      body: isFormData ? data : JSON.stringify(data),
     });
   }
 
   async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
     return this.fetch<T>(endpoint, { ...options, method: "DELETE" });
+  }
+
+  async patch<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    const isFormData = data instanceof FormData;
+    return this.fetch<T>(endpoint, {
+      ...options,
+      method: "PATCH",
+      body: isFormData ? data : data !== undefined ? JSON.stringify(data) : undefined,
+    });
   }
 }
 

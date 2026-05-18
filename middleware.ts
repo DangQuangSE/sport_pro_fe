@@ -23,7 +23,7 @@ export function middleware(request: NextRequest) {
   const isAuthRoute = pathname.includes('/login') || pathname.includes('/register')
   
   // Note: Add protected routes here as the app grows, e.g., '/profile', '/checkout'
-  const protectedRoutes = ['/profile', '/orders']
+  const protectedRoutes = ['/profile', '/orders', '/admin']
   const isProtectedRoute = protectedRoutes.some(route => pathname.includes(route))
 
   if (isProtectedRoute && !refreshToken) {

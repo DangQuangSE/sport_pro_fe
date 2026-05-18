@@ -1,48 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { useTranslation } from "@/hooks/useTranslation";
+import { ProductImageResponse } from "@/services/productService";
 
 interface ProductGalleryProps {
-  mainImage: string;
-  thumbnails: string[];
-  badge?: string;
+  images: ProductImageResponse[];
 }
 
 export default function ProductGallery({
-  mainImage,
-  thumbnails,
-  badge,
+  images,
 }: Readonly<ProductGalleryProps>) {
-  const { t } = useTranslation();
-  const [activeImage, setActiveImage] = useState(mainImage);
+  const sortedImages = [...images].sort((a, b) => a.sortOrder - b.sortOrder);
+  const mainThumbnail = sortedImages.find(img => img.isThumbnail) || sortedImages[0];
+  
+  const [activeImage, setActiveImage] = useState(mainThumbnail?.imageUrl || "/placeholder-product.png");
+
+  // Sync active image if images change (e.g. initial load)
+  useEffect(() => {
+    if (mainThumbnail) {
+      setActiveImage(mainThumbnail.imageUrl);
+    }
+  }, [mainThumbnail]);
+
+  if (!sortedImages.length) {
+    return (
+      <div className="flex-1 aspect-[4/5] bg-surface-container-low rounded-2xl animate-pulse" />
+    );
+  }
 
   return (
-    <div className="md:col-span-7 flex flex-col-reverse md:flex-row gap-4 h-fit">
+    <div className="flex flex-col-reverse md:flex-row gap-6 h-fit">
       {/* Thumbnails */}
-      <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible w-full md:w-[100px] shrink-0 snap-x">
-        {thumbnails.map((thumb, idx) => {
-          const isActive = activeImage === thumb;
+      <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-visible w-full md:w-[100px] shrink-0 snap-x scrollbar-hide">
+        {sortedImages.map((image) => {
+          const isActive = activeImage === image.imageUrl;
           return (
             <button
-              key={idx}
-              onClick={() => setActiveImage(thumb)}
+              key={image.id}
+              onClick={() => setActiveImage(image.imageUrl)}
               className={cn(
                 "snap-start shrink-0 w-[80px] md:w-full aspect-square",
-                "bg-surface-container overflow-hidden relative rounded-xl transition-colors",
+                "bg-surface-container overflow-hidden relative rounded-xl transition-all duration-300",
                 isActive
-                  ? "border-2 border-primary"
-                  : "border-2 border-transparent hover:border-outline-variant"
+                  ? "border-2 border-primary ring-2 ring-primary/20"
+                  : "border-2 border-transparent hover:border-outline-variant opacity-70 hover:opacity-100"
               )}
             >
-              <Image
-                src={thumb}
-                alt={`Thumbnail ${idx + 1}`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 80px, 100px"
+              <img
+                src={image.imageUrl}
+                alt={`Product thumbnail`}
+                className="w-full h-full object-cover"
               />
             </button>
           );
@@ -50,20 +59,15 @@ export default function ProductGallery({
       </div>
 
       {/* Main Image Canvas */}
-      <div className="flex-1 aspect-[4/5] bg-surface-container-low overflow-hidden relative shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant group rounded-2xl">
-        {badge && (
-          <div className="absolute top-4 left-4 z-10 bg-surface text-on-surface font-semibold text-[12px] px-3 py-1 shadow-sm border border-outline-variant uppercase rounded-full tracking-[0.05em]">
-            {badge === "New Release" ? t("product.details.newRelease") : badge}
-          </div>
-        )}
-        <Image
+      <div className="flex-1 aspect-[4/5] bg-white overflow-hidden relative shadow-2xl shadow-primary/5 border border-outline-variant group rounded-3xl">
+        <img
           src={activeImage}
-          alt="Product Main Image"
-          fill
-          priority
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 60vw"
+          alt="Product Main View"
+          className="w-full h-full object-contain p-8 transition-transform duration-700 group-hover:scale-110"
         />
+        
+        {/* Decorative corner */}
+        <div className="absolute bottom-0 right-0 w-24 h-24 bg-primary/5 rounded-tl-[100%] pointer-events-none" />
       </div>
     </div>
   );
