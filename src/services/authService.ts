@@ -37,5 +37,9 @@ export const authService = {
 
   getMe: () => {
     return apiClient.get<ApiResponse<UserMe>>("/auth/me");
+  },
+
+  resendOtp: (email: string) => {
+    return apiClient.post<ApiResponse<void>>("/auth/resend-otp", { email });
   }
 };

@@ -34,7 +34,20 @@
     "otpSent": "Mã OTP đã được gửi!",
     "registerFinalTitle": "HOÀN TẤT HỒ SƠ",
     "registerFinalSubtitle": "Thiết lập mật khẩu để gia nhập cộng đồng",
-    "signOutButton": "ĐĂNG XUẤT"
+    "signOutButton": "ĐĂNG XUẤT",
+    "forgotPasswordTitle": "KHÔI PHỤC MẬT KHẨU",
+    "forgotPasswordSubtitle": "Chúng tôi sẽ giúp bạn lấy lại quyền truy cập tài khoản",
+    "forgotPasswordRequestButton": "GỬI MÃ XÁC THỰC",
+    "forgotPasswordVerifyTitle": "XÁC MINH OTP KHÔI PHỤC",
+    "forgotPasswordVerifySubtitle": "Vui lòng nhập mã OTP được gửi tới email của bạn để tiếp tục",
+    "resetPasswordTitle": "THIẾT LẬP MẬT KHẨU MỚI",
+    "resetPasswordSubtitle": "Nhập mật khẩu mới mạnh hơn để bảo vệ tài khoản của bạn",
+    "newPasswordLabel": "Mật khẩu mới",
+    "newPasswordPlaceholder": "••••••••",
+    "resetPasswordButton": "THIẾT LẬP LẠI MẬT KHẨU",
+    "resetPasswordSuccess": "Khôi phục mật khẩu thành công! Vui lòng đăng nhập với mật khẩu mới.",
+    "forgotPasswordRequestSuccess": "Mã OTP khôi phục đã được gửi tới email của bạn!",
+    "loginSuccess": "Đăng nhập thành công!"
   },
   "home": {
     "nav": {

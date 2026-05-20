@@ -34,7 +34,20 @@
     "otpSent": "OTP code has been sent!",
     "registerFinalTitle": "FINALIZE PROFILE",
     "registerFinalSubtitle": "Set your password to join the elite",
-    "signOutButton": "SIGN OUT"
+    "signOutButton": "SIGN OUT",
+    "forgotPasswordTitle": "RESET PASSWORD",
+    "forgotPasswordSubtitle": "We will help you regain access to your account",
+    "forgotPasswordRequestButton": "SEND VERIFICATION CODE",
+    "forgotPasswordVerifyTitle": "VERIFY RECOVERY OTP",
+    "forgotPasswordVerifySubtitle": "Please enter the OTP code sent to your email to continue",
+    "resetPasswordTitle": "SET NEW PASSWORD",
+    "resetPasswordSubtitle": "Enter a stronger new password to secure your account",
+    "newPasswordLabel": "New Password",
+    "newPasswordPlaceholder": "••••••••",
+    "resetPasswordButton": "RESET PASSWORD",
+    "resetPasswordSuccess": "Password reset successful! Please log in with your new password.",
+    "forgotPasswordRequestSuccess": "Recovery OTP has been sent to your email!",
+    "loginSuccess": "Login successful!"
   },
   "home": {
     "nav": {

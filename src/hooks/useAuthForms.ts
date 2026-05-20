@@ -8,6 +8,7 @@ import { useTranslation } from './useTranslation'
 import { authService } from '@/services/authService'
 import { useRouter } from 'next/navigation'
 import { useAuthContext } from '@/contexts/AuthContext'
+import { toast } from 'sonner'
 
 export type AuthStep = 'REQUEST_OTP' | 'VERIFY_OTP' | 'REGISTER'
 
@@ -67,11 +68,12 @@ export function useAuthForms() {
       const response = await authService.login(values)
       if (response.data && response.data.accessToken) {
         await contextLogin(response.data.accessToken)
+        toast.success(t('auth.loginSuccess') || "Đăng nhập thành công!")
         router.push(`/${locale}`)
       }
     } catch (error: any) {
       console.error('Login error', error)
-      alert(error.message)
+      toast.error(error.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.")
     } finally {
       setIsLoading(false)
     }
@@ -82,10 +84,11 @@ export function useAuthForms() {
     try {
       await authService.requestOtp(values.email)
       setEmail(values.email)
+      toast.success(t('auth.otpSent') || "Mã OTP đã được gửi đến email của bạn!")
       setStep('VERIFY_OTP')
     } catch (error: any) {
       console.error('Request OTP error', error)
-      alert(error.message)
+      toast.error(error.message || "Gửi OTP thất bại. Vui lòng thử lại.")
     } finally {
       setIsLoading(false)
     }
@@ -95,10 +98,11 @@ export function useAuthForms() {
     setIsLoading(true)
     try {
       await authService.verifyOtp(email, values.otpCode)
+      toast.success("Xác thực OTP thành công!")
       setStep('REGISTER')
     } catch (error: any) {
       console.error('Verify OTP error', error)
-      alert(error.message)
+      toast.error(error.message || "Mã OTP không chính xác hoặc đã hết hạn.")
     } finally {
       setIsLoading(false)
     }
@@ -111,10 +115,25 @@ export function useAuthForms() {
         email,
         password: values.password
       })
+      toast.success("Đăng ký tài khoản thành công! Vui lòng đăng nhập.")
       router.push(`/${locale}/login`)
     } catch (error: any) {
       console.error('Register error', error)
-      alert(error.message)
+      toast.error(error.message || "Đăng ký thất bại. Vui lòng thử lại.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const onResendOtp = async () => {
+    if (!email) return
+    setIsLoading(true)
+    try {
+      await authService.resendOtp(email)
+      toast.success(t('auth.otpSent') || "Mã OTP đã được gửi lại!")
+    } catch (error: any) {
+      console.error('Resend OTP error', error)
+      toast.error(error.message || "Gửi lại OTP thất bại.")
     } finally {
       setIsLoading(false)
     }
@@ -129,6 +148,7 @@ export function useAuthForms() {
     onRequestOtp,
     onVerifyOtp,
     onRegister,
+    onResendOtp,
     isLoading,
     step,
     email

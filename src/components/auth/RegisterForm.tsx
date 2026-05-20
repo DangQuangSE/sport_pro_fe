@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { useTranslation } from "@/hooks/useTranslation"
 import { useAuthForms } from "@/hooks/useAuthForms"
 import { Button } from "@/components/ui/button"
@@ -12,9 +13,25 @@ export function RegisterForm() {
   const { t, locale } = useTranslation()
   const { 
     requestOtpForm, verifyOtpForm, registerForm, 
-    onRequestOtp, onVerifyOtp, onRegister, 
+    onRequestOtp, onVerifyOtp, onRegister, onResendOtp,
     isLoading, step, email 
   } = useAuthForms()
+
+  const [countdown, setCountdown] = useState(0)
+
+  useEffect(() => {
+    if (countdown > 0 && step === 'VERIFY_OTP') {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [countdown, step])
+
+  const handleResend = () => {
+    if (countdown === 0) {
+      onResendOtp()
+      setCountdown(60)
+    }
+  }
 
   return (
     <div className="w-full max-w-[440px] bg-surface-container-lowest rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-outline-variant p-8 lg:p-12 relative overflow-hidden">
@@ -84,6 +101,17 @@ export function RegisterForm() {
                 </>
               )}
             </Button>
+
+            <div className="text-center mt-6">
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={countdown > 0 || isLoading}
+                className="font-label-sm text-label-sm text-primary disabled:text-on-surface-variant/40 disabled:no-underline uppercase tracking-wider hover:underline decoration-2 underline-offset-4 cursor-pointer disabled:cursor-not-allowed"
+              >
+                {countdown > 0 ? `${t('auth.resendOtp')} (${countdown}s)` : t('auth.resendOtp')}
+              </button>
+            </div>
           </form>
         </>
       )}
