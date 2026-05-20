@@ -36,11 +36,11 @@ export function BrandFormModal({
   useEffect(() => {
     if (initialData) {
       setFormData({
-        name: initialData.name,
+        name: initialData.name || "",
         description: initialData.description || "",
         imageUrl: initialData.imageUrl || "",
-        displayOrder: initialData.displayOrder,
-        isActive: initialData.isActive
+        displayOrder: initialData.displayOrder ?? 0,
+        isActive: initialData.active ?? initialData.isActive ?? true
       });
     } else {
       setFormData({

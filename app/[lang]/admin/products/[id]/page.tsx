@@ -72,20 +72,29 @@ export default function EditProductPage() {
       setIsLoading(true);
       try {
         const [catsRes, brandsRes, productRes] = await Promise.all([
-          adminService.getCategories(),
+          adminService.getCategories({ size: 1000 }),
           adminService.getBrands({ size: 100 }),
           adminService.getProduct(id)
         ]);
         
-        setCategories(catsRes.data);
-        setBrands(brandsRes.data.content);
+        const catsData = catsRes.data;
+        let resolvedCategories: Category[] = [];
+        if (Array.isArray(catsData)) {
+          resolvedCategories = catsData;
+        } else if (catsData && Array.isArray(catsData.content)) {
+          resolvedCategories = catsData.content;
+        }
+        setCategories(resolvedCategories);
+        
+        const resolvedBrands = brandsRes.data.content || [];
+        setBrands(resolvedBrands);
         
         const p = productRes.data;
         setBasicInfo({
           name: p.name,
           description: p.description || "",
-          categoryId: String(catsRes.data.find(c => c.name === p.categoryName)?.id || ""),
-          brandId: String(brandsRes.data.content.find(b => b.name === p.brandName)?.id || ""),
+          categoryId: String(resolvedCategories.find(c => c.name === p.categoryName)?.id || ""),
+          brandId: String(resolvedBrands.find(b => b.name === p.brandName)?.id || ""),
           gender: p.gender,
           status: "ACTIVE"
         });

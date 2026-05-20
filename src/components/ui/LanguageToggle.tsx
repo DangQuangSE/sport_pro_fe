@@ -32,6 +32,7 @@ export default function LanguageToggle() {
         const isActive = currentLocale === lang.code;
         return (
           <button
+            suppressHydrationWarning
             key={lang.code}
             onClick={() => switchLanguage(lang.code)}
             className={cn(

@@ -19,7 +19,7 @@ export const authService = {
   },
 
   verifyOtp: (email: string, otpCode: string) => {
-    return apiClient.post<ApiResponse<void>>("/auth/verify-otp", { email, otpCode });
+    return apiClient.post<ApiResponse<void>>("/auth/verify-otp", { email, otp: otpCode });
   },
 
   register: (data: any) => {
@@ -37,5 +37,9 @@ export const authService = {
 
   getMe: () => {
     return apiClient.get<ApiResponse<UserMe>>("/auth/me");
+  },
+
+  resendOtp: (email: string) => {
+    return apiClient.post<ApiResponse<void>>("/auth/resend-otp", { email });
   }
 };

@@ -49,6 +49,7 @@ export default function PromoBanner() {
             {t("home.promo.subtitle")}
           </p>
           <button
+            suppressHydrationWarning
             className={cn(
               "bg-transparent border-2 border-primary-fixed text-primary-fixed",
               "hover:bg-primary-fixed hover:text-on-primary-fixed",

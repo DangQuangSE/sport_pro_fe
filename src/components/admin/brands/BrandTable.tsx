@@ -87,9 +87,14 @@ export function BrandTable({
                   </span>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={brand.isActive ? "success" : "secondary"}>
-                    {brand.isActive ? "Active" : "Inactive"}
-                  </Badge>
+                  {(() => {
+                    const isActive = brand.active ?? brand.isActive;
+                    return (
+                      <Badge variant={isActive ? "success" : "secondary"}>
+                        {isActive ? "Active" : "Inactive"}
+                      </Badge>
+                    );
+                  })()}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">

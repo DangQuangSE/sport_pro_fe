@@ -51,10 +51,19 @@ export default function NewProductPage() {
     const fetchData = async () => {
       try {
         const [catsRes, brandsRes] = await Promise.all([
-          adminService.getCategories(),
+          adminService.getCategories({ size: 1000 }),
           adminService.getBrands({ size: 100 })
         ]);
-        setCategories(catsRes.data);
+        
+        const catsData = catsRes.data;
+        if (Array.isArray(catsData)) {
+          setCategories(catsData);
+        } else if (catsData && Array.isArray(catsData.content)) {
+          setCategories(catsData.content);
+        } else {
+          setCategories([]);
+        }
+        
         setBrands(brandsRes.data.content);
       } catch (error) {
         console.error("Failed to fetch form data", error);

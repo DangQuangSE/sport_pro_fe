@@ -3,6 +3,7 @@ import { Lexend, Inter } from "next/font/google";
 import "../globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { Toaster } from "sonner";
 
 import { use } from "react";
 
@@ -38,6 +39,7 @@ export default function RootLayout({
         <AuthProvider>
           <CartProvider>
             {children}
+            <Toaster richColors position="top-right" closeButton />
           </CartProvider>
         </AuthProvider>
       </body>

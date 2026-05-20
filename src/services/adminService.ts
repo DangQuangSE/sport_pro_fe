@@ -9,7 +9,8 @@ export interface Category {
   description?: string;
   parentId?: number;
   imageUrl?: string;
-  isActive: boolean;
+  active?: boolean;   // Jackson serializes Java `boolean isActive` as "active"
+  isActive?: boolean; // kept for backward compatibility
   displayOrder: number;
   createdAt: string;
   updatedAt: string;
@@ -30,7 +31,8 @@ export interface Brand {
   slug: string;
   description?: string;
   imageUrl?: string;
-  isActive: boolean;
+  active?: boolean;   // Jackson serializes Java `boolean isActive` as "active"
+  isActive?: boolean; // kept for backward compatibility
   displayOrder: number;
   createdAt: string;
   updatedAt: string;
@@ -71,8 +73,9 @@ export interface PageResponse<T> {
 
 export const adminService = {
   // Categories
-  getCategories: () => {
-    return apiClient.get<ApiResponse<Category[]>>("/categories");
+  getCategories: (params?: any) => {
+    const query = params ? `?${new URLSearchParams(params).toString()}` : "";
+    return apiClient.get<ApiResponse<PageResponse<Category>>>(`/categories${query}`);
   },
   getCategoryTree: () => {
     return apiClient.get<ApiResponse<any>>("/categories/tree");
