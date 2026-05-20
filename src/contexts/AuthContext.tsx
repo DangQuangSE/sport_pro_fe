@@ -21,14 +21,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
+  const clearCookies = () => {
+    if (typeof window !== "undefined") {
+      document.cookie = "is_logged_in=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax";
+      document.cookie = "user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax";
+    }
+  };
+
   const fetchUser = async () => {
     try {
       const response = await authService.getMe();
       setUser(response.data);
       setIsLoggedIn(true);
+      if (typeof window !== "undefined") {
+        document.cookie = `is_logged_in=true; path=/; max-age=86400; SameSite=Lax`;
+        document.cookie = `user_role=${response.data.role}; path=/; max-age=86400; SameSite=Lax`;
+      }
     } catch (error) {
       setUser(null);
       setIsLoggedIn(false);
+      clearCookies();
     }
   };
 
@@ -50,10 +62,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setIsLoggedIn(false);
         setUser(null);
+        clearCookies();
       }
     } catch (error) {
       setIsLoggedIn(false);
       setUser(null);
+      clearCookies();
     } finally {
       setIsLoading(false);
     }
@@ -66,6 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const handleUnauthorized = () => {
       setUser(null);
       setIsLoggedIn(false);
+      clearCookies();
     };
 
     if (typeof window !== "undefined") {
@@ -94,6 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       apiClient.setAccessToken(null);
       setUser(null);
       setIsLoggedIn(false);
+      clearCookies();
       setIsLoading(false);
       router.push("/");
       router.refresh();

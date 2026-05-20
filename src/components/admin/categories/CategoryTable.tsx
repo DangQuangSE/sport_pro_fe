@@ -93,9 +93,14 @@ export function CategoryTable({
                   </span>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={category.isActive ? "success" : "secondary"}>
-                    {category.isActive ? "Active" : "Inactive"}
-                  </Badge>
+                  {(() => {
+                    const isActive = category.active ?? category.isActive;
+                    return (
+                      <Badge variant={isActive ? "success" : "secondary"}>
+                        {isActive ? "Active" : "Inactive"}
+                      </Badge>
+                    );
+                  })()}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">

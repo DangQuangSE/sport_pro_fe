@@ -51,11 +51,13 @@
   },
   "home": {
     "nav": {
+      "categories": "Danh mục",
       "men": "Nam",
       "women": "Nữ",
       "running": "Chạy bộ",
       "training": "Tập luyện",
       "sale": "Giảm giá",
+      "admin": "Quản trị",
       "searchPlaceholder": "Tìm kiếm ..."
     },
     "hero": {

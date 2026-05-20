@@ -8,13 +8,29 @@ export function useCategories() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fetchCategories = useCallback(async () => {
+  const [totalElements, setTotalElements] = useState(0);
+
+  const fetchCategories = useCallback(async (params?: any) => {
     setIsLoading(true);
     try {
-      const response = await adminService.getCategories();
-      setCategories(response.data);
+      // Default to a large size so we get all categories in administration
+      const response = await adminService.getCategories({ size: 1000, ...params });
+      const data = response.data;
+      
+      if (Array.isArray(data)) {
+        setCategories(data);
+        setTotalElements(data.length);
+      } else if (data && Array.isArray(data.content)) {
+        setCategories(data.content);
+        setTotalElements(data.totalElements ?? data.content.length);
+      } else {
+        setCategories([]);
+        setTotalElements(0);
+      }
     } catch (error) {
       console.error("Failed to fetch categories", error);
+      setCategories([]);
+      setTotalElements(0);
     } finally {
       setIsLoading(false);
     }
@@ -64,6 +80,7 @@ export function useCategories() {
     categories,
     isLoading,
     isSubmitting,
+    totalElements,
     fetchCategories,
     createCategory,
     updateCategory,

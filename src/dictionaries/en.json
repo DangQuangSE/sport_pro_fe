@@ -51,11 +51,13 @@
   },
   "home": {
     "nav": {
+      "categories": "Categories",
       "men": "Men",
       "women": "Women",
       "running": "Running",
       "training": "Training",
       "sale": "Sale",
+      "admin": "Admin",
       "searchPlaceholder": "Search ..."
     },
     "hero": {

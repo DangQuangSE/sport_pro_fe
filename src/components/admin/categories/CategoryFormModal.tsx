@@ -36,11 +36,11 @@ export function CategoryFormModal({
   useEffect(() => {
     if (initialData) {
       setFormData({
-        name: initialData.name,
+        name: initialData.name || "",
         description: initialData.description || "",
         parentId: initialData.parentId || undefined,
-        displayOrder: initialData.displayOrder,
-        isActive: initialData.isActive
+        displayOrder: initialData.displayOrder ?? 0,
+        isActive: initialData.active ?? initialData.isActive ?? true
       });
     } else {
       setFormData({

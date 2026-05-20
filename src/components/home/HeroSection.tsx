@@ -90,6 +90,7 @@ export default function HeroSection() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <button
+            suppressHydrationWarning
             className={cn(
               "bg-secondary-container text-white",
               "font-semibold text-[12px] uppercase tracking-[0.05em]",
@@ -102,6 +103,7 @@ export default function HeroSection() {
             {t("home.hero.ctaPrimary")}
           </button>
           <button
+            suppressHydrationWarning
             className={cn(
               "bg-transparent text-primary border-2 border-primary",
               "font-semibold text-[12px] uppercase tracking-[0.05em]",

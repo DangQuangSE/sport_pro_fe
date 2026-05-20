@@ -19,7 +19,7 @@ export const authService = {
   },
 
   verifyOtp: (email: string, otpCode: string) => {
-    return apiClient.post<ApiResponse<void>>("/auth/verify-otp", { email, otpCode });
+    return apiClient.post<ApiResponse<void>>("/auth/verify-otp", { email, otp: otpCode });
   },
 
   register: (data: any) => {
