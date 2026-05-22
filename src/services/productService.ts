@@ -6,6 +6,8 @@ export interface ProductListResponse {
   slug: string;
   sku: string;
   basePrice: number;
+  originalPrice?: number;
+  salePrice?: number;
   imageUrl: string;
   categoryName: string;
   brandName: string;
@@ -13,6 +15,8 @@ export interface ProductListResponse {
   averageRating: number;
   status: string;
   gender: string;
+  availableSizes?: string[];
+  availableColors?: string[];
 }
 
 export interface ProductDetailResponse {
@@ -47,7 +51,16 @@ export interface ProductVariantResponse {
 
 export const productService = {
   getProducts: (params?: any) => {
-    const query = params ? `?${new URLSearchParams(params).toString()}` : "";
+    const cleanParams: Record<string, string> = {};
+    if (params) {
+      Object.keys(params).forEach(key => {
+        const val = params[key];
+        if (val !== undefined && val !== null && val !== "") {
+          cleanParams[key] = String(val);
+        }
+      });
+    }
+    const query = Object.keys(cleanParams).length > 0 ? `?${new URLSearchParams(cleanParams).toString()}` : "";
     return apiClient.get<ApiResponse<PageResponse<ProductListResponse>>>(`/products${query}`);
   },
 
@@ -64,7 +77,17 @@ export const productService = {
   },
 
   getBrands: (params?: any) => {
-    const query = params ? `?${new URLSearchParams(params).toString()}` : "";
+    const cleanParams: Record<string, string> = {};
+    if (params) {
+      Object.keys(params).forEach(key => {
+        const val = params[key];
+        if (val !== undefined && val !== null && val !== "") {
+          cleanParams[key] = String(val);
+        }
+      });
+    }
+    const query = Object.keys(cleanParams).length > 0 ? `?${new URLSearchParams(cleanParams).toString()}` : "";
     return apiClient.get<ApiResponse<PageResponse<any>>>(`/brands${query}`);
   }
 };
+

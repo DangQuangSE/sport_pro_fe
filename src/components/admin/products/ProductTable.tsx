@@ -114,7 +114,16 @@ export function ProductTable({
                   </div>
                 </TableCell>
                 <TableCell className="font-lexend font-bold text-on-surface text-sm">
-                  ${product.basePrice.toLocaleString()}
+                  <div className="flex flex-col gap-0.5">
+                    {product.salePrice && product.originalPrice && product.originalPrice > product.salePrice ? (
+                      <>
+                        <span className="text-primary italic">{product.salePrice.toLocaleString()} đ</span>
+                        <span className="text-[10px] line-through text-on-surface-variant/40 font-normal">{product.originalPrice.toLocaleString()} đ</span>
+                      </>
+                    ) : (
+                      <span>{(product.originalPrice ?? product.basePrice ?? 0).toLocaleString()} đ</span>
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col gap-1.5 w-24">

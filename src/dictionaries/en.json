@@ -56,6 +56,7 @@
       "women": "Women",
       "running": "Running",
       "training": "Training",
+      "shop": "Shop",
       "sale": "Sale",
       "admin": "Admin",
       "searchPlaceholder": "Search ..."
@@ -134,6 +135,44 @@
     "related": {
       "title": "You May Also Like"
     }
+  },
+  "catalog": {
+    "title": "Shop All Gear",
+    "categories": "Locker Categories",
+    "gender": "Gender Focus",
+    "brands": "Performance Squad (Brands)",
+    "sizes": "Size Selection",
+    "colors": "Color Swatches",
+    "price": "Price Cap (VND)",
+    "searchPlaceholder": "Search premium catalog...",
+    "sorting": {
+      "newest": "New Releases",
+      "priceAsc": "Price: Low-to-High",
+      "priceDesc": "Price: High-to-Low"
+    },
+    "activeFilters": "Active:",
+    "emptyTitle": "No gear detected",
+    "emptyDesc": "Try adjusting or resetting your performance filter inputs to inspect our locker inventory.",
+    "clearAll": "Clear All Filters",
+    "showing": "Showing",
+    "of": "of",
+    "gears": "professional gears",
+    "prev": "Prev",
+    "next": "Next",
+    "eliteDrop": "Elite Drop",
+    "promo": "Promo",
+    "basePrice": "Price",
+    "deploy": "Deploy",
+    "reset": "Reset",
+    "apply": "Apply",
+    "filtersTitle": "Engineered Filters",
+    "mobileFiltersTitle": "Locker Filters",
+    "all": "ALL",
+    "men": "MEN",
+    "women": "WOMEN",
+    "unisex": "UNISEX",
+    "under1m": "Under 1M",
+    "1m3m": "1M - 3M"
   },
   "admin": {
     "sidebar": {

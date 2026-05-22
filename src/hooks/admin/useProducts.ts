@@ -11,7 +11,10 @@ export function useProducts() {
   const fetchProducts = useCallback(async (params?: any) => {
     setIsLoading(true);
     try {
+      console.log("=== [useProducts] fetchProducts called ===");
+      console.log("Params sent to adminService.getProducts:", params);
       const response = await adminService.getProducts(params);
+      console.log("Response received from adminService.getProducts:", response);
       setProducts(response.data.content);
       setTotalElements(response.data.totalElements);
     } catch (error) {

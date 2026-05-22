@@ -52,6 +52,8 @@ export interface ProductListResponse {
   slug: string;
   sku: string;
   basePrice: number;
+  originalPrice?: number;
+  salePrice?: number;
   imageUrl?: string;
   categoryName: string;
   brandName: string;

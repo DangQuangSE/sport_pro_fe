@@ -52,55 +52,58 @@ export default function AdminOrdersPage() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 text-xs font-medium text-on-surface-variant uppercase tracking-widest">
-        <Link href={`/${locale}/admin`} className="hover:text-primary transition-colors flex items-center gap-1">
-          <Home size={12} />
-          Admin
-        </Link>
-        <ChevronRight size={12} />
-        <span className="text-on-surface">Orders</span>
-      </div>
-
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div className="space-y-1">
-          <h2 className="text-4xl font-black italic tracking-tighter text-on-surface uppercase">
-            Order Fulfillment
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* Breadcrumbs & Actions Row */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-2 border-outline-variant pb-6">
+        <div className="flex flex-col gap-1 flex-shrink-0">
+          {/* Breadcrumbs */}
+          <div className="flex items-center gap-2 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+            <Link href={`/${locale}/admin`} className="hover:text-primary transition-colors flex items-center gap-1">
+              <Home size={10} />
+              Admin
+            </Link>
+            <ChevronRight size={10} />
+            <span className="text-on-surface">Orders</span>
+          </div>
+          <h2 className="text-2xl font-black italic tracking-tighter text-on-surface uppercase leading-none">
+            Order <span className="text-primary">Fulfillment</span>
           </h2>
-          <p className="text-on-surface-variant max-w-md">
-            Track, process, and manage elite performance gear shipments globally.
-          </p>
         </div>
-        <Button variant="outline" className="gap-2 h-12 px-6 rounded-xl border-outline-variant hover:border-primary transition-all">
-          <Download size={20} />
-          Export Reports
-        </Button>
-      </div>
 
-      <div className="space-y-4">
-        {/* Filters Area */}
-        <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-surface p-4 rounded-2xl border border-outline-variant shadow-sm">
-          <div className="relative w-full md:w-96 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" size={18} />
+        {/* Search, Filter, Sort and Export Button */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          {/* Search bar */}
+          <div className="relative w-full sm:w-[260px] group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" size={16} />
             <Input 
               placeholder="Search by Order ID or phone..." 
-              className="pl-12 h-11 rounded-xl bg-surface-variant/20 border-transparent focus:bg-surface focus:border-primary transition-all" 
+              className="pl-10 h-10 rounded-xl bg-surface-container-highest/30 border-outline-variant focus:bg-surface focus:border-primary transition-all font-inter text-xs shadow-inner" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <Button variant="outline" size="sm" className="gap-2 h-11 rounded-xl flex-grow md:flex-grow-0">
-              <Filter size={16} />
+          {/* Buttons */}
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <Button variant="outline" className="gap-1.5 h-10 rounded-xl border-outline-variant hover:border-primary transition-all text-xs font-bold w-full sm:w-auto px-3">
+              <Filter size={14} />
               Filters
             </Button>
-            <Button variant="outline" size="sm" className="gap-2 h-11 rounded-xl flex-grow md:flex-grow-0">
-              <ArrowUpDown size={16} />
+            <Button variant="outline" className="gap-1.5 h-10 rounded-xl border-outline-variant hover:border-primary transition-all text-xs font-bold w-full sm:w-auto px-3">
+              <ArrowUpDown size={14} />
               Sort
+            </Button>
+            <Button 
+              variant="outline" 
+              className="gap-1.5 h-10 px-4 rounded-xl border-outline-variant hover:border-primary transition-all text-xs font-bold w-full sm:w-auto flex-shrink-0"
+            >
+              <Download size={14} />
+              Export Reports
             </Button>
           </div>
         </div>
+      </div>
+
+      <div className="space-y-4">
 
         {/* Table Area */}
         <OrderTable 

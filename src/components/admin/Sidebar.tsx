@@ -46,9 +46,9 @@ export default function Sidebar() {
       {/* Logo Area */}
       <div className="h-20 flex items-center justify-between px-6 border-b border-outline-variant">
         {!isCollapsed && (
-          <span className="text-xl font-black italic tracking-tighter text-on-surface uppercase">
+          <Link href={`/${locale}`} className="text-xl font-black italic tracking-tighter text-on-surface uppercase hover:opacity-80 transition-all">
             SPORT <span className="text-primary">PRO</span>
-          </span>
+          </Link>
         )}
         <button 
           onClick={() => setIsCollapsed(!isCollapsed)}

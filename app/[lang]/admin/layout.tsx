@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useRouter, useParams } from "next/navigation";
+import LanguageToggle from "@/components/ui/LanguageToggle";
 import Sidebar from "@/components/admin/Sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -49,7 +50,8 @@ export default function AdminLayout({
           <h1 className="text-xl font-semibold text-on-surface capitalize">
             Admin Management
           </h1>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
+            <LanguageToggle />
             <div className="text-right">
               <p className="text-sm font-medium text-on-surface">{user.email}</p>
               <p className="text-xs text-on-surface-variant uppercase tracking-wider">{user.role}</p>
