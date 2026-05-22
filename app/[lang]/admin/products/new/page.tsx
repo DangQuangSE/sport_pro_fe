@@ -244,10 +244,9 @@ export default function NewProductPage() {
                   value={basicInfo.gender}
                   onChange={(e) => setBasicInfo({...basicInfo, gender: e.target.value})}
                 >
-                  <option value="MEN">Men</option>
-                  <option value="WOMEN">Women</option>
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
                   <option value="UNISEX">Unisex</option>
-                  <option value="KIDS">Kids</option>
                 </select>
               </div>
             </div>
