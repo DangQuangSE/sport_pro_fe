@@ -15,8 +15,10 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { t, locale } = useTranslation();
-  const isNew = product.status === "NEW" || product.id % 7 === 0;
-  const isSale = product.status === "SALE" || product.id % 5 === 0;
+  
+  const hasDiscount = !!(product.salePrice && product.originalPrice && product.originalPrice > product.salePrice);
+  const activePrice = hasDiscount && product.salePrice ? product.salePrice : product.originalPrice;
+  const crossedPrice = hasDiscount ? product.originalPrice : null;
 
   return (
     <motion.div 
@@ -41,12 +43,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           {/* Badges container */}
           <div className="absolute top-4 left-4 flex flex-col gap-1.5 items-start">
-            {isNew && (
-              <span className="bg-primary text-on-primary text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-sm">
-                {t("catalog.eliteDrop")}
-              </span>
-            )}
-            {isSale && (
+            {hasDiscount && (
               <span className="bg-secondary text-on-secondary text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-sm flex items-center gap-0.5">
                 <Percent size={8} />
                 {t("catalog.promo")}
@@ -76,7 +73,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 key={idx} 
                 size={10} 
                 className={cn(
-                  idx < Math.round(product.averageRating || 4.5) 
+                  idx < Math.round(product.averageRating || 4.8) 
                     ? "fill-secondary text-secondary" 
                     : "text-outline-variant/60"
                 )} 
@@ -91,9 +88,16 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="flex justify-between items-center pt-5 border-t border-outline-variant/40 mt-6 px-2">
         <div className="space-y-0.5">
           <p className="text-[8px] font-bold text-on-surface-variant uppercase tracking-widest">{t("catalog.basePrice")}</p>
-          <p className="text-base font-black italic tracking-tighter text-on-surface">
-            {product.basePrice ? `${product.basePrice.toLocaleString()} đ` : (locale === "vi" ? "Liên hệ" : "Contact us")}
-          </p>
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <p className="text-base font-black italic tracking-tighter text-on-surface">
+              {activePrice ? `${activePrice.toLocaleString()} đ` : (locale === "vi" ? "Liên hệ" : "Contact us")}
+            </p>
+            {hasDiscount && crossedPrice && (
+              <p className="text-xs font-semibold line-through text-on-surface-variant/50">
+                {crossedPrice.toLocaleString()} đ
+              </p>
+            )}
+          </div>
         </div>
 
         <Link href={`/${locale}/product/${product.slug}`}>

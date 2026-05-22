@@ -69,47 +69,47 @@ export default function BrandsPage() {
   );
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 text-xs font-medium text-on-surface-variant uppercase tracking-widest">
-        <Link href={`/${locale}/admin`} className="hover:text-primary transition-colors flex items-center gap-1">
-          <Home size={12} />
-          Admin
-        </Link>
-        <ChevronRight size={12} />
-        <span className="text-on-surface">Brands</span>
-      </div>
-
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-2 border-outline-variant pb-8">
-        <div className="space-y-2">
-          <h2 className="text-5xl font-black italic tracking-tighter text-on-surface uppercase leading-none">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* Breadcrumbs & Actions Row */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-2 border-outline-variant pb-6">
+        <div className="flex flex-col gap-1 flex-shrink-0">
+          {/* Breadcrumbs */}
+          <div className="flex items-center gap-2 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+            <Link href={`/${locale}/admin`} className="hover:text-primary transition-colors flex items-center gap-1">
+              <Home size={10} />
+              Admin
+            </Link>
+            <ChevronRight size={10} />
+            <span className="text-on-surface">Brands</span>
+          </div>
+          <h2 className="text-2xl font-black italic tracking-tighter text-on-surface uppercase leading-none">
             Brand <span className="text-primary">Partners</span>
           </h2>
-          <p className="text-on-surface-variant max-w-md font-medium text-sm tracking-tight">
-            Manage the manufacturers and professional brands in your elite sports catalog.
-          </p>
         </div>
-        <Button 
-          className="gap-2 h-14 px-8 rounded-2xl shadow-xl shadow-secondary/20 hover:shadow-secondary/40 transition-all bg-secondary hover:bg-secondary/90 text-on-secondary font-lexend font-bold uppercase tracking-widest text-xs"
-          onClick={handleOpenCreate}
-        >
-          <Plus size={20} />
-          Add Brand
-        </Button>
-      </div>
 
-      <div className="space-y-6">
-        <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-surface-container/30 p-6 rounded-3xl border border-outline-variant shadow-sm backdrop-blur-sm">
-          <div className="relative w-full md:w-[480px] group">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" size={20} />
+        {/* Search bar & Action Button */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          {/* Search bar */}
+          <div className="relative w-full sm:w-[260px] group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" size={16} />
             <Input 
-              placeholder="Search brands by name or slug..." 
-              className="pl-14 h-12 rounded-2xl bg-surface-container-highest/50 border-outline-variant/50 focus:bg-surface focus:border-primary transition-all font-inter text-sm shadow-inner" 
+              placeholder="Search brands by name..." 
+              className="pl-10 h-10 rounded-xl bg-surface-container-highest/30 border-outline-variant focus:bg-surface focus:border-primary transition-all font-inter text-xs shadow-inner" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
+          <Button 
+            className="gap-1.5 h-10 px-5 rounded-xl shadow-md hover:shadow-lg transition-all bg-secondary hover:bg-secondary/90 text-on-secondary font-lexend font-bold uppercase tracking-widest text-[10px] w-full sm:w-auto flex-shrink-0"
+            onClick={handleOpenCreate}
+          >
+            <Plus size={14} />
+            Add Brand
+          </Button>
         </div>
+      </div>
+
+      <div className="space-y-6">
 
         <BrandTable 
           brands={filteredBrands}

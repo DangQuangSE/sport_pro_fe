@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { 
-  Plus, 
-  Search, 
+import {
+  Plus,
+  Search,
   Filter,
   ArrowUpDown,
   ChevronRight,
@@ -22,12 +22,12 @@ export default function AdminProductsPage() {
   const { t, locale } = useTranslation();
   const router = useRouter();
   const params = useParams();
-  const { 
-    products, 
-    isLoading, 
-    totalElements, 
-    fetchProducts, 
-    deleteProduct 
+  const {
+    products,
+    isLoading,
+    totalElements,
+    fetchProducts,
+    deleteProduct
   } = useProducts();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,7 +35,7 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetchProducts({ 
+      fetchProducts({
         keyword: searchQuery,
         page: page,
         size: 10
@@ -60,61 +60,60 @@ export default function AdminProductsPage() {
   };
 
   return (
-    <div className="space-y-8">
-      {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 text-xs font-medium text-on-surface-variant uppercase tracking-widest">
-        <Link href={`/${locale}/admin`} className="hover:text-primary transition-colors flex items-center gap-1">
-          <Home size={12} />
-          Admin
-        </Link>
-        <ChevronRight size={12} />
-        <span className="text-on-surface">Products</span>
-      </div>
-
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-2 border-outline-variant pb-8">
-        <div className="space-y-2">
-          <h2 className="text-5xl font-black italic tracking-tighter text-on-surface uppercase leading-none">
-            Inventory <span className="text-primary">Control</span>
+    <div className="space-y-6">
+      {/* Breadcrumbs & Actions Row */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-2 border-outline-variant pb-6">
+        <div className="flex flex-col gap-1 flex-shrink-0">
+          {/* Breadcrumbs */}
+          <div className="flex items-center gap-2 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+            <Link href={`/${locale}/admin`} className="hover:text-primary transition-colors flex items-center gap-1">
+              <Home size={10} />
+              Admin
+            </Link>
+            <ChevronRight size={10} />
+            <span className="text-on-surface">Products</span>
+          </div>
+          <h2 className="text-2xl font-black italic tracking-tighter text-on-surface uppercase leading-none">
+            Products <span className="text-primary">Catalog</span>
           </h2>
-          <p className="text-on-surface-variant max-w-md font-medium text-sm tracking-tight">
-            Manage your elite athletic catalog with precision. Monitor stock, pricing, and performance.
-          </p>
         </div>
-        <Button 
-          className="gap-2 h-14 px-8 rounded-2xl shadow-xl shadow-secondary/20 hover:shadow-secondary/40 transition-all bg-secondary hover:bg-secondary/90 text-on-secondary font-lexend font-bold uppercase tracking-widest text-xs"
-          onClick={() => router.push(`/${locale}/admin/products/new`)}
-        >
-          <Plus size={20} />
-          New Product
-        </Button>
-      </div>
 
-      <div className="space-y-6">
-        {/* Filters Area */}
-        <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-surface-container/30 p-6 rounded-3xl border border-outline-variant shadow-sm backdrop-blur-sm">
-          <div className="relative w-full md:w-[480px] group">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" size={20} />
-            <Input 
-              placeholder="Search products by name, SKU or brand..." 
-              className="pl-14 h-12 rounded-2xl bg-surface-container-highest/50 border-outline-variant/50 focus:bg-surface focus:border-primary transition-all font-inter text-sm shadow-inner" 
+        {/* Search, Filter, Sort and Action Button */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          {/* Search bar */}
+          <div className="relative w-full sm:w-[260px] group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" size={16} />
+            <Input
+              placeholder="Search products by name, SKU..."
+              className="pl-10 h-10 rounded-xl bg-surface-container-highest/30 border-outline-variant focus:bg-surface focus:border-primary transition-all font-inter text-xs shadow-inner"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" className="gap-2 h-12 rounded-2xl border-outline-variant hover:border-primary transition-all">
-              <Filter size={18} />
+          {/* Buttons */}
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <Button variant="outline" className="gap-1.5 h-10 rounded-xl border-outline-variant hover:border-primary transition-all text-xs font-bold w-full sm:w-auto px-3">
+              <Filter size={14} />
               Filters
             </Button>
-            <Button variant="outline" className="gap-2 h-12 rounded-2xl border-outline-variant hover:border-primary transition-all">
-              <ArrowUpDown size={18} />
+            <Button variant="outline" className="gap-1.5 h-10 rounded-xl border-outline-variant hover:border-primary transition-all text-xs font-bold w-full sm:w-auto px-3">
+              <ArrowUpDown size={14} />
               Sort
+            </Button>
+            <Button
+              className="gap-1.5 h-10 px-5 rounded-xl shadow-md hover:shadow-lg transition-all bg-secondary hover:bg-secondary/90 text-on-secondary font-lexend font-bold uppercase tracking-widest text-[10px] w-full sm:w-auto flex-shrink-0"
+              onClick={() => router.push(`/${locale}/admin/products/new`)}
+            >
+              <Plus size={14} />
+              New Product
             </Button>
           </div>
         </div>
+      </div>
 
+      <div className="space-y-6">
         {/* Table Area */}
-        <ProductTable 
+        <ProductTable
           products={products}
           isLoading={isLoading}
           onDelete={handleDelete}
@@ -127,9 +126,9 @@ export default function AdminProductsPage() {
             Showing <span className="text-on-surface underline decoration-primary/30 decoration-2 underline-offset-4">{products.length}</span> of <span className="text-on-surface">{totalElements}</span> professional products
           </p>
           <div className="flex items-center gap-3">
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="h-11 rounded-xl px-6 font-lexend font-bold uppercase tracking-widest text-[10px] border-outline-variant hover:border-primary transition-all disabled:opacity-30"
               disabled={page === 0}
               onClick={() => setPage(page - 1)}
@@ -144,8 +143,8 @@ export default function AdminProductsPage() {
                   size="sm"
                   className={cn(
                     "w-11 h-11 rounded-xl font-lexend font-black text-xs transition-all",
-                    page === i 
-                      ? "bg-primary text-on-primary shadow-lg shadow-primary/30 scale-105" 
+                    page === i
+                      ? "bg-primary text-on-primary shadow-lg shadow-primary/30 scale-105"
                       : "border-outline-variant hover:border-primary text-on-surface-variant"
                   )}
                   onClick={() => setPage(i)}
@@ -154,8 +153,8 @@ export default function AdminProductsPage() {
                 </Button>
               ))}
             </div>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               className="h-11 rounded-xl px-6 font-lexend font-bold uppercase tracking-widest text-[10px] border-outline-variant hover:border-primary transition-all disabled:opacity-30"
               disabled={(page + 1) * 10 >= totalElements}

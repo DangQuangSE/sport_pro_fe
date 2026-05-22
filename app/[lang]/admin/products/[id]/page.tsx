@@ -59,11 +59,12 @@ export default function EditProductPage() {
 
   // Modal/State for adding new variant
   const [isAddingVariant, setIsAddingVariant] = useState(false);
-  const [newVariant, setNewVariant] = useState({
+  const [newVariant, setNewVariant] = useState<any>({
     sku: "",
     size: "",
     color: "",
     originalPrice: 0,
+    salePrice: null,
     stockQuantity: 0
   });
 
@@ -134,7 +135,7 @@ export default function EditProductPage() {
       const response = await adminService.createVariant(id, newVariant);
       setVariants([...variants, response.data]);
       setIsAddingVariant(false);
-      setNewVariant({ sku: "", size: "", color: "", originalPrice: 0, stockQuantity: 0 });
+      setNewVariant({ sku: "", size: "", color: "", originalPrice: 0, salePrice: null, stockQuantity: 0 });
     } catch (error) {
       alert("Failed to add variant");
     } finally {
@@ -149,6 +150,7 @@ export default function EditProductPage() {
       size: v.size,
       color: v.color,
       originalPrice: v.originalPrice,
+      salePrice: v.salePrice,
       stockQuantity: v.stockQuantity
     });
   };
@@ -367,7 +369,7 @@ export default function EditProductPage() {
               {variants.map((v) => (
                 <div key={v.id} className="group p-6 bg-surface-container/30 rounded-3xl border border-outline-variant transition-all hover:bg-surface-container/50 hover:border-primary/30">
                   {editingVariantId === v.id ? (
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
+                    <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
                       <div className="space-y-2">
                         <Label className="text-[10px] font-black uppercase opacity-60">SKU</Label>
                         <Input value={editingVariantData.sku} onChange={(e) => setEditingVariantData({...editingVariantData, sku: e.target.value})} className="rounded-xl" />
@@ -381,8 +383,12 @@ export default function EditProductPage() {
                         <Input value={editingVariantData.color} onChange={(e) => setEditingVariantData({...editingVariantData, color: e.target.value})} className="rounded-xl" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase opacity-60">Price</Label>
+                        <Label className="text-[10px] font-black uppercase opacity-60">Orig. Price</Label>
                         <Input type="number" value={editingVariantData.originalPrice} onChange={(e) => setEditingVariantData({...editingVariantData, originalPrice: Number(e.target.value)})} className="rounded-xl" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase opacity-60">Sale Price</Label>
+                        <Input type="number" placeholder="No discount" value={editingVariantData.salePrice ?? ""} onChange={(e) => setEditingVariantData({...editingVariantData, salePrice: e.target.value === "" ? null : Number(e.target.value)})} className="rounded-xl" />
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="space-y-2 flex-grow">
@@ -391,7 +397,7 @@ export default function EditProductPage() {
                         </div>
                         <Button 
                           size="icon" 
-                          className="h-10 w-10 mt-6 rounded-xl bg-primary"
+                          className="h-10 w-10 mt-6 rounded-xl bg-primary flex-shrink-0"
                           onClick={() => handleSaveVariantUpdate(v.id)}
                         >
                           <Save size={16} />
@@ -399,7 +405,7 @@ export default function EditProductPage() {
                         <Button 
                           variant="outline"
                           size="icon" 
-                          className="h-10 w-10 mt-6 rounded-xl"
+                          className="h-10 w-10 mt-6 rounded-xl flex-shrink-0"
                           onClick={() => setEditingVariantId(null)}
                         >
                           <X size={16} />
@@ -422,7 +428,16 @@ export default function EditProductPage() {
                         </div>
                         <div className="space-y-1">
                           <Label className="text-[10px] font-black uppercase text-on-surface-variant opacity-60">Price</Label>
-                          <p className="font-lexend font-black text-primary">${v.originalPrice.toLocaleString()}</p>
+                          <div className="flex flex-col">
+                            {v.salePrice && v.originalPrice > v.salePrice ? (
+                              <>
+                                <span className="font-lexend font-black text-primary">{v.salePrice.toLocaleString()} đ</span>
+                                <span className="text-[10px] line-through text-on-surface-variant/40 font-normal">{v.originalPrice.toLocaleString()} đ</span>
+                              </>
+                            ) : (
+                              <span className="font-lexend font-black text-on-surface">{v.originalPrice.toLocaleString()} đ</span>
+                            )}
+                          </div>
                         </div>
                         <div className="space-y-1">
                           <Label className="text-[10px] font-black uppercase text-on-surface-variant opacity-60">Stock</Label>
@@ -466,7 +481,7 @@ export default function EditProductPage() {
                     <X size={20} />
                   </Button>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-6 items-end">
+                <div className="grid grid-cols-2 md:grid-cols-6 gap-4 items-end">
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase opacity-60">SKU</Label>
                     <Input value={newVariant.sku} onChange={(e) => setNewVariant({...newVariant, sku: e.target.value})} className="rounded-xl" />
@@ -480,8 +495,12 @@ export default function EditProductPage() {
                     <Input value={newVariant.color} onChange={(e) => setNewVariant({...newVariant, color: e.target.value})} className="rounded-xl" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase opacity-60">Price</Label>
+                    <Label className="text-[10px] font-black uppercase opacity-60">Orig. Price</Label>
                     <Input type="number" value={newVariant.originalPrice} onChange={(e) => setNewVariant({...newVariant, originalPrice: Number(e.target.value)})} className="rounded-xl" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase opacity-60">Sale Price</Label>
+                    <Input type="number" placeholder="No discount" value={newVariant.salePrice ?? ""} onChange={(e) => setNewVariant({...newVariant, salePrice: e.target.value === "" ? null : Number(e.target.value)})} className="rounded-xl" />
                   </div>
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase opacity-60">Stock</Label>
