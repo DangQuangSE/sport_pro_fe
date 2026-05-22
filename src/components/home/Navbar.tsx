@@ -73,6 +73,14 @@ export default function Navbar() {
 
         {/* Desktop Nav Links */}
         <div className="hidden md:flex items-center space-x-8 relative h-full" ref={dropdownRef}>
+          {/* Shop All Gear link */}
+          <Link
+            href={`/${locale}/products`}
+            className="text-[12px] font-semibold uppercase tracking-[0.08em] text-on-surface hover:text-primary transition-colors"
+          >
+            {t("home.nav.shop")}
+          </Link>
+
           {/* Categories Dropdown Trigger */}
           <div 
             className="relative flex items-center h-full"
@@ -262,6 +270,15 @@ export default function Navbar() {
       {/* Mobile Drawer */}
       {mobileOpen && (
         <div className="md:hidden bg-white border-t border-outline-variant px-8 py-6 flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-80px)]">
+          {/* Shop All Gear link */}
+          <Link
+            href={`/${locale}/products`}
+            onClick={() => setMobileOpen(false)}
+            className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary py-2 transition-colors block"
+          >
+            {t("home.nav.shop")}
+          </Link>
+
           {/* Categories Accordion */}
           <div className="space-y-2">
             <button

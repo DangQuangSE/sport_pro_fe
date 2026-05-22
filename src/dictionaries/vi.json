@@ -56,6 +56,7 @@
       "women": "Nữ",
       "running": "Chạy bộ",
       "training": "Tập luyện",
+      "shop": "Mua sắm",
       "sale": "Giảm giá",
       "admin": "Quản trị",
       "searchPlaceholder": "Tìm kiếm ..."
@@ -134,6 +135,44 @@
     "related": {
       "title": "Có thể bạn cũng thích"
     }
+  },
+  "catalog": {
+    "title": "Tất Cả Sản Phẩm",
+    "categories": "Danh Mục",
+    "gender": "Giới Tính",
+    "brands": "Thương Hiệu Hiệu Năng",
+    "sizes": "Chọn Kích Cỡ",
+    "colors": "Bảng Màu Sắc",
+    "price": "Khoảng Giá (VND)",
+    "searchPlaceholder": "Tìm kiếm sản phẩm...",
+    "sorting": {
+      "newest": "Hàng Mới Về",
+      "priceAsc": "Giá: Từ Thấp Đến Cao",
+      "priceDesc": "Giá: Từ Cao Đến Thấp"
+    },
+    "activeFilters": "Đang Lọc:",
+    "emptyTitle": "Không tìm thấy sản phẩm",
+    "emptyDesc": "Hãy thử điều chỉnh hoặc xóa các bộ lọc để khám phá kho hàng của chúng tôi.",
+    "clearAll": "Xóa Tất Cả Bộ Lọc",
+    "showing": "Hiển thị",
+    "of": "trên",
+    "gears": "sản phẩm chuyên nghiệp",
+    "prev": "Trước",
+    "next": "Tiếp theo",
+    "eliteDrop": "Bản Cao Cấp",
+    "promo": "Khuyến Mãi",
+    "basePrice": "Giá gốc",
+    "deploy": "Khám Phá",
+    "reset": "Đặt Lại",
+    "apply": "Áp Dụng",
+    "filtersTitle": "Bộ Lọc Hiệu Năng",
+    "mobileFiltersTitle": "Bộ Lọc Sản Phẩm",
+    "all": "TẤT CẢ",
+    "men": "NAM",
+    "women": "NỮ",
+    "unisex": "UNISEX",
+    "under1m": "Dưới 1 Triệu",
+    "1m3m": "1 Triệu - 3 Triệu"
   },
   "admin": {
     "sidebar": {

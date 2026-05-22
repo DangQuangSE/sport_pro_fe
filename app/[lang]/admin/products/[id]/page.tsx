@@ -426,10 +426,12 @@ export default function EditProductPage() {
                         </div>
                         <div className="space-y-1">
                           <Label className="text-[10px] font-black uppercase text-on-surface-variant opacity-60">Stock</Label>
-                          <Badge className={cn(
-                            "font-black text-[10px]",
-                            v.stockQuantity > 10 ? "bg-success" : "bg-error"
-                          )}>{v.stockQuantity} UNITS</Badge>
+                          <Badge 
+                            variant={v.stockQuantity > 10 ? "default" : "destructive"}
+                            className="font-black text-[10px]"
+                          >
+                            {v.stockQuantity} UNITS
+                          </Badge>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
