@@ -47,7 +47,8 @@ export default function EditProductPage() {
     categoryId: "",
     brandId: "",
     gender: "UNISEX",
-    status: "ACTIVE"
+    status: "ACTIVE",
+    isFeatured: false
   });
 
   const [variants, setVariants] = useState<any[]>([]);
@@ -97,7 +98,8 @@ export default function EditProductPage() {
           categoryId: String(resolvedCategories.find(c => c.name === p.categoryName)?.id || ""),
           brandId: String(resolvedBrands.find(b => b.name === p.brandName)?.id || ""),
           gender: p.gender,
-          status: "ACTIVE"
+          status: p.status || "ACTIVE",
+          isFeatured: !!p.isFeatured
         });
         
         setVariants(p.variants);
@@ -336,6 +338,43 @@ export default function EditProductPage() {
                 >
                   <option value="">Select Brand</option>
                   {brands.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                </select>
+              </div>
+              <div className="space-y-3">
+                <Label className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Gender Target</Label>
+                <select 
+                  className="flex h-14 w-full rounded-2xl border-2 border-outline-variant bg-surface px-4 font-bold text-sm outline-none focus:border-primary transition-all"
+                  value={basicInfo.gender}
+                  onChange={(e) => setBasicInfo({...basicInfo, gender: e.target.value})}
+                  required
+                >
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                  <option value="UNISEX">Unisex</option>
+                </select>
+              </div>
+              <div className="space-y-3">
+                <Label className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Inventory Status</Label>
+                <select 
+                  className="flex h-14 w-full rounded-2xl border-2 border-outline-variant bg-surface px-4 font-bold text-sm outline-none focus:border-primary transition-all"
+                  value={basicInfo.status}
+                  onChange={(e) => setBasicInfo({...basicInfo, status: e.target.value})}
+                  required
+                >
+                  <option value="ACTIVE">Active (On Store)</option>
+                  <option value="INACTIVE">Inactive (Hidden)</option>
+                </select>
+              </div>
+              <div className="space-y-3 md:col-span-2">
+                <Label className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Featured Promotion</Label>
+                <select 
+                  className="flex h-14 w-full rounded-2xl border-2 border-outline-variant bg-surface px-4 font-bold text-sm outline-none focus:border-primary transition-all"
+                  value={basicInfo.isFeatured ? "true" : "false"}
+                  onChange={(e) => setBasicInfo({...basicInfo, isFeatured: e.target.value === "true"})}
+                  required
+                >
+                  <option value="false">Standard Product</option>
+                  <option value="true">★ Featured in Home Carousel (Nổi bật Tuần này)</option>
                 </select>
               </div>
             </div>

@@ -41,7 +41,9 @@ export default function NewProductPage() {
     description: "",
     categoryId: "",
     brandId: "",
-    gender: "UNISEX"
+    gender: "UNISEX",
+    status: "ACTIVE",
+    isFeatured: false
   });
 
   const [variants, setVariants] = useState<any[]>([]);
@@ -260,6 +262,30 @@ export default function NewProductPage() {
                   <option value="MALE">Male</option>
                   <option value="FEMALE">Female</option>
                   <option value="UNISEX">Unisex</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="status">Inventory Status</Label>
+                <select 
+                  id="status"
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  value={basicInfo.status}
+                  onChange={(e) => setBasicInfo({...basicInfo, status: e.target.value})}
+                >
+                  <option value="ACTIVE">Active (On Store)</option>
+                  <option value="INACTIVE">Inactive (Hidden)</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="isFeatured">Featured Promotion</Label>
+                <select 
+                  id="isFeatured"
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  value={basicInfo.isFeatured ? "true" : "false"}
+                  onChange={(e) => setBasicInfo({...basicInfo, isFeatured: e.target.value === "true"})}
+                >
+                  <option value="false">Standard Product</option>
+                  <option value="true">★ Featured Product (Nổi bật Tuần này)</option>
                 </select>
               </div>
             </div>

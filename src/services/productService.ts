@@ -17,6 +17,7 @@ export interface ProductListResponse {
   gender: string;
   availableSizes?: string[];
   availableColors?: string[];
+  isFeatured?: boolean;
 }
 
 export interface ProductDetailResponse {
