@@ -39,6 +39,26 @@ export default function CheckoutPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successOrder, setSuccessOrder] = useState<any | null>(null);
 
+  // Customized design states
+  const [customDesign, setCustomDesign] = useState<{
+    printingPrice: number;
+    materialName: string;
+    designImageUrl: string;
+    textsCount: number;
+    imagesCount: number;
+  } | null>(null);
+
+  useEffect(() => {
+    const savedDesign = localStorage.getItem("sport_pro_custom_design");
+    if (savedDesign) {
+      try {
+        setCustomDesign(JSON.parse(savedDesign));
+      } catch (e) {
+        console.error("Failed to parse custom design from localStorage", e);
+      }
+    }
+  }, []);
+
   // Load default address to pre-fill if available (elite feature)
   useEffect(() => {
     const fetchDefaultAddress = async () => {
@@ -197,7 +217,8 @@ export default function CheckoutPage() {
   const estimatedCost = cart ? cart.totalAmount : 0;
   const standardDelivery = 15;
   const expectedTax = 24;
-  const totalPayment = estimatedCost > 0 ? estimatedCost + standardDelivery + expectedTax : 0;
+  const printingCost = customDesign ? customDesign.printingPrice / 25000 : 0; // Convert VND to USD
+  const totalPayment = estimatedCost > 0 ? estimatedCost + standardDelivery + expectedTax + printingCost : 0;
 
   return (
     <div className="flex flex-col min-h-screen bg-[#f9f9fe] font-sans antialiased text-[#1a1c1f]">
@@ -263,7 +284,9 @@ export default function CheckoutPage() {
                     <div key={item.id} className="py-6 flex gap-6 items-center first:pt-0 last:pb-0">
                       <div className="w-20 h-20 bg-[#F2F2F7] rounded-xl flex items-center justify-center p-2 relative overflow-hidden border border-[#e2e2e7] shrink-0">
                         <img 
-                          src={item.designImageUrl || "/placeholder-product.png"} 
+                          src={(customDesign && (item.productName.toLowerCase().includes("tee") || item.productName.toLowerCase().includes("shirt"))) 
+                            ? customDesign.designImageUrl 
+                            : (item.designImageUrl || "/placeholder-product.png")} 
                           className="w-full h-full object-contain"
                           alt={item.productName} 
                         />
@@ -279,6 +302,12 @@ export default function CheckoutPage() {
                         <p className="text-[10px] font-bold text-[#717786]">
                           Size: {item.size} / Color: {item.color}
                         </p>
+                        {customDesign && (item.productName.toLowerCase().includes("tee") || item.productName.toLowerCase().includes("shirt")) && (
+                          <div className="inline-flex items-center gap-1.5 bg-primary/5 text-primary text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded border border-primary/20 mt-1">
+                            <Wrench size={10} />
+                            <span>Custom In: {customDesign.materialName} (+${printingCost.toFixed(2)})</span>
+                          </div>
+                        )}
 
                         {/* Quantity and Erase Panel */}
                         <div className="flex items-center gap-4 pt-2">
@@ -316,6 +345,55 @@ export default function CheckoutPage() {
                   ))}
                 </div>
               </div>
+
+              {/* CARD A2: CUSTOM DESIGN PREVIEW DETAILS */}
+              {customDesign && (
+                <div className="bg-white border border-[#e2e2e7] shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-[24px] p-8 space-y-6">
+                  <div className="flex justify-between items-center pb-4 border-b border-[#e2e2e7]">
+                    <div className="flex items-center gap-2">
+                      <Wrench className="text-primary" size={18} />
+                      <h3 className="text-lg font-black uppercase tracking-tight text-[#1a1c1f]" style={{ fontFamily: 'var(--font-lexend)' }}>
+                        Chi tiết thiết kế in ấn của bạn
+                      </h3>
+                    </div>
+                    <Link 
+                      href={`/${locale}/customizer`}
+                      className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                    >
+                      Chỉnh sửa thiết kế
+                    </Link>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-6 items-center">
+                    {/* Design Preview Image */}
+                    <div className="w-24 h-24 bg-[#F2F2F7] rounded-xl flex items-center justify-center p-2 relative overflow-hidden border border-[#e2e2e7] shrink-0 shadow-inner">
+                      <img 
+                        src={customDesign.designImageUrl} 
+                        className="w-full h-full object-contain"
+                        alt="Your Custom Jersey Design" 
+                      />
+                    </div>
+
+                    {/* Breakdown Specifications */}
+                    <div className="flex-grow w-full space-y-2 text-xs font-semibold text-[#414755] text-left">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Thông số in ấn</p>
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-1 bg-[#f9f9fe] p-4 rounded-xl border border-[#e2e2e7]">
+                        <span className="text-[#717786]">Chất liệu tuyển chọn:</span>
+                        <span className="text-[#1a1c1f] font-bold uppercase">{customDesign.materialName}</span>
+                        
+                        <span className="text-[#717786]">Số lớp chữ in thêm:</span>
+                        <span className="text-[#1a1c1f] font-bold">{customDesign.textsCount} lớp</span>
+
+                        <span className="text-[#717786]">Số logo tải lên:</span>
+                        <span className="text-[#1a1c1f] font-bold">{customDesign.imagesCount} ảnh</span>
+
+                        <span className="text-[#717786]">Tổng cộng chi phí in:</span>
+                        <span className="text-primary font-black italic">+${printingCost.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* CARD B: DELIVERY INFORMATION */}
               <div className="bg-white border border-[#e2e2e7] shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-[24px] p-8">
@@ -468,10 +546,38 @@ export default function CheckoutPage() {
                       <span className="text-[#1a1c1f]">${standardDelivery.toLocaleString()}</span>
                     </div>
 
-                    <div className="flex justify-between items-center">
+                     <div className="flex justify-between items-center">
                       <span>{t("checkout.expectedTax")}</span>
                       <span className="text-[#1a1c1f]">${expectedTax.toLocaleString()}</span>
                     </div>
+
+                    {customDesign && (
+                      <div className="space-y-1.5 pt-2 pb-1 border-t border-[#e2e2e7]/60 border-dashed">
+                        <div className="flex justify-between items-center text-primary font-black">
+                          <span>Thiết kế in ({customDesign.materialName})</span>
+                          <span>+${printingCost.toFixed(2)}</span>
+                        </div>
+                        <div className="bg-[#f9f9fe] p-3 rounded-xl border border-primary/10 text-[10px] font-semibold text-[#717786] space-y-1 leading-relaxed">
+                          <p className="font-bold text-primary uppercase text-[8px] tracking-widest mb-1">Chi tiết in ấn</p>
+                          <div className="flex justify-between">
+                            <span>Chất liệu ({customDesign.materialName}):</span>
+                            <span className="font-mono text-[#1a1c1f]">${((customDesign.printingPrice - (customDesign.textsCount * 10000) - (customDesign.imagesCount * 25000)) / 25000).toFixed(2)}</span>
+                          </div>
+                          {customDesign.textsCount > 0 && (
+                            <div className="flex justify-between">
+                              <span>Lớp chữ ({customDesign.textsCount} lớp):</span>
+                              <span className="font-mono text-[#1a1c1f]">+${((customDesign.textsCount * 10000) / 25000).toFixed(2)}</span>
+                            </div>
+                          )}
+                          {customDesign.imagesCount > 0 && (
+                            <div className="flex justify-between">
+                              <span>Ảnh logo ({customDesign.imagesCount} ảnh):</span>
+                              <span className="font-mono text-[#1a1c1f]">+${((customDesign.imagesCount * 25000) / 25000).toFixed(2)}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
 
                     <div className="pt-6 border-t border-[#e2e2e7] flex justify-between items-center">
                       <span className="text-sm font-black uppercase text-[#1a1c1f] tracking-tight">{t("checkout.total")}</span>
@@ -486,6 +592,7 @@ export default function CheckoutPage() {
                     {/* Wrench button */}
                     <button
                       type="button"
+                      onClick={() => router.push(`/${locale}/customizer`)}
                       className="w-full h-14 bg-primary hover:bg-[#004493] text-white font-black uppercase text-[10px] tracking-widest rounded-xl flex items-center justify-center gap-2.5 transition-colors shadow-lg shadow-primary/10"
                     >
                       <Wrench size={14} />
