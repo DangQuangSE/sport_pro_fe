@@ -25,7 +25,7 @@ export default function Navbar() {
   const router = useRouter();
   
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const cartCount = cart?.totalItems ?? 0;
+  const cartCount = cart?.items?.length ?? 0;
 
   // Load categories on mount
   useEffect(() => {
@@ -230,10 +230,11 @@ export default function Navbar() {
           </Link>
 
           {/* Cart */}
-          <button
+          <Link
+            href={`/${locale}/cart`}
             suppressHydrationWarning
             aria-label={`Cart — ${cartCount} items`}
-            className="text-on-surface hover:text-primary transition-colors relative cursor-pointer"
+            className="text-on-surface hover:text-primary transition-colors relative cursor-pointer block"
           >
             <ShoppingCart className="w-5 h-5" />
             {cartCount > 0 && (
@@ -248,7 +249,7 @@ export default function Navbar() {
                 {cartCount}
               </span>
             )}
-          </button>
+          </Link>
 
           {/* Mobile menu toggle */}
           <button

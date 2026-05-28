@@ -52,7 +52,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const updateQuantity = async (variantId: number, quantity: number) => {
     try {
-      const response = await cartService.addOrUpdateItem({ variantId, quantity });
+      const response = await cartService.addOrUpdateItem({ variantId, quantity, isReplace: true });
       setCart(response.data);
     } catch (error) {
       console.error("Failed to update quantity", error);

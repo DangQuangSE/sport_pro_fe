@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ShoppingBag,
   Calendar,
@@ -20,11 +21,14 @@ import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import { orderService, OrderResponse, OrderStatus } from "@/services/orderService";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function OrderHistoryPage() {
   const { t, locale } = useTranslation();
+  const router = useRouter();
+  const { isLoggedIn, isLoading: isLoadingAuth } = useAuthContext();
 
   const [orders, setOrders] = useState<OrderResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +40,6 @@ export default function OrderHistoryPage() {
     setError(null);
     try {
       const res = await orderService.getUserOrders({ size: 50 });
-      // Spring Data Page splits content into `res.data.content`
       setOrders(res.data.content || []);
     } catch (err) {
       console.error("Failed to fetch user orders", err);
@@ -47,8 +50,29 @@ export default function OrderHistoryPage() {
   };
 
   useEffect(() => {
-    fetchOrders();
-  }, []);
+    if (!isLoadingAuth) {
+      if (isLoggedIn) {
+        fetchOrders();
+      } else {
+        router.push(`/${locale}/login`);
+      }
+    }
+  }, [isLoadingAuth, isLoggedIn, locale, router]);
+
+  if (isLoadingAuth) {
+    return (
+      <div className="flex flex-col min-h-screen bg-surface">
+        <Navbar />
+        <main className="flex-grow flex items-center justify-center pt-32 pb-20">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 size={48} className="animate-spin text-primary" />
+            <p className="font-lexend font-bold uppercase tracking-widest text-xs text-on-surface-variant">Syncing athlete session...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   const getStatusIcon = (status: OrderStatus) => {
     switch (status) {

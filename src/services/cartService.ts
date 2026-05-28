@@ -27,6 +27,7 @@ export interface CartItemRequest {
   variantId: number;
   quantity: number;
   customDesignId?: number;
+  isReplace?: boolean;
 }
 
 export const cartService = {

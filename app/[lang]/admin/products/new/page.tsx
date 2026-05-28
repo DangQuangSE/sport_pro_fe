@@ -41,18 +41,22 @@ export default function NewProductPage() {
     description: "",
     categoryId: "",
     brandId: "",
-    gender: "UNISEX"
+    gender: "UNISEX",
+    status: "ACTIVE",
+    isFeatured: false
   });
 
   const [variants, setVariants] = useState<any[]>([]);
   const [images, setImages] = useState<any[]>([]);
+  const [colors, setColors] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [catsRes, brandsRes] = await Promise.all([
+        const [catsRes, brandsRes, colorsRes] = await Promise.all([
           adminService.getCategories({ size: 1000 }),
-          adminService.getBrands({ size: 100 })
+          adminService.getBrands({ size: 100 }),
+          adminService.getColors()
         ]);
         
         const catsData = catsRes.data;
@@ -65,6 +69,7 @@ export default function NewProductPage() {
         }
         
         setBrands(brandsRes.data.content);
+        setColors(colorsRes.data || []);
       } catch (error) {
         console.error("Failed to fetch form data", error);
       }
@@ -94,7 +99,7 @@ export default function NewProductPage() {
     setVariants([...variants, {
       sku: `${basicInfo.name.substring(0,3).toUpperCase()}-${Date.now().toString().slice(-4)}`,
       size: "",
-      color: "",
+      colorId: "",
       originalPrice: 0,
       salePrice: null,
       stockQuantity: 0
@@ -105,7 +110,10 @@ export default function NewProductPage() {
     if (!createdProductId) return;
     setIsSubmitting(true);
     try {
-      await Promise.all(variants.map(v => adminService.createVariant(createdProductId, v)));
+      await Promise.all(variants.map(v => adminService.createVariant(createdProductId, {
+        ...v,
+        colorId: Number(v.colorId)
+      })));
       setActiveStep("images");
     } catch (error) {
       alert("Failed to save variants");
@@ -262,6 +270,30 @@ export default function NewProductPage() {
                   <option value="UNISEX">Unisex</option>
                 </select>
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="status">Inventory Status</Label>
+                <select 
+                  id="status"
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  value={basicInfo.status}
+                  onChange={(e) => setBasicInfo({...basicInfo, status: e.target.value})}
+                >
+                  <option value="ACTIVE">Active (On Store)</option>
+                  <option value="INACTIVE">Inactive (Hidden)</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="isFeatured">Featured Promotion</Label>
+                <select 
+                  id="isFeatured"
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  value={basicInfo.isFeatured ? "true" : "false"}
+                  onChange={(e) => setBasicInfo({...basicInfo, isFeatured: e.target.value === "true"})}
+                >
+                  <option value="false">Standard Product</option>
+                  <option value="true">★ Featured Product (Nổi bật Tuần này)</option>
+                </select>
+              </div>
             </div>
             <div className="flex justify-end pt-4">
               <Button type="submit" disabled={isSubmitting} className="gap-2">
@@ -307,12 +339,32 @@ export default function NewProductPage() {
                       }} />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-[10px] uppercase">Color</Label>
-                      <Input placeholder="Red, Blue..." value={v.color} onChange={(e) => {
-                        const newV = [...variants];
-                        newV[idx].color = e.target.value;
-                        setVariants(newV);
-                      }} />
+                      <Label className="text-[10px] uppercase">{lang === "vi" ? "MÀU SẮC" : "COLOR"}</Label>
+                      <div className="flex items-center gap-2">
+                        <select 
+                          value={v.colorId} 
+                          onChange={(e) => {
+                            const newV = [...variants];
+                            newV[idx].colorId = e.target.value;
+                            setVariants(newV);
+                          }}
+                          className="flex h-10 flex-grow rounded-md border-2 border-outline-variant bg-surface px-3 font-bold text-xs outline-none focus:border-primary transition-all"
+                        >
+                          <option value="">{lang === "vi" ? "Chọn màu" : "Select Color"}</option>
+                          {colors.map(c => (
+                            <option key={c.id} value={c.id}>
+                              {c.name}
+                            </option>
+                          ))}
+                        </select>
+                        {v.colorId && (
+                          <div 
+                            className="w-8 h-8 rounded-full border border-outline-variant flex-shrink-0 shadow-sm animate-in fade-in zoom-in duration-200" 
+                            style={{ backgroundColor: colors.find(c => String(c.id) === String(v.colorId))?.hexCode || "#000000" }}
+                            title={colors.find(c => String(c.id) === String(v.colorId))?.name}
+                          />
+                        )}
+                      </div>
                     </div>
                     <div className="space-y-1">
                       <Label className="text-[10px] uppercase">Original Price</Label>

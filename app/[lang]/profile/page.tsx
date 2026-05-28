@@ -5,6 +5,8 @@ import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import { useTranslation } from "@/hooks/useTranslation";
 import { profileService, UserProfileResponse } from "@/services/profileService";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -35,6 +37,8 @@ const TIER_THRESHOLDS = {
 
 export default function UserProfilePage() {
   const { t, locale } = useTranslation();
+  const router = useRouter();
+  const { isLoggedIn, isLoading: isLoadingAuth } = useAuthContext();
   const [profile, setProfile] = useState<UserProfileResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -61,8 +65,27 @@ export default function UserProfilePage() {
   };
 
   useEffect(() => {
-    fetchProfile();
-  }, []);
+    if (!isLoadingAuth) {
+      if (isLoggedIn) {
+        fetchProfile();
+      } else {
+        router.push(`/${locale}/login`);
+      }
+    }
+  }, [isLoadingAuth, isLoggedIn, locale, router]);
+
+  if (isLoadingAuth) {
+    return (
+      <div className="flex flex-col min-h-screen bg-surface">
+        <Navbar />
+        <div className="flex-grow flex flex-col items-center justify-center pt-32 pb-20 gap-4 text-on-surface-variant">
+          <Loader2 size={40} className="animate-spin text-primary" />
+          <p className="text-xs font-bold uppercase tracking-widest italic">SYNCING ATHLETE SESSION...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
