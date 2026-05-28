@@ -194,4 +194,66 @@ export const adminService = {
   deleteColor: (id: number) => {
     return apiClient.delete<ApiResponse<void>>(`/admin/colors/${id}`);
   },
+
+  // --- Printing ---
+  getPrintingMaterials: () => {
+    return apiClient.get<ApiResponse<PrintingMaterial[]>>("/admin/printing/materials");
+  },
+  createPrintingMaterial: (data: PrintingMaterialRequest) => {
+    return apiClient.post<ApiResponse<PrintingMaterial>>("/admin/printing/materials", data);
+  },
+  updatePrintingMaterial: (id: number, data: PrintingMaterialRequest) => {
+    return apiClient.put<ApiResponse<PrintingMaterial>>(`/admin/printing/materials/${id}`, data);
+  },
+  deletePrintingMaterial: (id: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/printing/materials/${id}`);
+  },
+
+  getPrintingPriceConfigs: () => {
+    return apiClient.get<ApiResponse<PrintingPriceConfig[]>>("/admin/printing/price-configs");
+  },
+  createPrintingPriceConfig: (data: PrintingPriceConfigRequest) => {
+    return apiClient.post<ApiResponse<PrintingPriceConfig>>("/admin/printing/price-configs", data);
+  },
+  updatePrintingPriceConfig: (id: number, data: PrintingPriceConfigRequest) => {
+    return apiClient.put<ApiResponse<PrintingPriceConfig>>(`/admin/printing/price-configs/${id}`, data);
+  },
+  deletePrintingPriceConfig: (id: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/printing/price-configs/${id}`);
+  },
 };
+
+// --- Printing Interfaces ---
+export interface PrintingMaterial {
+  id: number;
+  name: string;
+  description?: string;
+  basePrice: number;
+  active?: boolean;    // Jackson serialize isActive as "active"
+  isActive?: boolean;  // support both formats
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface PrintingMaterialRequest {
+  name: string;
+  description?: string;
+  basePrice: number;
+  isActive: boolean;
+}
+
+export interface PrintingPriceConfig {
+  id: number;
+  type: "TEXT" | "IMAGE";
+  unitPrice: number;
+  description?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface PrintingPriceConfigRequest {
+  type: "TEXT" | "IMAGE";
+  unitPrice: number;
+  description?: string;
+}
+
