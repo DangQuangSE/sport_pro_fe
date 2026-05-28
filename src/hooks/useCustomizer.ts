@@ -84,25 +84,19 @@ export function useCustomizer() {
   useEffect(() => {
     const fetchConfigs = async () => {
       try {
-        const response = await apiClient.get<ApiResponse<{ materials: PrintingMaterial[], priceConfigs: PrintingPriceConfig[] }>>("/public/printing/all");
+        const response = await apiClient.get<ApiResponse<{ 
+          materials: PrintingMaterial[], 
+          priceConfigs: PrintingPriceConfig[], 
+          colors?: { id: number, name: string, hexCode: string, isActive?: boolean }[] 
+        }>>("/public/printing/all");
         const activeMats = response.data?.materials?.filter(m => m.isActive) || [];
         setMaterials(activeMats.length > 0 ? activeMats : defaultMaterials);
         setPriceConfigs(response.data?.priceConfigs || defaultPriceConfigs);
         setSelectedMaterial(activeMats.length > 0 ? activeMats[0] : defaultMaterials[0]);
 
-        // Load Printing Colors from localStorage (shared with Admin printing config)
-        if (typeof window !== "undefined") {
-          const savedColors = localStorage.getItem("sport_pro_printing_colors");
-          if (savedColors) {
-            try {
-              const parsed = JSON.parse(savedColors);
-              if (Array.isArray(parsed) && parsed.length > 0) {
-                setColors(parsed.map((c: any) => c.hexCode || c));
-              }
-            } catch (err) {
-              console.error("Failed to parse local printing colors, using defaults.", err);
-            }
-          }
+        // Load Printing Colors from Backend public payload
+        if (response.data?.colors && response.data.colors.length > 0) {
+          setColors(response.data.colors.map(c => c.hexCode));
         }
       } catch (err) {
         console.error("Failed to load backend printing configs, using default fallbacks.", err);

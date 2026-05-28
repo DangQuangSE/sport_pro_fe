@@ -52,10 +52,11 @@ export default function AdminPrintingPage() {
     deletePriceConfig
   } = usePrinting();
 
-  // Custom hook for printing specific colors (localStorage synced)
+  // Custom hook for printing-specific colors (BE synced)
   const {
     colors,
     isLoading: isColorsLoading,
+    isSubmitting: isColorsSubmitting,
     createColor,
     updateColor,
     deleteColor
@@ -71,7 +72,7 @@ export default function AdminPrintingPage() {
   } = useAdminFonts();
 
   const isLoading = isPrintingLoading || isColorsLoading || isFontsLoading;
-  const isSubmitting = isPrintingSubmitting;
+  const isSubmitting = isPrintingSubmitting || isColorsSubmitting;
 
   // View States
   const [activeTab, setActiveTab] = useState<"materials" | "prices" | "colors" | "fonts">("materials");
@@ -114,8 +115,7 @@ export default function AdminPrintingPage() {
     } else if (deleteConfirm.type === "price") {
       result = await deletePriceConfig(deleteConfirm.id);
     } else if (deleteConfirm.type === "color") {
-      await deleteColor(deleteConfirm.id);
-      result = { success: true };
+      result = await deleteColor(deleteConfirm.id);
     } else if (deleteConfirm.type === "font") {
       deleteFont(deleteConfirm.id);
       result = { success: true };
@@ -348,7 +348,7 @@ export default function AdminPrintingPage() {
           if (res.success) setIsColorOpen(false);
           else alert(res.error);
         }}
-        isSubmitting={false}
+        isSubmitting={isColorsSubmitting}
       />
 
       <FontModal 

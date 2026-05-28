@@ -221,6 +221,20 @@ export const adminService = {
   deletePrintingPriceConfig: (id: number) => {
     return apiClient.delete<ApiResponse<void>>(`/admin/printing/price-configs/${id}`);
   },
+
+  // --- Printing Colors ---
+  getPrintingColors: () => {
+    return apiClient.get<ApiResponse<Color[]>>("/admin/printing/colors");
+  },
+  createPrintingColor: (data: ColorRequest) => {
+    return apiClient.post<ApiResponse<Color>>("/admin/printing/colors", data);
+  },
+  updatePrintingColor: (id: number, data: ColorRequest) => {
+    return apiClient.put<ApiResponse<Color>>(`/admin/printing/colors/${id}`, data);
+  },
+  deletePrintingColor: (id: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/printing/colors/${id}`);
+  },
 };
 
 // --- Printing Interfaces ---
