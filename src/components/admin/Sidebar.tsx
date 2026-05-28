@@ -8,6 +8,7 @@ import {
   Package, 
   Tag, 
   Hash, 
+  Palette,
   ShoppingCart, 
   Users, 
   BarChart3, 
@@ -18,21 +19,24 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const sidebarItems = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
-  { icon: Package, label: "Products", href: "/admin/products" },
-  { icon: Tag, label: "Categories", href: "/admin/categories" },
-  { icon: Hash, label: "Brands", href: "/admin/brands" },
-  { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
-  { icon: Users, label: "Users", href: "/admin/users" },
-  { icon: BarChart3, label: "Analytics", href: "/admin/analytics" },
+  { icon: LayoutDashboard, labelKey: "admin.sidebar.dashboard", defaultLabel: "Dashboard", href: "/admin" },
+  { icon: Package, labelKey: "admin.sidebar.products", defaultLabel: "Products", href: "/admin/products" },
+  { icon: Tag, labelKey: "admin.sidebar.categories", defaultLabel: "Categories", href: "/admin/categories" },
+  { icon: Hash, labelKey: "admin.sidebar.brands", defaultLabel: "Brands", href: "/admin/brands" },
+  { icon: Palette, labelKey: "admin.sidebar.colors", defaultLabel: "Colors", href: "/admin/colors" },
+  { icon: ShoppingCart, labelKey: "admin.sidebar.orders", defaultLabel: "Orders", href: "/admin/orders" },
+  { icon: Users, labelKey: "admin.sidebar.users", defaultLabel: "Users", href: "/admin/users" },
+  { icon: BarChart3, labelKey: "admin.sidebar.analytics", defaultLabel: "Analytics", href: "/admin/analytics" },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { logout } = useAuthContext();
   const [isCollapsed, setIsCollapsed] = React.useState(false);
+  const { t } = useTranslation();
 
   const locale = pathname.split("/")[1] || "en";
 
@@ -78,7 +82,7 @@ export default function Sidebar() {
               )}
             >
               <item.icon size={20} className={cn("transition-transform duration-300", isActive ? "scale-110" : "group-hover:scale-110")} />
-              {!isCollapsed && <span className="font-bold text-sm tracking-wide uppercase">{item.label}</span>}
+              {!isCollapsed && <span className="font-bold text-sm tracking-wide uppercase">{t(item.labelKey) || item.defaultLabel}</span>}
               
               {isActive && !isCollapsed && (
                 <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-on-primary animate-pulse" />
@@ -97,7 +101,7 @@ export default function Sidebar() {
           )}
         >
           <LogOut size={20} />
-          {!isCollapsed && <span className="font-bold text-sm tracking-wide uppercase">Logout</span>}
+          {!isCollapsed && <span className="font-bold text-sm tracking-wide uppercase">{t("admin.sidebar.logout") || "Logout"}</span>}
         </button>
       </div>
     </aside>

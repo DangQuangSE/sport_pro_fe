@@ -2,6 +2,17 @@ import { apiClient, ApiResponse } from "@/lib/api-client";
 
 // --- Interfaces ---
 
+export interface Color {
+  id: number;
+  name: string;
+  hexCode: string;
+}
+
+export interface ColorRequest {
+  name: string;
+  hexCode: string;
+}
+
 export interface Category {
   id: number;
   name: string;
@@ -161,5 +172,19 @@ export const adminService = {
       method: "PATCH",
       body: JSON.stringify({ status })
     });
+  },
+
+  // Colors
+  getColors: () => {
+    return apiClient.get<ApiResponse<Color[]>>("/colors");
+  },
+  createColor: (data: ColorRequest) => {
+    return apiClient.post<ApiResponse<Color>>("/admin/colors", data);
+  },
+  updateColor: (id: number, data: ColorRequest) => {
+    return apiClient.put<ApiResponse<Color>>(`/admin/colors/${id}`, data);
+  },
+  deleteColor: (id: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/colors/${id}`);
   },
 };
