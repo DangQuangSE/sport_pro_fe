@@ -81,6 +81,8 @@ export default function AdminOrderDetailPage() {
         return <Clock size={16} className="text-amber-600" />;
       case "CONFIRMED":
         return <CheckCircle size={16} className="text-blue-600" />;
+      case "PROCESSING":
+        return <Clock size={16} className="text-slate-600" />;
       case "SHIPPING":
       case "SHIPPED":
         return <Truck size={16} className="text-indigo-600" />;
@@ -88,6 +90,12 @@ export default function AdminOrderDetailPage() {
         return <CheckCircle size={16} className="text-green-600" />;
       case "CANCELLED":
         return <XCircle size={16} className="text-red-600" />;
+      case "RETURN_REQUESTED":
+        return <Clock size={16} className="text-purple-600" />;
+      case "RETURNED":
+        return <CheckCircle size={16} className="text-fuchsia-600" />;
+      case "REFUNDED":
+        return <CheckCircle size={16} className="text-pink-600" />;
       default:
         return <Clock size={16} className="text-slate-600" />;
     }
@@ -99,6 +107,8 @@ export default function AdminOrderDetailPage() {
         return "text-amber-600 bg-amber-50 border-amber-200";
       case "CONFIRMED":
         return "text-blue-600 bg-blue-50 border-blue-200";
+      case "PROCESSING":
+        return "text-slate-600 bg-slate-50 border-slate-200";
       case "SHIPPING":
       case "SHIPPED":
         return "text-indigo-600 bg-indigo-50 border-indigo-200";
@@ -106,6 +116,12 @@ export default function AdminOrderDetailPage() {
         return "text-green-600 bg-green-50 border-green-200";
       case "CANCELLED":
         return "text-red-600 bg-red-50 border-red-200";
+      case "RETURN_REQUESTED":
+        return "text-purple-600 bg-purple-50 border-purple-200";
+      case "RETURNED":
+        return "text-fuchsia-600 bg-fuchsia-50 border-fuchsia-200";
+      case "REFUNDED":
+        return "text-pink-600 bg-pink-50 border-pink-200";
       default:
         return "text-slate-600 bg-slate-50 border-slate-200";
     }
@@ -247,9 +263,13 @@ export default function AdminOrderDetailPage() {
                   >
                     <option value="PENDING">PENDING</option>
                     <option value="CONFIRMED">CONFIRMED</option>
-                    <option value="SHIPPING">SHIPPING</option>
+                    <option value="PROCESSING">PROCESSING</option>
+                    <option value="SHIPPED">SHIPPED</option>
                     <option value="DELIVERED">DELIVERED</option>
                     <option value="CANCELLED">CANCELLED</option>
+                    <option value="RETURN_REQUESTED">RETURN REQUESTED</option>
+                    <option value="RETURNED">RETURNED</option>
+                    <option value="REFUNDED">REFUNDED</option>
                   </select>
                   <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold text-xs">
                     ▼
@@ -300,9 +320,9 @@ export default function AdminOrderDetailPage() {
                   </div>
 
                   <div className="text-right shrink-0">
-                    <p className="text-xs font-black text-on-surface-variant">${item.salePrice.toLocaleString()} each</p>
+                    <p className="text-xs font-black text-on-surface-variant">${(item.price ?? item.salePrice ?? 0).toLocaleString()} each</p>
                     <p className="text-sm font-black italic text-primary" style={{ fontFamily: 'var(--font-lexend)' }}>
-                      ${(item.salePrice * item.quantity).toLocaleString()}
+                      ${((item.price ?? item.salePrice ?? 0) * item.quantity).toLocaleString()}
                     </p>
                   </div>
                 </div>

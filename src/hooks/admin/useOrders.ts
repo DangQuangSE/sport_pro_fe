@@ -12,10 +12,12 @@ export function useOrders() {
     setIsLoading(true);
     try {
       const response = await adminService.getAllOrders(params);
-      setOrders(response.data.content);
-      setTotalElements(response.data.totalElements);
+      setOrders(response.data?.content || []);
+      setTotalElements(response.data?.totalElements || 0);
     } catch (error) {
       console.error("Failed to fetch orders", error);
+      setOrders([]);
+      setTotalElements(0);
     } finally {
       setIsLoading(false);
     }

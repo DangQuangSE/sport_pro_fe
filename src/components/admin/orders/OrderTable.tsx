@@ -41,12 +41,21 @@ export function OrderTable({
         return { variant: "secondary" as const, icon: Clock, label: "Pending", class: "text-amber-600 bg-amber-50 border-amber-200" };
       case "CONFIRMED": 
         return { variant: "default" as const, icon: CheckCircle2, label: "Confirmed", class: "text-blue-600 bg-blue-50 border-blue-200" };
+      case "PROCESSING": 
+        return { variant: "secondary" as const, icon: Clock, label: "Processing", class: "text-slate-600 bg-slate-50 border-slate-200" };
+      case "SHIPPED":
       case "SHIPPING": 
-        return { variant: "default" as const, icon: Truck, label: "Shipping", class: "text-indigo-600 bg-indigo-50 border-indigo-200" };
+        return { variant: "default" as const, icon: Truck, label: "Shipped", class: "text-indigo-600 bg-indigo-50 border-indigo-200" };
       case "DELIVERED": 
         return { variant: "success" as const, icon: CheckCircle2, label: "Delivered", class: "text-green-600 bg-green-50 border-green-200" };
       case "CANCELLED": 
         return { variant: "error" as const, icon: XCircle, label: "Cancelled", class: "text-red-600 bg-red-50 border-red-200" };
+      case "RETURN_REQUESTED": 
+        return { variant: "secondary" as const, icon: Clock, label: "Return Requested", class: "text-purple-600 bg-purple-50 border-purple-200" };
+      case "RETURNED": 
+        return { variant: "secondary" as const, icon: CheckCircle2, label: "Returned", class: "text-fuchsia-600 bg-fuchsia-50 border-fuchsia-200" };
+      case "REFUNDED": 
+        return { variant: "success" as const, icon: CheckCircle2, label: "Refunded", class: "text-pink-600 bg-pink-50 border-pink-200" };
       default: 
         return { variant: "outline" as const, icon: Clock, label: status, class: "" };
     }
@@ -115,12 +124,31 @@ export function OrderTable({
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <div className={cn(
-                      "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider transition-all",
-                      status.class
-                    )}>
-                      <StatusIcon size={12} />
-                      {status.label}
+                    <div className="relative inline-block w-full min-w-[130px]">
+                      <select
+                        value={order.status}
+                        onChange={(e) => onUpdateStatus(order.id, e.target.value)}
+                        className={cn(
+                          "appearance-none outline-none cursor-pointer pr-8 pl-2.5 py-1 rounded-full border text-[10px] font-black uppercase tracking-widest transition-all w-full select-none",
+                          status.class
+                        )}
+                      >
+                        <option value="PENDING">Pending</option>
+                        <option value="CONFIRMED">Confirmed</option>
+                        <option value="PROCESSING">Processing</option>
+                        <option value="SHIPPED">Shipped</option>
+                        <option value="DELIVERED">Delivered</option>
+                        <option value="CANCELLED">Cancelled</option>
+                        <option value="RETURN_REQUESTED">Return Requested</option>
+                        <option value="RETURNED">Returned</option>
+                        <option value="REFUNDED">Refunded</option>
+                      </select>
+                      <div className={cn(
+                        "pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[8px] font-black leading-none",
+                        status.class.split(" ")[0]
+                      )}>
+                        ▼
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell className="text-right">

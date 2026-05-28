@@ -17,6 +17,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function AdminOrdersPage() {
   const { t, locale } = useTranslation();
@@ -31,19 +32,41 @@ export default function AdminOrdersPage() {
   } = useOrders();
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [page, setPage] = useState(0);
+
+  // Debounce search input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setPage(0);
+    }, 400);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery]);
 
   useEffect(() => {
     fetchOrders({ 
       page: page,
-      size: 10
+      size: 10,
+      search: debouncedSearch || undefined,
+      status: selectedStatus || undefined
     });
-  }, [page, fetchOrders]);
+  }, [page, debouncedSearch, selectedStatus, fetchOrders]);
 
   const handleUpdateStatus = async (id: number, status: string) => {
-    const result = await updateOrderStatus(id, status);
-    if (!result.success) {
-      alert("Failed to update order status");
+    try {
+      const result = await updateOrderStatus(id, status);
+      if (result.success) {
+        toast.success(`Order #ORD-${id.toString().padStart(6, '0')} status updated to ${status}`);
+      } else {
+        toast.error("Failed to update order status");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update status");
     }
   };
 
@@ -84,10 +107,30 @@ export default function AdminOrdersPage() {
           </div>
           {/* Buttons */}
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Button variant="outline" className="gap-1.5 h-10 rounded-xl border-outline-variant hover:border-primary transition-all text-xs font-bold w-full sm:w-auto px-3">
-              <Filter size={14} />
-              Filters
-            </Button>
+            <div className="relative w-full sm:w-auto flex-shrink-0">
+              <select
+                value={selectedStatus}
+                onChange={(e) => {
+                  setSelectedStatus(e.target.value);
+                  setPage(0);
+                }}
+                className="h-10 px-4 pr-10 rounded-xl border border-outline-variant bg-surface text-xs font-bold uppercase tracking-wider focus:border-primary outline-none cursor-pointer appearance-none min-w-[150px] w-full sm:w-auto"
+              >
+                <option value="">All Statuses</option>
+                <option value="PENDING">Pending</option>
+                <option value="CONFIRMED">Confirmed</option>
+                <option value="PROCESSING">Processing</option>
+                <option value="SHIPPED">Shipped</option>
+                <option value="DELIVERED">Delivered</option>
+                <option value="CANCELLED">Cancelled</option>
+                <option value="RETURN_REQUESTED">Return Requested</option>
+                <option value="RETURNED">Returned</option>
+                <option value="REFUNDED">Refunded</option>
+              </select>
+              <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant font-bold text-[9px]">
+                ▼
+              </div>
+            </div>
             <Button variant="outline" className="gap-1.5 h-10 rounded-xl border-outline-variant hover:border-primary transition-all text-xs font-bold w-full sm:w-auto px-3">
               <ArrowUpDown size={14} />
               Sort

@@ -82,13 +82,23 @@ export interface PageResponse<T> {
   number: number;
 }
 
+const buildQueryString = (params?: any) => {
+  if (!params) return "";
+  const cleanParams: any = {};
+  Object.keys(params).forEach((key) => {
+    if (params[key] !== undefined && params[key] !== null && params[key] !== "") {
+      cleanParams[key] = params[key];
+    }
+  });
+  return Object.keys(cleanParams).length > 0 ? `?${new URLSearchParams(cleanParams).toString()}` : "";
+};
+
 // --- Admin Service ---
 
 export const adminService = {
   // Categories
   getCategories: (params?: any) => {
-    const query = params ? `?${new URLSearchParams(params).toString()}` : "";
-    return apiClient.get<ApiResponse<PageResponse<Category>>>(`/categories${query}`);
+    return apiClient.get<ApiResponse<PageResponse<Category>>>(`/categories${buildQueryString(params)}`);
   },
   getCategoryTree: () => {
     return apiClient.get<ApiResponse<any>>("/categories/tree");
@@ -105,8 +115,7 @@ export const adminService = {
 
   // Brands
   getBrands: (params?: any) => {
-    const query = params ? `?${new URLSearchParams(params).toString()}` : "";
-    return apiClient.get<ApiResponse<PageResponse<Brand>>>(`/brands${query}`);
+    return apiClient.get<ApiResponse<PageResponse<Brand>>>(`/brands${buildQueryString(params)}`);
   },
   createBrand: (data: BrandRequest) => {
     return apiClient.post<ApiResponse<Brand>>("/admin/brands", data);
@@ -120,8 +129,7 @@ export const adminService = {
 
   // Products
   getProducts: (params?: any) => {
-    const query = params ? `?${new URLSearchParams(params).toString()}` : "";
-    return apiClient.get<ApiResponse<PageResponse<ProductListResponse>>>(`/admin/products${query}`);
+    return apiClient.get<ApiResponse<PageResponse<ProductListResponse>>>(`/admin/products${buildQueryString(params)}`);
   },
   getProduct: (id: number) => {
     return apiClient.get<ApiResponse<any>>(`/admin/products/${id}`);
@@ -161,8 +169,7 @@ export const adminService = {
 
   // Orders
   getAllOrders: (params?: any) => {
-    const query = params ? `?${new URLSearchParams(params).toString()}` : "";
-    return apiClient.get<ApiResponse<PageResponse<any>>>(`/v1/admin/orders${query}`);
+    return apiClient.get<ApiResponse<PageResponse<any>>>(`/v1/admin/orders${buildQueryString(params)}`);
   },
   getOrderDetails: (id: number) => {
     return apiClient.get<ApiResponse<any>>(`/v1/admin/orders/${id}`);
