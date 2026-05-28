@@ -58,6 +58,7 @@ export function useCustomizer() {
   const [materials, setMaterials] = useState<PrintingMaterial[]>([]);
   const [priceConfigs, setPriceConfigs] = useState<PrintingPriceConfig[]>([]);
   const [selectedMaterial, setSelectedMaterial] = useState<PrintingMaterial | null>(null);
+  const [colors, setColors] = useState<string[]>(["#0058bc", "#FF9500", "#1a1c1f", "#ffffff", "#ba1a1a", "#00b32c", "#e0007b"]);
   
   const [texts, setTexts] = useState<CustomText[]>([
     { id: "text-1", text: "SPORT PRO", font: "Lexend", color: "#0058bc", fontSize: 24, x: 0, y: -20 }
@@ -88,6 +89,21 @@ export function useCustomizer() {
         setMaterials(activeMats.length > 0 ? activeMats : defaultMaterials);
         setPriceConfigs(response.data?.priceConfigs || defaultPriceConfigs);
         setSelectedMaterial(activeMats.length > 0 ? activeMats[0] : defaultMaterials[0]);
+
+        // Load Printing Colors from localStorage (shared with Admin printing config)
+        if (typeof window !== "undefined") {
+          const savedColors = localStorage.getItem("sport_pro_printing_colors");
+          if (savedColors) {
+            try {
+              const parsed = JSON.parse(savedColors);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                setColors(parsed.map((c: any) => c.hexCode || c));
+              }
+            } catch (err) {
+              console.error("Failed to parse local printing colors, using defaults.", err);
+            }
+          }
+        }
       } catch (err) {
         console.error("Failed to load backend printing configs, using default fallbacks.", err);
         setMaterials(defaultMaterials);
@@ -241,6 +257,7 @@ export function useCustomizer() {
     priceConfigs,
     selectedMaterial,
     setSelectedMaterial,
+    colors,
     texts,
     setTexts,
     images,

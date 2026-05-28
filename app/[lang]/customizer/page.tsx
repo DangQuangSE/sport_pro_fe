@@ -18,6 +18,7 @@ export default function ProductCustomizerPage() {
     materials,
     selectedMaterial,
     setSelectedMaterial,
+    colors,
     texts,
     images,
     inputText,
@@ -103,6 +104,7 @@ export default function ProductCustomizerPage() {
           materials={materials}
           selectedMaterial={selectedMaterial}
           setSelectedMaterial={setSelectedMaterial}
+          colors={colors}
           inputText={inputText}
           setInputText={setInputText}
           selectedFont={selectedFont}

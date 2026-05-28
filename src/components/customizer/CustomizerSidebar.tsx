@@ -11,6 +11,7 @@ interface CustomizerSidebarProps {
   readonly materials: PrintingMaterial[];
   readonly selectedMaterial: PrintingMaterial | null;
   readonly setSelectedMaterial: (m: PrintingMaterial) => void;
+  readonly colors?: string[];
   readonly inputText: string;
   readonly setInputText: (t: string) => void;
   readonly selectedFont: string;
@@ -35,6 +36,7 @@ export default function CustomizerSidebar({
   materials,
   selectedMaterial,
   setSelectedMaterial,
+  colors = ["#0058bc", "#FF9500", "#1a1c1f", "#ffffff", "#ba1a1a", "#00b32c", "#e0007b"],
   inputText,
   setInputText,
   selectedFont,
@@ -55,6 +57,31 @@ export default function CustomizerSidebar({
   formatCurrency
 }: CustomizerSidebarProps) {
   const activeText = texts.find(t => t.id === activeTextId);
+
+  // Dynamic Fonts Load from localStorage (shared with Admin config)
+  const defaultFonts = [
+    { id: 1, name: "Lexend", displayName: "Lexend (Thể thao)" },
+    { id: 2, name: "Anton", displayName: "Anton (Mạnh mẽ)" },
+    { id: 3, name: "Bebas Neue", displayName: "Bebas (Chuyên nghiệp)" },
+    { id: 4, name: "Jockey One", displayName: "Jockey (Cổ điển)" },
+    { id: 5, name: "Russo One", displayName: "Russo (Góc cạnh)" },
+    { id: 6, name: "Tourney", displayName: "Tourney (Độc đáo)" },
+    { id: 7, name: "Jersey 25", displayName: "Jersey 25 (Varsity)" }
+  ];
+  const [availableFonts, setAvailableFonts] = React.useState(defaultFonts);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("sport_pro_fonts");
+      if (saved) {
+        try {
+          setAvailableFonts(JSON.parse(saved));
+        } catch (err) {
+          console.error("Failed to parse local fonts, using defaults.", err);
+        }
+      }
+    }
+  }, []);
 
   return (
     <aside className="w-full lg:w-88 flex-shrink-0 flex flex-col gap-6 py-6 overflow-y-auto pr-2 border-r border-[#e2e2e7] h-full text-left">
@@ -143,19 +170,15 @@ export default function CustomizerSidebar({
                     onChange={(e) => handleUpdateText(activeText.id, { font: e.target.value })}
                     className="w-full h-10 px-3 rounded-lg border border-[#c1c6d7] bg-white text-xs font-bold font-lexend focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                   >
-                    <option value="Lexend">Lexend (Thể thao)</option>
-                    <option value="Anton">Anton (Mạnh mẽ)</option>
-                    <option value="Bebas Neue">Bebas (Chuyên nghiệp)</option>
-                    <option value="Jockey One">Jockey (Cổ điển)</option>
-                    <option value="Russo One">Russo (Góc cạnh)</option>
-                    <option value="Tourney">Tourney (Độc đáo)</option>
-                    <option value="Jersey 25">Jersey 25 (Varsity)</option>
+                    {availableFonts.map(f => (
+                      <option key={f.id} value={f.name}>{f.displayName}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-[#414755]">Màu sắc in</Label>
                   <div className="flex flex-wrap gap-2.5 items-center">
-                    {["#0058bc", "#FF9500", "#1a1c1f", "#ffffff", "#ba1a1a", "#00b32c", "#e0007b"].map((color) => (
+                    {colors.map((color) => (
                       <button
                         key={color}
                         type="button"
@@ -175,12 +198,12 @@ export default function CustomizerSidebar({
                     {/* Custom Color picker swatch */}
                     <div 
                       className={`relative w-7 h-7 rounded-full border border-[#c1c6d7] transition-all shrink-0 cursor-pointer overflow-hidden ${
-                        !["#0058bc", "#FF9500", "#1a1c1f", "#ffffff", "#ba1a1a", "#00b32c", "#e0007b"].includes(activeText.color)
+                        !colors.includes(activeText.color)
                           ? "ring-2 ring-primary ring-offset-1 scale-110 shadow-sm" 
                           : "hover:scale-105"
                       }`}
                       style={{ 
-                        background: !["#0058bc", "#FF9500", "#1a1c1f", "#ffffff", "#ba1a1a", "#00b32c", "#e0007b"].includes(activeText.color)
+                        background: !colors.includes(activeText.color)
                           ? activeText.color
                           : "linear-gradient(135deg, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)"
                       }}
@@ -234,19 +257,15 @@ export default function CustomizerSidebar({
                     onChange={(e) => setSelectedFont(e.target.value)}
                     className="w-full h-10 px-3 rounded-lg border border-[#c1c6d7] bg-white text-xs font-bold font-lexend focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                   >
-                    <option value="Lexend">Lexend (Thể thao)</option>
-                    <option value="Anton">Anton (Mạnh mẽ)</option>
-                    <option value="Bebas Neue">Bebas (Chuyên nghiệp)</option>
-                    <option value="Jockey One">Jockey (Cổ điển)</option>
-                    <option value="Russo One">Russo (Góc cạnh)</option>
-                    <option value="Tourney">Tourney (Độc đáo)</option>
-                    <option value="Jersey 25">Jersey 25 (Varsity)</option>
+                    {availableFonts.map(f => (
+                      <option key={f.id} value={f.name}>{f.displayName}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-[#414755]">Màu sắc in</Label>
                   <div className="flex flex-wrap gap-2.5 items-center">
-                    {["#0058bc", "#FF9500", "#1a1c1f", "#ffffff", "#ba1a1a", "#00b32c", "#e0007b"].map((color) => (
+                    {colors.map((color) => (
                       <button
                         key={color}
                         type="button"
@@ -266,12 +285,12 @@ export default function CustomizerSidebar({
                     {/* Custom Color picker swatch */}
                     <div 
                       className={`relative w-7 h-7 rounded-full border border-[#c1c6d7] transition-all shrink-0 cursor-pointer overflow-hidden ${
-                        !["#0058bc", "#FF9500", "#1a1c1f", "#ffffff", "#ba1a1a", "#00b32c", "#e0007b"].includes(selectedColor)
+                        !colors.includes(selectedColor)
                           ? "ring-2 ring-primary ring-offset-1 scale-110 shadow-sm" 
                           : "hover:scale-105"
                       }`}
                       style={{ 
-                        background: !["#0058bc", "#FF9500", "#1a1c1f", "#ffffff", "#ba1a1a", "#00b32c", "#e0007b"].includes(selectedColor)
+                        background: !colors.includes(selectedColor)
                           ? selectedColor
                           : "linear-gradient(135deg, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)"
                       }}
