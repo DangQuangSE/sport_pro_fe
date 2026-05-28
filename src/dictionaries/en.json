@@ -130,7 +130,12 @@
       "addToCart": "Add to Cart",
       "newRelease": "New Release",
       "specs": "Specs",
-      "shippingAndReturns": "Shipping & Returns"
+      "shippingAndReturns": "Shipping & Returns",
+      "authRequired": "Authentication Required",
+      "pleaseLoginCart": "Please sign in to add gear to your bag.",
+      "addedToBag": "Added to Bag!",
+      "selectColor": "Select Color",
+      "selectSize": "Select Size"
     },
     "related": {
       "title": "You May Also Like"

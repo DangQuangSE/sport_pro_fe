@@ -2,10 +2,12 @@
 
 import { useState, useMemo } from "react";
 import { ChevronDown, Heart, ShoppingBag, Loader2, CheckCircle2 } from "lucide-react";
+import { useRouter, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
-import { ProductDetailResponse, ProductVariantResponse } from "@/services/productService";
+import { ProductDetailResponse } from "@/services/productService";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
 interface ProductInfoProps {
@@ -13,20 +15,29 @@ interface ProductInfoProps {
 }
 
 export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { addToCart } = useCart();
+  const { isLoggedIn } = useAuth();
+  const router = useRouter();
 
-  // Extract unique colors and sizes from variants
+  // Extract unique colors (name & hex) from variants
   const availableColors = useMemo(() => {
-    const colors = new Set(product.variants.map(v => v.color));
-    return Array.from(colors);
+    const colorMap = new Map<string, string>();
+    product.variants.forEach(v => {
+      if (v.colorName) {
+        colorMap.set(v.colorName, v.colorHex || "#18181B");
+      } else if (v.color) {
+        colorMap.set(v.color, "#18181B");
+      }
+    });
+    return Array.from(colorMap.entries()).map(([name, hex]) => ({ name, hex }));
   }, [product.variants]);
 
-  const [selectedColor, setSelectedColor] = useState(availableColors[0]);
+  const [selectedColor, setSelectedColor] = useState(availableColors[0]?.name || "");
   
   const availableSizes = useMemo(() => {
     return product.variants
-      .filter(v => v.color === selectedColor)
+      .filter(v => (v.colorName || v.color) === selectedColor)
       .map(v => v.size);
   }, [product.variants, selectedColor]);
 
@@ -36,10 +47,10 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
 
   // Find the specific variant based on selections
   const selectedVariant = useMemo(() => {
-    return product.variants.find(v => v.color === selectedColor && v.size === selectedSize);
+    return product.variants.find(v => (v.colorName || v.color) === selectedColor && v.size === selectedSize);
   }, [product.variants, selectedColor, selectedSize]);
 
-  // If only one color, and we just changed color, we might need to reset size if not available
+  // Reset selected size if it's not available in the new color
   useMemo(() => {
     if (selectedSize && !availableSizes.includes(selectedSize)) {
       setSelectedSize(null);
@@ -47,8 +58,24 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
   }, [availableSizes, selectedSize]);
 
   const handleAddToCart = async () => {
+    if (!selectedSize) {
+      toast.error(t("product.details.selectSize") || "Please select a size.");
+      return;
+    }
+
     if (!selectedVariant) {
-      toast.error("Please select a size.");
+      toast.error(t("product.details.selectSize") || "Please select a size.");
+      return;
+    }
+
+    // Guest Redirection Flow
+    if (!isLoggedIn) {
+      toast.error(t("product.details.authRequired") || "Sign In Required", {
+        description: t("product.details.pleaseLoginCart") || "Please sign in to add gear to your bag.",
+      });
+      setTimeout(() => {
+        router.push(`/${locale}/login`);
+      }, 1500);
       return;
     }
 
@@ -58,12 +85,13 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
         variantId: selectedVariant.id,
         quantity: quantity
       });
-      toast.success("Added to Bag!", {
+      
+      toast.success(t("product.details.addedToBag") || "Added to Bag!", {
         description: `${product.name} - ${selectedColor}, Size ${selectedSize}`,
         icon: <CheckCircle2 className="text-primary" size={18} />
       });
-    } catch (error) {
-      toast.error("Failed to add to bag. Please try again.");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to add to bag. Please try again.");
     } finally {
       setIsAdding(false);
     }
@@ -87,7 +115,7 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
       </div>
 
       <h1
-        className="font-[800] text-[48px] leading-[1.1] text-on-surface uppercase italic mb-4 tracking-[-0.02em]"
+        className="font-[800] text-[40px] sm:text-[48px] leading-[1.1] text-on-surface uppercase italic mb-4 tracking-[-0.02em]"
         style={{ fontFamily: "var(--font-lexend)" }}
       >
         {product.name}
@@ -98,11 +126,11 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
           className="font-[700] text-[32px] leading-[1.3] text-on-surface"
           style={{ fontFamily: "var(--font-lexend)" }}
         >
-          ${currentPrice?.toLocaleString()}
+          {currentPrice?.toLocaleString()} VND
         </span>
         {hasDiscount && (
           <span className="text-xl text-on-surface-variant line-through opacity-50">
-            ${originalPrice?.toLocaleString()}
+            {originalPrice?.toLocaleString()} VND
           </span>
         )}
       </div>
@@ -111,29 +139,40 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
 
       {/* Color Selection */}
       <div className="mb-6">
-        <div className="flex justify-between items-end mb-2">
-          <span className="font-semibold text-[12px] text-on-surface-variant uppercase tracking-[0.05em]">
-            Select Color
+        <div className="flex justify-between items-end mb-3">
+          <span className="font-bold text-xs text-on-surface-variant uppercase tracking-[0.08em]">
+            {t("product.details.selectColor") || "Select Color"}
           </span>
-          <span className="text-[14px] text-on-surface font-bold uppercase">
+          <span className="text-sm text-on-surface font-black uppercase tracking-wider font-mono">
             {selectedColor}
           </span>
         </div>
+        
+        {/* Swatches Grid */}
         <div className="flex flex-wrap gap-3">
           {availableColors.map((color) => {
-            const isActive = selectedColor === color;
+            const isActive = selectedColor === color.name;
             return (
               <button
-                key={color}
-                onClick={() => setSelectedColor(color)}
+                key={color.name}
+                onClick={() => setSelectedColor(color.name)}
                 className={cn(
-                  "px-4 py-2 border font-bold text-[12px] uppercase tracking-widest rounded-xl transition-all",
+                  "flex items-center gap-2.5 px-4 py-2.5 border rounded-2xl transition-all duration-300 active:scale-95 group relative cursor-pointer",
                   isActive
                     ? "border-primary bg-primary/5 text-primary shadow-sm"
-                    : "border-outline-variant text-on-surface-variant hover:border-on-surface"
+                    : "border-outline-variant bg-surface hover:border-on-surface hover:bg-surface-variant/30"
                 )}
               >
-                {color}
+                <span 
+                  className="w-5 h-5 rounded-full border border-outline-variant/60 shadow-inner block transition-transform group-hover:scale-115 relative overflow-hidden flex-shrink-0"
+                  style={{ backgroundColor: color.hex }}
+                >
+                  <span className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/10" />
+                </span>
+                
+                <span className="font-black text-[11px] uppercase tracking-widest leading-none">
+                  {color.name}
+                </span>
               </button>
             );
           })}
@@ -143,17 +182,17 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
       {/* Size Selection */}
       <div className="mb-8">
         <div className="flex justify-between items-end mb-2">
-          <span className="font-semibold text-[12px] text-on-surface-variant uppercase tracking-[0.05em]">
-            Select Size
+          <span className="font-bold text-xs text-on-surface-variant uppercase tracking-[0.08em]">
+            {t("product.details.selectSize") || "Select Size"}
           </span>
           <button className="font-bold text-[10px] text-primary underline underline-offset-4 hover:text-primary-fixed transition-colors tracking-[0.08em]">
-            Size Guide
+            {t("product.details.sizeGuide") || "Size Guide"}
           </button>
         </div>
         <div className="grid grid-cols-4 gap-2">
           {availableSizes.map((size) => {
             const isActive = selectedSize === size;
-            const variantForSize = product.variants.find(v => v.color === selectedColor && v.size === size);
+            const variantForSize = product.variants.find(v => (v.colorName || v.color) === selectedColor && v.size === size);
             const isOutOfStock = (variantForSize?.stockQuantity ?? 0) <= 0;
 
             return (
@@ -162,7 +201,7 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
                 disabled={isOutOfStock}
                 onClick={() => setSelectedSize(size)}
                 className={cn(
-                  "py-3 border font-semibold text-[14px] tracking-[0.05em] rounded-xl transition-all relative overflow-hidden",
+                  "py-3 border font-semibold text-[14px] tracking-[0.05em] rounded-xl transition-all relative overflow-hidden cursor-pointer",
                   isActive
                     ? "border-on-surface bg-on-surface text-surface shadow-md"
                     : "border-outline-variant bg-surface text-on-surface hover:border-on-surface hover:bg-surface-container",
@@ -206,12 +245,12 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
           {/* Primary CTA */}
           <button
             onClick={handleAddToCart}
-            disabled={isAdding || (selectedVariant?.stockQuantity ?? 0) <= 0}
+            disabled={isAdding || (selectedVariant && selectedVariant.stockQuantity <= 0)}
             className={cn(
               "flex-1 h-14 font-black text-[14px] uppercase tracking-[0.1em]",
               "bg-secondary-container text-on-secondary-container",
               "shadow-xl shadow-secondary-container/20 hover:shadow-2xl hover:shadow-secondary-container/30",
-              "hover:bg-[#ff9f1a] transition-all duration-300 active:scale-[0.98]",
+              "hover:bg-[#ff9f1a] transition-all duration-300 active:scale-[0.98] cursor-pointer",
               "flex items-center justify-center gap-3 rounded-xl disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
             )}
           >
@@ -220,7 +259,7 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
             ) : (
               <>
                 <ShoppingBag size={20} />
-                {selectedVariant ? "Add to Bag" : "Select Size"}
+                {selectedVariant ? t("product.details.addToCart") : t("product.details.selectSize")}
               </>
             )}
           </button>
@@ -229,7 +268,7 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
         {/* Wishlist */}
         <button
           aria-label="Add to Wishlist"
-          className="w-full h-14 border border-outline-variant bg-surface text-on-surface-variant hover:text-on-surface hover:border-on-surface flex items-center justify-center gap-3 transition-all duration-300 rounded-xl font-bold text-xs uppercase tracking-widest"
+          className="w-full h-14 border border-outline-variant bg-surface text-on-surface-variant hover:text-on-surface hover:border-on-surface flex items-center justify-center gap-3 transition-all duration-300 rounded-xl font-bold text-xs uppercase tracking-widest cursor-pointer"
         >
           <Heart className="w-5 h-5" />
           Add to Wishlist
@@ -260,7 +299,7 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
           </summary>
           <div className="p-6 pt-0 text-on-surface-variant text-[15px] leading-[1.6]">
             <p className="mb-2">
-              Free standard shipping on orders over $100. Expedited options available at checkout.
+              Free standard shipping on orders over 500,000 VND. Expedited options available at checkout.
             </p>
             <p>
               Returns accepted within 30 days of delivery in unworn condition.

@@ -130,7 +130,12 @@
       "addToCart": "Thêm vào giỏ hàng",
       "newRelease": "Sản phẩm mới",
       "specs": "Thông số kỹ thuật",
-      "shippingAndReturns": "Giao hàng & Đổi trả"
+      "shippingAndReturns": "Giao hàng & Đổi trả",
+      "authRequired": "Yêu cầu đăng nhập",
+      "pleaseLoginCart": "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.",
+      "addedToBag": "Đã thêm vào giỏ hàng!",
+      "selectColor": "Chọn màu sắc",
+      "selectSize": "Chọn kích cỡ"
     },
     "related": {
       "title": "Có thể bạn cũng thích"

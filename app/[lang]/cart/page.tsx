@@ -18,10 +18,28 @@ import Footer from "@/components/home/Footer";
 import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
+import { toast } from "sonner";
 
 export default function CartPage() {
   const { cart, isLoading, updateQuantity, removeFromCart } = useCart();
   const { t, locale } = useTranslation();
+
+  const handleUpdateQuantity = async (variantId: number, newQty: number) => {
+    try {
+      await updateQuantity(variantId, newQty);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update quantity");
+    }
+  };
+
+  const handleRemoveFromCart = async (itemId: number) => {
+    try {
+      await removeFromCart(itemId);
+      toast.success("Item removed from bag.");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to remove item");
+    }
+  };
 
   if (isLoading && !cart) {
     return (
@@ -50,7 +68,7 @@ export default function CartPage() {
           <div className="flex-grow space-y-10">
             <div className="space-y-2">
               <h1 className="text-[48px] font-black tracking-tighter text-on-surface uppercase leading-none" style={{ fontFamily: 'var(--font-lexend)' }}>
-                Your Bag <span className="text-on-surface-variant/40 ml-4">({cart?.totalItems ?? 0})</span>
+                Your Bag <span className="text-on-surface-variant/40 ml-4">({cart?.items?.length ?? 0})</span>
               </h1>
             </div>
 
@@ -113,7 +131,7 @@ export default function CartPage() {
                         <div className="flex items-center gap-4 border border-outline-variant rounded-xl px-2 h-10">
                           <button 
                             className="p-1 hover:text-primary disabled:opacity-30"
-                            onClick={() => updateQuantity(item.variantId, Math.max(0, item.quantity - 1))}
+                            onClick={() => handleUpdateQuantity(item.variantId, Math.max(0, item.quantity - 1))}
                             disabled={item.quantity <= 1}
                           >
                             <Minus size={14} />
@@ -121,7 +139,7 @@ export default function CartPage() {
                           <span className="w-4 text-center text-xs font-black">{item.quantity}</span>
                           <button 
                             className="p-1 hover:text-primary"
-                            onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
+                            onClick={() => handleUpdateQuantity(item.variantId, item.quantity + 1)}
                           >
                             <Plus size={14} />
                           </button>
@@ -129,7 +147,7 @@ export default function CartPage() {
 
                         <button 
                           className="text-on-surface-variant hover:text-error flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors"
-                          onClick={() => removeFromCart(item.id)}
+                          onClick={() => handleRemoveFromCart(item.id)}
                         >
                           <Trash2 size={14} />
                           Remove
@@ -214,33 +232,7 @@ export default function CartPage() {
           )}
         </div>
 
-        {/* Complete Your Look Section */}
-        {!isEmpty && (
-          <div className="mt-32 space-y-12">
-            <h2 className="text-3xl font-black italic uppercase tracking-tighter text-center">Complete Your Look</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="group space-y-4">
-                  <div className="aspect-[4/5] bg-surface-container rounded-2xl overflow-hidden relative">
-                    <img 
-                      src={`https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=500&q=80`} 
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      alt="Recommended product"
-                    />
-                    <div className="absolute top-4 left-4 bg-on-surface text-surface text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-sm">
-                      Best Seller
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Training Gear</p>
-                    <h4 className="font-bold uppercase tracking-tight group-hover:text-primary transition-colors">Elite Performance Tee</h4>
-                    <p className="font-black italic text-sm">$45.00</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+
       </main>
 
       <Footer />

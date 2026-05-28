@@ -43,7 +43,10 @@ export interface ProductVariantResponse {
   id: number;
   sku: string;
   size: string;
-  color: string;
+  color?: string;
+  colorId?: number;
+  colorName?: string;
+  colorHex?: string;
   originalPrice: number;
   salePrice: number;
   stockQuantity: number;
