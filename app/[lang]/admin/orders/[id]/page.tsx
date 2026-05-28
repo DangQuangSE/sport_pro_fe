@@ -26,12 +26,14 @@ import { adminService } from "@/services/adminService";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function AdminOrderDetailPage() {
   const { id } = useParams() as { id: string };
   const params = useParams();
   const locale = params?.lang as string || "en";
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [order, setOrder] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +48,11 @@ export default function AdminOrderDetailPage() {
       setOrder(res.data);
     } catch (err: any) {
       console.error("Failed to fetch admin order details", err);
-      setError("Failed to retrieve order details or order does not exist.");
+      setError(
+        locale === "vi" 
+          ? "Không thể tải chi tiết đơn hàng hoặc đơn hàng không tồn tại." 
+          : "Failed to retrieve order details or order does not exist."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -63,13 +69,17 @@ export default function AdminOrderDetailPage() {
     try {
       setIsUpdatingStatus(true);
       await adminService.updateOrderStatus(order.id, newStatus);
-      toast.success(`Order status successfully updated to ${newStatus}`);
+      toast.success(
+        locale === "vi" 
+          ? `Cập nhật trạng thái đơn hàng thành ${newStatus} thành công` 
+          : `Order status successfully updated to ${newStatus}`
+      );
       // Refresh order data
       const updatedRes = await adminService.getOrderDetails(order.id);
       setOrder(updatedRes.data);
     } catch (err: any) {
       console.error("Failed to update status", err);
-      toast.error(err.message || "Failed to update order status.");
+      toast.error(err.message || (locale === "vi" ? "Cập nhật trạng thái đơn hàng thất bại." : "Failed to update order status."));
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -158,7 +168,7 @@ export default function AdminOrderDetailPage() {
     return (
       <div className="space-y-8 py-20 flex flex-col items-center justify-center text-on-surface-variant">
         <Loader2 size={36} className="animate-spin text-primary" />
-        <p className="text-xs font-black uppercase tracking-widest italic">Retrieving secure order file...</p>
+        <p className="text-xs font-black uppercase tracking-widest italic">{t("admin.orders.detail.loading")}</p>
       </div>
     );
   }
@@ -168,11 +178,11 @@ export default function AdminOrderDetailPage() {
       <div className="max-w-lg mx-auto w-full py-20 flex flex-col items-center justify-center text-center gap-6">
         <ShieldAlert size={56} className="text-error" />
         <div className="space-y-2">
-          <h3 className="text-xl font-bold uppercase tracking-tight text-on-surface">Order Not Found</h3>
+          <h3 className="text-xl font-bold uppercase tracking-tight text-on-surface">{t("admin.orders.detail.notFound")}</h3>
           <p className="text-xs text-on-surface-variant font-medium">{error || "Something went wrong"}</p>
         </div>
         <Button asChild className="h-12 px-6 rounded-xl bg-primary text-surface font-black uppercase tracking-widest text-xs">
-          <Link href={`/${locale}/admin/orders`}>Back to Orders List</Link>
+          <Link href={`/${locale}/admin/orders`}>{t("admin.orders.detail.backToList")}</Link>
         </Button>
       </div>
     );
@@ -191,11 +201,11 @@ export default function AdminOrderDetailPage() {
       {/* Navigation Breadcrumb */}
       <div className="flex items-center gap-2 text-xs font-medium text-on-surface-variant uppercase tracking-widest">
         <Link href={`/${locale}/admin`} className="hover:text-primary transition-colors flex items-center gap-1">
-          Admin
+          {t("admin.orders.detail.breadcrumbs.admin")}
         </Link>
         <span className="text-[14px] leading-none">›</span>
         <Link href={`/${locale}/admin/orders`} className="hover:text-primary transition-colors">
-          Orders
+          {t("admin.orders.detail.breadcrumbs.orders")}
         </Link>
         <span className="text-[14px] leading-none">›</span>
         <span className="text-on-surface font-black">#ORD-{order.id.toString().padStart(6, '0')}</span>
@@ -209,7 +219,7 @@ export default function AdminOrderDetailPage() {
               <ChevronLeft size={16} />
             </Link>
             <h2 className="text-3xl font-black italic tracking-tighter text-on-surface uppercase font-lexend">
-              Order Details <span className="text-primary italic">#SP-{order.id}</span>
+              {t("admin.orders.detail.title")} <span className="text-primary italic">#SP-{order.id}</span>
             </h2>
           </div>
           <div className="flex items-center gap-6 text-[10px] font-bold text-on-surface-variant/70 pl-12">
@@ -223,7 +233,7 @@ export default function AdminOrderDetailPage() {
           className="self-start md:self-auto p-3 rounded-xl border border-outline-variant hover:bg-surface-container/50 text-on-surface transition-colors flex items-center gap-2 text-xs font-black uppercase tracking-widest"
         >
           <RefreshCcw size={14} />
-          Refresh
+          {t("admin.orders.detail.refresh")}
         </button>
       </div>
 
@@ -237,23 +247,23 @@ export default function AdminOrderDetailPage() {
           <div className="bg-surface border border-outline-variant shadow-sm rounded-3xl p-8 space-y-6">
             <h3 className="text-sm font-black uppercase tracking-wider text-on-surface flex items-center gap-2">
               <Package size={18} className="text-primary" />
-              Fulfillment Status
+              {t("admin.orders.detail.fulfillmentStatus")}
             </h3>
 
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 p-6 rounded-2xl bg-surface-container/30 border border-outline-variant/60">
               <div className="space-y-2">
-                <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block">Current Status</span>
+                <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block">{t("admin.orders.detail.currentStatus")}</span>
                 <div className={cn(
                   "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-black uppercase tracking-widest",
                   getStatusBadgeClass(order.status)
                 )}>
                   {getStatusIcon(order.status)}
-                  <span>{order.status}</span>
+                  <span>{t(`admin.orders.statuses.${order.status.toLowerCase()}`)}</span>
                 </div>
               </div>
 
               <div className="space-y-2 min-w-[220px]">
-                <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block">Update Status</label>
+                <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block">{t("admin.orders.detail.updateStatus")}</label>
                 <div className="relative">
                   <select
                     disabled={isUpdatingStatus}
@@ -261,15 +271,15 @@ export default function AdminOrderDetailPage() {
                     onChange={(e) => handleStatusChange(e.target.value)}
                     className="w-full h-11 px-4 rounded-xl border border-outline-variant bg-surface text-xs font-bold uppercase tracking-widest appearance-none outline-none focus:border-primary transition-colors cursor-pointer"
                   >
-                    <option value="PENDING">PENDING</option>
-                    <option value="CONFIRMED">CONFIRMED</option>
-                    <option value="PROCESSING">PROCESSING</option>
-                    <option value="SHIPPED">SHIPPED</option>
-                    <option value="DELIVERED">DELIVERED</option>
-                    <option value="CANCELLED">CANCELLED</option>
-                    <option value="RETURN_REQUESTED">RETURN REQUESTED</option>
-                    <option value="RETURNED">RETURNED</option>
-                    <option value="REFUNDED">REFUNDED</option>
+                    <option value="PENDING">{t("admin.orders.statuses.pending").toUpperCase()}</option>
+                    <option value="CONFIRMED">{t("admin.orders.statuses.confirmed").toUpperCase()}</option>
+                    <option value="PROCESSING">{t("admin.orders.statuses.processing").toUpperCase()}</option>
+                    <option value="SHIPPED">{t("admin.orders.statuses.shipped").toUpperCase()}</option>
+                    <option value="DELIVERED">{t("admin.orders.statuses.delivered").toUpperCase()}</option>
+                    <option value="CANCELLED">{t("admin.orders.statuses.cancelled").toUpperCase()}</option>
+                    <option value="RETURN_REQUESTED">{t("admin.orders.statuses.return_requested").toUpperCase()}</option>
+                    <option value="RETURNED">{t("admin.orders.statuses.returned").toUpperCase()}</option>
+                    <option value="REFUNDED">{t("admin.orders.statuses.refunded").toUpperCase()}</option>
                   </select>
                   <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold text-xs">
                     ▼
@@ -283,7 +293,7 @@ export default function AdminOrderDetailPage() {
           <div className="bg-surface border border-outline-variant shadow-sm rounded-3xl p-8">
             <h3 className="text-sm font-black uppercase tracking-wider text-on-surface flex items-center gap-2 pb-6 border-b border-outline-variant/60 mb-6">
               <ShoppingBag size={18} className="text-primary" />
-              Ordered Items ({order.items?.length || 0} products)
+              {t("admin.orders.detail.orderedItems")} ({order.items?.length || 0} {t("admin.orders.detail.productsCount")})
             </h3>
 
             <div className="divide-y divide-outline-variant/60">
@@ -302,9 +312,9 @@ export default function AdminOrderDetailPage() {
                       {item.productName}
                     </p>
                     <div className="flex items-center gap-4 text-[10px] font-bold text-on-surface-variant/80">
-                      <span>Size: <strong className="text-on-surface font-black">{item.size}</strong></span>
-                      <span>Color: <strong className="text-on-surface font-black">{item.color}</strong></span>
-                      <span>Qty: <strong className="text-primary font-black">{item.quantity}</strong></span>
+                      <span>{t("admin.orders.detail.size")}: <strong className="text-on-surface font-black">{item.size}</strong></span>
+                      <span>{t("admin.orders.detail.color")}: <strong className="text-on-surface font-black">{item.color}</strong></span>
+                      <span>{t("admin.orders.detail.qty")}: <strong className="text-primary font-black">{item.quantity}</strong></span>
                     </div>
 
                     {item.designImageUrl && (
@@ -314,13 +324,13 @@ export default function AdminOrderDetailPage() {
                         rel="noreferrer" 
                         className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-primary hover:underline pt-1"
                       >
-                        View Print Layout Image
+                        {t("admin.orders.detail.viewDesign")}
                       </a>
                     )}
                   </div>
 
                   <div className="text-right shrink-0">
-                    <p className="text-xs font-black text-on-surface-variant">${(item.price ?? item.salePrice ?? 0).toLocaleString()} each</p>
+                    <p className="text-xs font-black text-on-surface-variant">${(item.price ?? item.salePrice ?? 0).toLocaleString()} {t("admin.orders.detail.each")}</p>
                     <p className="text-sm font-black italic text-primary" style={{ fontFamily: 'var(--font-lexend)' }}>
                       ${((item.price ?? item.salePrice ?? 0) * item.quantity).toLocaleString()}
                     </p>
@@ -339,7 +349,7 @@ export default function AdminOrderDetailPage() {
           <div className="bg-surface border border-outline-variant shadow-sm rounded-3xl p-8 space-y-6">
             <h3 className="text-sm font-black uppercase tracking-wider text-on-surface flex items-center gap-2">
               <User size={18} className="text-primary" />
-              Customer File
+              {t("admin.orders.detail.customerFile")}
             </h3>
 
             <div className="space-y-5 text-xs font-semibold text-on-surface-variant">
@@ -348,7 +358,7 @@ export default function AdminOrderDetailPage() {
                   {receiver ? receiver.charAt(0) : "A"}
                 </div>
                 <div>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60 block mb-0.5">Name</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60 block mb-0.5">{t("admin.orders.detail.name")}</span>
                   <span className="text-sm font-black text-on-surface uppercase">{receiver}</span>
                 </div>
               </div>
@@ -357,15 +367,15 @@ export default function AdminOrderDetailPage() {
                 <div className="flex items-start gap-3">
                   <Mail size={16} className="text-on-surface-variant/70 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60 block">Email Record</span>
-                    <span className="text-xs font-bold text-on-surface select-all">{extraEmail || "No registered email"}</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60 block">{t("admin.orders.detail.emailRecord")}</span>
+                    <span className="text-xs font-bold text-on-surface select-all">{extraEmail || t("admin.orders.detail.noEmail")}</span>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
                   <Phone size={16} className="text-on-surface-variant/70 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60 block">Contact Phone</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60 block">{t("admin.orders.detail.contactPhone")}</span>
                     <span className="text-xs font-bold text-on-surface select-all">{order.phoneNumber}</span>
                   </div>
                 </div>
@@ -373,7 +383,7 @@ export default function AdminOrderDetailPage() {
                 <div className="flex items-start gap-3">
                   <MapPin size={16} className="text-on-surface-variant/70 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60 block">Shipping Destination</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60 block">{t("admin.orders.detail.shippingDestination")}</span>
                     <span className="text-xs font-bold text-on-surface leading-relaxed">{address}</span>
                   </div>
                 </div>
@@ -385,34 +395,34 @@ export default function AdminOrderDetailPage() {
           <div className="bg-surface border border-outline-variant shadow-sm rounded-3xl p-8 space-y-6">
             <h3 className="text-sm font-black uppercase tracking-wider text-on-surface flex items-center gap-2">
               <CreditCard size={18} className="text-primary" />
-              Billing & Specs
+              {t("admin.orders.detail.billingSpecs")}
             </h3>
 
             <div className="space-y-4 text-xs font-semibold text-on-surface-variant">
               <div className="flex justify-between items-center">
-                <span>Estimated Subtotal</span>
+                <span>{t("admin.orders.detail.estimatedSubtotal")}</span>
                 <span className="text-on-surface">${estimatedCost.toLocaleString()}</span>
               </div>
               
               <div className="flex justify-between items-center">
-                <span>Standard Handling Fee</span>
+                <span>{t("admin.orders.detail.standardHandlingFee")}</span>
                 <span className="text-on-surface">${standardDelivery.toLocaleString()}</span>
               </div>
 
               <div className="flex justify-between items-center">
-                <span>Expected Tax spec</span>
+                <span>{t("admin.orders.detail.expectedTax")}</span>
                 <span className="text-on-surface">${expectedTax.toLocaleString()}</span>
               </div>
 
               <div className="pt-5 border-t border-outline-variant/60 flex justify-between items-center">
-                <span className="text-sm font-black uppercase text-on-surface tracking-tight">Total Fulfillment Value</span>
+                <span className="text-sm font-black uppercase text-on-surface tracking-tight">{t("admin.orders.detail.totalFulfillmentValue")}</span>
                 <span className="text-xl font-black italic tracking-tighter text-primary" style={{ fontFamily: 'var(--font-lexend)' }}>
                   ${order.totalAmount?.toLocaleString()}
                 </span>
               </div>
 
               <div className="bg-surface-container/50 border border-outline-variant/60 rounded-xl p-4 flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                <span>Method</span>
+                <span>{t("admin.orders.detail.method")}</span>
                 <span className="text-primary italic">{order.paymentMethod}</span>
               </div>
             </div>
