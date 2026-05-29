@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { apiClient, ApiResponse } from "@/lib/api-client";
 import { customDesignService } from "@/services/customDesignService";
 import { cartService } from "@/services/cartService";
+import { toast } from "sonner";
 
 // Interfaces
 export interface PrintingMaterial {
@@ -162,7 +163,7 @@ export function useCustomizer() {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("File size exceeds 5MB limit");
+      toast.error("File size exceeds 5MB limit");
       return;
     }
 

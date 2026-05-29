@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
 import { PrintingPriceConfig } from "@/services/adminService";
+import { toast } from "sonner";
+
 
 interface PriceConfigModalProps {
   readonly isOpen: boolean;
@@ -52,7 +54,7 @@ export default function PriceConfigModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.unitPrice < 0) {
-      alert("Unit price must be positive or zero");
+      toast.error("Unit price must be positive or zero");
       return;
     }
     await onSave(formData);

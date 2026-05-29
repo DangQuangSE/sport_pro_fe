@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { toast } from "sonner";
 import { 
   ChevronLeft, 
   Save, 
@@ -88,8 +89,9 @@ export default function NewProductPage() {
       });
       setCreatedProductId(response.data.id);
       setActiveStep("variants");
+      toast.success("Basic info saved successfully!");
     } catch (error) {
-      alert("Failed to create product");
+      toast.error("Failed to create product");
     } finally {
       setIsSubmitting(false);
     }
@@ -115,8 +117,9 @@ export default function NewProductPage() {
         colorId: Number(v.colorId)
       })));
       setActiveStep("images");
+      toast.success("Variants saved successfully!");
     } catch (error) {
-      alert("Failed to save variants");
+      toast.error("Failed to save variants");
     } finally {
       setIsSubmitting(false);
     }
@@ -133,8 +136,9 @@ export default function NewProductPage() {
         const response = await adminService.addImage(createdProductId, formData);
         setImages(prev => [...prev, response.data]);
       }
+      toast.success("Images uploaded successfully!");
     } catch (error) {
-      alert("Failed to upload images");
+      toast.error("Failed to upload images");
     } finally {
       setIsSubmitting(false);
     }
@@ -146,8 +150,9 @@ export default function NewProductPage() {
     try {
       await adminService.deleteImage(imageId);
       setImages(images.filter(img => img.id !== imageId));
+      toast.success("Image deleted successfully!");
     } catch (error) {
-      alert("Failed to delete image");
+      toast.error("Failed to delete image");
     } finally {
       setIsSubmitting(false);
     }
@@ -476,7 +481,7 @@ export default function NewProductPage() {
               <Button variant="outline" onClick={() => setActiveStep("variants")} className="rounded-xl font-bold">Back</Button>
               <Button 
                 onClick={() => {
-                  alert("Product created successfully!");
+                  toast.success("Product created successfully!");
                   router.push(`/${lang}/admin/products`);
                 }}
                 disabled={isSubmitting}

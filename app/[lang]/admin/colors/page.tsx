@@ -22,6 +22,7 @@ import { Modal } from "@/components/ui/modal";
 import { Color } from "@/services/adminService";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useColors } from "@/hooks/admin/useColors";
+import { toast } from "sonner";
 
 export default function AdminColorsPage() {
   const params = useParams();
@@ -75,7 +76,7 @@ export default function AdminColorsPage() {
     // Hex Validation
     const hexPattern = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
     if (!hexPattern.test(formData.hexCode)) {
-      alert("Invalid Hex Code format. Example: #18181B");
+      toast.error("Invalid Hex Code format. Example: #18181B");
       return;
     }
 
@@ -88,8 +89,9 @@ export default function AdminColorsPage() {
 
     if (result.success) {
       setIsFormOpen(false);
+      toast.success(editingColor ? "Color updated successfully!" : "Color created successfully!");
     } else {
-      alert(result.error);
+      toast.error(result.error || "Operation failed");
     }
   };
 
@@ -103,8 +105,9 @@ export default function AdminColorsPage() {
     const result = await deleteColor(confirmState.colorId);
     if (result.success) {
       setConfirmState({ isOpen: false, colorId: null });
+      toast.success("Color deleted successfully!");
     } else {
-      alert(t("admin.productForm.failedDeleteColor") || "Failed to delete color.");
+      toast.error(t("admin.productForm.failedDeleteColor") || "Failed to delete color.");
     }
   };
 

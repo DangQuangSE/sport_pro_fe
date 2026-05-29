@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
 import { Color } from "@/services/adminService";
+import { toast } from "sonner";
+
 
 interface ColorModalProps {
   readonly isOpen: boolean;
@@ -46,7 +48,7 @@ export default function ColorModal({
     e.preventDefault();
     const hexPattern = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
     if (!hexPattern.test(formData.hexCode)) {
-      alert("Invalid Hex Code format. Example: #0058bc");
+      toast.error("Invalid Hex Code format. Example: #0058bc");
       return;
     }
     await onSave(formData);

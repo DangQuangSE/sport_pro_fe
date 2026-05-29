@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
+import { toast } from "sonner";
+
 
 interface Font {
   id: number;
@@ -48,7 +50,7 @@ export default function FontModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.displayName) {
-      alert("Please fill all fields");
+      toast.error("Please fill all fields");
       return;
     }
     onSave(formData);

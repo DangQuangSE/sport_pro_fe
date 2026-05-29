@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Brand } from "@/services/adminService";
 import { useTranslation } from "@/hooks/useTranslation";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function BrandsPage() {
   const { t, locale } = useTranslation();
@@ -49,16 +50,19 @@ export default function BrandsPage() {
     
     if (result.success) {
       setIsModalOpen(false);
+      toast.success(editingBrand ? "Brand updated successfully!" : "Brand created successfully!");
     } else {
-      alert("An error occurred. Please try again.");
+      toast.error(result.error || "An error occurred. Please try again.");
     }
   };
 
   const handleDelete = async (id: number) => {
     if (window.confirm("Are you sure you want to delete this brand?")) {
       const result = await deleteBrand(id);
-      if (!result.success) {
-        alert("Failed to delete brand");
+      if (result.success) {
+        toast.success("Brand deleted successfully!");
+      } else {
+        toast.error(result.error || "Failed to delete brand");
       }
     }
   };

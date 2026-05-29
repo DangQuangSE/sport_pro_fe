@@ -123,8 +123,9 @@ export default function AdminPrintingPage() {
 
     if (result && result.success) {
       setDeleteConfirm({ isOpen: false, type: "material", id: null });
+      toast.success("Item deleted successfully!");
     } else if (result) {
-      alert((result as any).error || "Delete operation failed.");
+      toast.error((result as any).error || "Delete operation failed.");
     }
   };
 
@@ -321,8 +322,12 @@ export default function AdminPrintingPage() {
         editingMaterial={editingMaterial}
         onSave={async (data) => {
           let res = editingMaterial ? await updateMaterial(editingMaterial.id, data) : await createMaterial(data);
-          if (res.success) setIsMaterialOpen(false);
-          else alert(res.error);
+          if (res.success) {
+            setIsMaterialOpen(false);
+            toast.success(editingMaterial ? "Material updated!" : "Material created!");
+          } else {
+            toast.error(res.error || "Operation failed");
+          }
         }}
         isSubmitting={isSubmitting}
       />
@@ -333,8 +338,12 @@ export default function AdminPrintingPage() {
         editingPriceConfig={editingPrice}
         onSave={async (data) => {
           let res = editingPrice ? await updatePriceConfig(editingPrice.id, data) : await createPriceConfig(data);
-          if (res.success) setIsPriceOpen(false);
-          else alert(res.error);
+          if (res.success) {
+            setIsPriceOpen(false);
+            toast.success(editingPrice ? "Price config updated!" : "Price config created!");
+          } else {
+            toast.error(res.error || "Operation failed");
+          }
         }}
         isSubmitting={isSubmitting}
       />
@@ -345,8 +354,12 @@ export default function AdminPrintingPage() {
         editingColor={editingColor}
         onSave={async (data) => {
           let res = editingColor ? await updateColor(editingColor.id, data) : await createColor(data);
-          if (res.success) setIsColorOpen(false);
-          else alert(res.error);
+          if (res.success) {
+            setIsColorOpen(false);
+            toast.success(editingColor ? "Color updated!" : "Color created!");
+          } else {
+            toast.error(res.error || "Operation failed");
+          }
         }}
         isSubmitting={isColorsSubmitting}
       />
@@ -358,8 +371,10 @@ export default function AdminPrintingPage() {
         onSave={(data) => {
           if (editingFont) {
             updateFont(editingFont.id, data);
+            toast.success("Font updated!");
           } else {
             addFont(data);
+            toast.success("Font added!");
           }
           setIsFontOpen(false);
         }}

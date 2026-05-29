@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
 import { PrintingMaterial } from "@/services/adminService";
+import { toast } from "sonner";
+
 
 interface MaterialModalProps {
   readonly isOpen: boolean;
@@ -51,7 +53,7 @@ export default function MaterialModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.basePrice < 0) {
-      alert("Base price must be positive or zero");
+      toast.error("Base price must be positive or zero");
       return;
     }
     await onSave(formData);
