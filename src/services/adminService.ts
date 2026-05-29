@@ -22,6 +22,8 @@ export interface Category {
   imageUrl?: string;
   active?: boolean;   // Jackson serializes Java `boolean isActive` as "active"
   isActive?: boolean; // kept for backward compatibility
+  isCustomizable?: boolean;
+  customizable?: boolean;
   displayOrder: number;
   createdAt: string;
   updatedAt: string;
@@ -34,6 +36,8 @@ export interface CategoryRequest {
   imageUrl?: string;
   displayOrder?: number;
   isActive?: boolean;
+  isCustomizable?: boolean;
+  customizable?: boolean;
 }
 
 export interface Brand {

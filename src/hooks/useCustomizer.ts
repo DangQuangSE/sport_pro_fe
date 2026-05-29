@@ -323,20 +323,17 @@ export function useCustomizer() {
     const cartRes = await cartService.getMyCart();
     const cartItems = cartRes.data?.items || [];
     
-    const shirtItem = cartItems.find(item => 
-      item.productName.toLowerCase().includes("tee") || 
-      item.productName.toLowerCase().includes("shirt")
-    );
+    const customizableItem = cartItems.find(item => item.isCustomizable ?? item.customizable);
 
-    if (shirtItem) {
+    if (customizableItem) {
       await cartService.addOrUpdateItem({
-        variantId: shirtItem.variantId,
-        quantity: shirtItem.quantity,
+        variantId: customizableItem.variantId,
+        quantity: customizableItem.quantity,
         customDesignId: designId,
         isReplace: true
       });
     } else {
-      console.warn("No customizable shirt found in cart. Creating fallback/local data.");
+      console.warn("No customizable item found in cart. Creating fallback/local data.");
     }
 
     const customDesignLocalData = {
