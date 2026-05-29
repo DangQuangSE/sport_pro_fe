@@ -180,6 +180,10 @@ export const adminService = {
       body: JSON.stringify({ status })
     });
   },
+  getCustomDesignDetails: (id: number) => {
+    return apiClient.get<ApiResponse<any>>(`/admin/custom-designs/${id}`);
+  },
+
 
   // Colors
   getColors: () => {

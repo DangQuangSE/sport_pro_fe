@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { adminService } from "@/services/adminService";
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -39,6 +40,31 @@ export default function AdminOrderDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+
+  // Printing customization modal states
+  const [isDesignModalOpen, setIsDesignModalOpen] = useState(false);
+  const [selectedDesign, setSelectedDesign] = useState<any | null>(null);
+  const [isDesignLoading, setIsDesignLoading] = useState(false);
+
+  const handleViewCustomDesign = async (designId: number) => {
+    setIsDesignModalOpen(true);
+    setIsDesignLoading(true);
+    setSelectedDesign(null);
+    try {
+      const res = await adminService.getCustomDesignDetails(designId);
+      setSelectedDesign(res.data);
+    } catch (err: any) {
+      console.error("Failed to fetch custom design details", err);
+      toast.error(
+        locale === "vi"
+          ? "Không thể tải thông tin thiết kế in ấn."
+          : "Failed to retrieve custom printing details."
+      );
+      setIsDesignModalOpen(false);
+    } finally {
+      setIsDesignLoading(false);
+    }
+  };
 
   const fetchOrderDetail = async () => {
     setIsLoading(true);
@@ -317,16 +343,23 @@ export default function AdminOrderDetailPage() {
                       <span>{t("admin.orders.detail.qty")}: <strong className="text-primary font-black">{item.quantity}</strong></span>
                     </div>
 
-                    {item.designImageUrl && (
+                    {item.customDesignId ? (
+                      <button 
+                        onClick={() => handleViewCustomDesign(Number(item.customDesignId))}
+                        className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-primary hover:underline pt-1 cursor-pointer text-left"
+                      >
+                        {t("admin.orders.detail.viewDesign")}
+                      </button>
+                    ) : item.designImageUrl ? (
                       <a 
                         href={item.designImageUrl} 
                         target="_blank" 
                         rel="noreferrer" 
                         className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-primary hover:underline pt-1"
                       >
-                        {t("admin.orders.detail.viewDesign")}
+                        {locale === "vi" ? "Xem ảnh sản phẩm" : "View Product Image"}
                       </a>
-                    )}
+                    ) : null}
                   </div>
 
                   <div className="text-right shrink-0">
@@ -432,6 +465,196 @@ export default function AdminOrderDetailPage() {
 
       </div>
 
+      {/* Custom Printing Design Modal */}
+      <Modal
+        isOpen={isDesignModalOpen}
+        onClose={() => setIsDesignModalOpen(false)}
+        title={locale === "vi" ? "Thông tin thiết kế in ấn" : "Printing Layout Design Details"}
+        className="max-w-2xl text-on-surface"
+      >
+        {isDesignLoading ? (
+          <div className="flex flex-col items-center justify-center py-12 text-on-surface-variant gap-4">
+            <Loader2 size={32} className="animate-spin text-primary" />
+            <p className="text-[10px] font-black uppercase tracking-widest italic">
+              {locale === "vi" ? "Đang tải chi tiết thiết kế..." : "Loading layout details..."}
+            </p>
+          </div>
+        ) : selectedDesign ? (() => {
+          let metadata: any = null;
+          try {
+            if (selectedDesign.designMetadata) {
+              metadata = JSON.parse(selectedDesign.designMetadata);
+            }
+          } catch (e) {
+            console.error("Failed to parse design metadata", e);
+          }
+
+          const texts = metadata?.texts || [];
+          const images = metadata?.images || [];
+
+          return (
+            <div className="space-y-6 text-left">
+              {/* Mockup image */}
+              <div className="space-y-2">
+                <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/70 block">
+                  {locale === "vi" ? "Bản thiết kế mẫu" : "Mockup Layout"}
+                </span>
+                <div className="relative w-full h-72 bg-surface-container rounded-2xl flex items-center justify-center p-4 border border-outline-variant overflow-hidden bg-slate-100">
+                  <img
+                    src={selectedDesign.designImageUrl}
+                    alt="Custom Print Mockup"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              </div>
+
+              {/* General specs */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-surface-container/50 border border-outline-variant/60">
+                <div className="space-y-1">
+                  <span className="text-[9px] font-bold text-on-surface-variant/80 uppercase block">
+                    {locale === "vi" ? "Chất liệu in" : "Material"}
+                  </span>
+                  <span className="text-xs font-black text-primary uppercase">
+                    {selectedDesign.printingMaterialName}
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[9px] font-bold text-on-surface-variant/80 uppercase block">
+                    {locale === "vi" ? "Dòng chữ" : "Texts Count"}
+                  </span>
+                  <span className="text-xs font-black text-on-surface">
+                    {selectedDesign.numTextLines}
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[9px] font-bold text-on-surface-variant/80 uppercase block">
+                    {locale === "vi" ? "Ảnh / Logo" : "Images Count"}
+                  </span>
+                  <span className="text-xs font-black text-on-surface">
+                    {selectedDesign.numImages}
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[9px] font-bold text-on-surface-variant/80 uppercase block">
+                    {locale === "vi" ? "Tổng chi phí" : "Price"}
+                  </span>
+                  <span className="text-xs font-black text-success">
+                    {locale === "vi"
+                      ? new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(selectedDesign.totalPrintingPrice)
+                      : `$${selectedDesign.totalPrintingPrice}`}
+                  </span>
+                </div>
+              </div>
+
+              {/* Custom Elements details */}
+              <div className="space-y-4">
+                <h4 className="text-xs font-black uppercase tracking-wider text-on-surface border-b border-outline-variant pb-2">
+                  {locale === "vi" ? "Chi tiết các lớp in ấn" : "Custom elements specifications"}
+                </h4>
+
+                {/* Text Layers */}
+                <div className="space-y-3">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-on-surface-variant flex items-center gap-1.5">
+                    🔤 {locale === "vi" ? "Các lớp chữ" : "Custom Text Layers"} ({texts.length})
+                  </span>
+                  {texts.length > 0 ? (
+                    <div className="divide-y divide-outline-variant/50 border border-outline-variant/60 rounded-xl overflow-hidden bg-surface">
+                      {texts.map((t: any, idx: number) => (
+                        <div key={t.id || idx} className="p-3 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <div className="space-y-1">
+                            <p className="font-bold text-on-surface">
+                              &ldquo;<span className="font-black italic text-primary">{t.text}</span>&rdquo;
+                            </p>
+                            <div className="flex items-center gap-3 text-[10px] text-on-surface-variant">
+                              <span>Font: <strong className="text-on-surface">{t.font || "Default"}</strong></span>
+                              <span>Size: <strong className="text-on-surface">{t.fontSize || 20}px</strong></span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-4 text-[10px] shrink-0 font-mono">
+                            <div className="flex items-center gap-1.5 bg-surface-container p-1 rounded-lg border border-outline-variant">
+                              <span 
+                                className="w-3.5 h-3.5 rounded-full border border-black/10 shadow-sm" 
+                                style={{ backgroundColor: t.color || "#000" }} 
+                              />
+                              <span className="text-[9px] font-bold uppercase">{t.color || "#000"}</span>
+                            </div>
+                            <span className="text-on-surface-variant font-bold">X: {Math.round(t.x || 0)}, Y: {Math.round(t.y || 0)}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-[10px] text-on-surface-variant/70 italic pl-4">
+                      {locale === "vi" ? "Không có lớp chữ nào." : "No custom text added."}
+                    </p>
+                  )}
+                </div>
+
+                {/* Image Layers */}
+                <div className="space-y-3 pt-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-on-surface-variant flex items-center gap-1.5">
+                    🖼️ {locale === "vi" ? "Các lớp ảnh / logo" : "Custom Logo Layers"} ({images.length})
+                  </span>
+                  {images.length > 0 ? (
+                    <div className="divide-y divide-outline-variant/50 border border-outline-variant/60 rounded-xl overflow-hidden bg-surface">
+                      {images.map((img: any, idx: number) => (
+                        <div key={img.id || idx} className="p-3 text-xs flex items-center justify-between gap-4">
+                          <div className="flex items-center gap-3 overflow-hidden">
+                            <div className="w-10 h-10 bg-surface-container rounded-lg border border-outline-variant shrink-0 flex items-center justify-center p-1 overflow-hidden">
+                              <img
+                                src={img.src}
+                                alt={img.name || "Custom Logo"}
+                                className="w-full h-full object-contain"
+                              />
+                            </div>
+                            <div className="space-y-0.5 min-w-0">
+                              <p className="font-bold text-on-surface truncate max-w-[180px] sm:max-w-[280px]">
+                                {img.name || `Logo_${idx + 1}`}
+                              </p>
+                              <p className="text-[9px] text-on-surface-variant font-medium">
+                                W: {Math.round(img.width || 0)}px &bull; H: {Math.round(img.height || 0)}px
+                              </p>
+                            </div>
+                          </div>
+                          <span className="text-[10px] text-on-surface-variant font-mono font-bold shrink-0">
+                            X: {Math.round(img.x || 0)}, Y: {Math.round(img.y || 0)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-[10px] text-on-surface-variant/70 italic pl-4">
+                      {locale === "vi" ? "Không có ảnh logo nào." : "No custom logos added."}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div className="pt-4 flex justify-end gap-3 border-t border-outline-variant">
+                <Button 
+                  onClick={() => setIsDesignModalOpen(false)}
+                  className="rounded-xl px-5 py-2 font-black uppercase tracking-widest text-xs h-10 border border-outline-variant bg-surface text-on-surface hover:bg-surface-variant/30"
+                >
+                  {locale === "vi" ? "Đóng" : "Close"}
+                </Button>
+                <a
+                  href={selectedDesign.designImageUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center bg-primary text-surface rounded-xl px-5 py-2 font-black uppercase tracking-widest text-xs h-10 hover:bg-primary-dark transition-colors shadow-sm"
+                >
+                  {locale === "vi" ? "Mở Ảnh Gốc" : "Open Original Image"}
+                </a>
+              </div>
+            </div>
+          );
+        })() : (
+          <p className="text-center py-6 text-xs text-on-surface-variant">
+            {locale === "vi" ? "Không có dữ liệu thiết kế." : "No design data found."}
+          </p>
+        )}
+      </Modal>
     </div>
   );
 }
