@@ -19,9 +19,33 @@ export interface CustomDesignInfo {
 }
 
 export function useCheckout() {
-  const { cart, refreshCart, updateQuantity, removeFromCart } = useCart();
+  const { cart: rawCart, refreshCart, updateQuantity, removeFromCart } = useCart();
   const { t, locale } = useTranslation();
   const router = useRouter();
+  const [selectedIds, setSelectedIds] = useState<number[] | null>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("sport_pro_checkout_selected_ids");
+    if (saved) {
+      try {
+        setSelectedIds(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse selected checkout IDs", e);
+      }
+    }
+  }, []);
+
+  const checkoutItems = rawCart 
+    ? (selectedIds ? rawCart.items.filter(item => selectedIds.includes(item.id)) : rawCart.items)
+    : [];
+
+  const estimatedCost = checkoutItems.reduce((acc, item) => acc + (item.salePrice * item.quantity), 0);
+
+  const checkoutCart = rawCart ? {
+    ...rawCart,
+    items: checkoutItems,
+    totalAmount: estimatedCost
+  } : null;
 
   // Delivery states
   const [email, setEmail] = useState("athlete@example.com");
@@ -40,9 +64,9 @@ export function useCheckout() {
 
   // Fetch custom design details when cart changes
   useEffect(() => {
-    if (!cart) return;
+    if (!rawCart) return;
 
-    const customizedItem = cart.items.find(
+    const customizedItem = rawCart.items.find(
       (item) => item.customDesignId !== null && item.customDesignId !== undefined
     );
 
@@ -78,12 +102,12 @@ export function useCheckout() {
     } else {
       setCustomDesign(null);
     }
-  }, [cart]);
+  }, [rawCart]);
 
   // Remove custom design from cart
   const handleRemoveDesign = async () => {
-    if (!cart) return;
-    const customizedItem = cart.items.find(
+    if (!rawCart) return;
+    const customizedItem = rawCart.items.find(
       (item) => item.customDesignId !== null && item.customDesignId !== undefined
     );
     if (!customizedItem) return;
@@ -156,7 +180,7 @@ export function useCheckout() {
     e.preventDefault();
     setErrorMsg(null);
 
-    if (!cart || cart.items.length === 0) {
+    if (checkoutItems.length === 0) {
       setErrorMsg(t("checkout.noCartItems"));
       return;
     }
@@ -186,7 +210,7 @@ export function useCheckout() {
         shippingAddress: finalShippingAddress,
         phoneNumber: phoneNumber.trim(),
         paymentMethod: PaymentMethod.BANK_TRANSFER,
-        cartItemIds: cart.items.map((item) => item.id),
+        cartItemIds: checkoutItems.map((item) => item.id),
       };
 
       const orderRes = await orderService.placeOrder(orderPayload);
@@ -203,11 +227,10 @@ export function useCheckout() {
   };
 
   // Computed values
-  const isCartEmpty = !cart || cart.items.length === 0;
-  const estimatedCost = cart ? cart.totalAmount : 0;
+  const isCartEmpty = checkoutItems.length === 0;
   const standardDelivery = 15;
   const expectedTax = 24;
-  const customizedItem = cart?.items.find(
+  const customizedItem = checkoutItems.find(
     (item) => item.customDesignId !== null && item.customDesignId !== undefined
   );
   const printingCost =
@@ -219,7 +242,8 @@ export function useCheckout() {
 
   return {
     // Cart
-    cart,
+    cart: checkoutCart,
+    checkoutItems,
     isCartEmpty,
     updateQuantity,
     removeFromCart,

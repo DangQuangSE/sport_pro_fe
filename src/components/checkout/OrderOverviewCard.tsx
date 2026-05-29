@@ -130,14 +130,16 @@ export function OrderOverviewCard({
           {/* Buttons Action Segment */}
           <div className="space-y-3 pt-4">
             {/* Customize button */}
-            <button
-              type="button"
-              onClick={() => router.push(`/${locale}/customizer`)}
-              className="w-full h-14 bg-primary hover:bg-[#004493] text-white font-black uppercase text-[10px] tracking-widest rounded-xl flex items-center justify-center gap-2.5 transition-colors shadow-lg shadow-primary/10"
-            >
-              <Wrench size={14} />
-              <span>{t("checkout.customizeButton")}</span>
-            </button>
+            {cart?.items?.some(item => item.isCustomizable === true || item.customizable === true) && (
+              <button
+                type="button"
+                onClick={() => router.push(`/${locale}/customizer`)}
+                className="w-full h-14 bg-primary hover:bg-[#004493] text-white font-black uppercase text-[10px] tracking-widest rounded-xl flex items-center justify-center gap-2.5 transition-colors shadow-lg shadow-primary/10"
+              >
+                <Wrench size={14} />
+                <span>{t("checkout.customizeButton")}</span>
+              </button>
+            )}
 
             {/* Primary Confirmation button */}
             <button

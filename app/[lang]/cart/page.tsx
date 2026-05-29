@@ -23,6 +23,18 @@ import { toast } from "sonner";
 export default function CartPage() {
   const { cart, isLoading, updateQuantity, removeFromCart } = useCart();
   const { t, locale } = useTranslation();
+  const [selectedIds, setSelectedIds] = React.useState<number[]>([]);
+
+  // Sync selectedIds with cart items to remove any deleted items
+  React.useEffect(() => {
+    if (cart && cart.items) {
+      const currentIds = cart.items.map(item => item.id);
+      setSelectedIds(prev => prev.filter(id => currentIds.includes(id)));
+    }
+  }, [cart]);
+
+  const selectedItems = cart ? cart.items.filter(item => selectedIds.includes(item.id)) : [];
+  const subtotal = selectedItems.reduce((sum, item) => sum + (item.salePrice * item.quantity), 0);
 
   const handleUpdateQuantity = async (variantId: number, newQty: number) => {
     try {
@@ -88,20 +100,64 @@ export default function CartPage() {
                 </Button>
               </div>
             ) : (
-              <div className="space-y-4">
-                {cart.items.map((item) => (
-                  <div 
-                    key={item.id} 
-                    className="flex flex-col md:flex-row gap-6 p-6 border-b border-outline-variant last:border-0"
-                  >
-                    {/* Product Image */}
-                    <div className="relative w-full md:w-32 aspect-square rounded-xl bg-surface-container overflow-hidden shrink-0">
-                      <img 
-                        src={item.designImageUrl || "/placeholder-product.png"} 
-                        alt={item.productName} 
-                        className="w-full h-full object-contain p-2" 
-                      />
-                    </div>
+              <div className="space-y-6">
+                {/* Select All Bar */}
+                <div className="flex items-center justify-between p-4 bg-surface-container-highest/20 border border-outline-variant/60 rounded-2xl">
+                  <label className="flex items-center gap-3 cursor-pointer select-none font-bold text-xs uppercase tracking-wider text-on-surface-variant">
+                    <input 
+                      type="checkbox"
+                      checked={cart.items.length > 0 && selectedIds.length === cart.items.length}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedIds(cart.items.map(item => item.id));
+                        } else {
+                          setSelectedIds([]);
+                        }
+                      }}
+                      className="w-5 h-5 rounded-lg border-2 border-outline-variant text-primary focus:ring-primary accent-primary cursor-pointer transition-all"
+                    />
+                    {locale === "vi" ? "Chọn tất cả" : "Select All"} ({selectedIds.length}/{cart.items.length})
+                  </label>
+                  {selectedIds.length > 0 && (
+                    <button 
+                      onClick={() => setSelectedIds([])}
+                      className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-error transition-colors cursor-pointer"
+                    >
+                      {locale === "vi" ? "Bỏ chọn tất cả" : "Deselect All"}
+                    </button>
+                  )}
+                </div>
+
+                <div className="space-y-4">
+                  {cart.items.map((item) => (
+                    <div 
+                      key={item.id} 
+                      className="flex flex-col md:flex-row items-start md:items-center gap-6 p-6 border-b border-outline-variant last:border-0 relative"
+                    >
+                      {/* Checkbox */}
+                      <div className="flex items-center self-stretch md:self-auto py-2">
+                        <input 
+                          type="checkbox"
+                          checked={selectedIds.includes(item.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedIds([...selectedIds, item.id]);
+                            } else {
+                              setSelectedIds(selectedIds.filter(id => id !== item.id));
+                            }
+                          }}
+                          className="w-5 h-5 rounded-lg border-2 border-outline-variant text-primary focus:ring-primary accent-primary cursor-pointer transition-all"
+                        />
+                      </div>
+
+                      {/* Product Image */}
+                      <div className="relative w-full md:w-32 aspect-square rounded-xl bg-surface-container overflow-hidden shrink-0">
+                        <img 
+                          src={item.designImageUrl || "/placeholder-product.png"} 
+                          alt={item.productName} 
+                          className="w-full h-full object-contain p-2" 
+                        />
+                      </div>
 
                     {/* Product Info */}
                     <div className="flex-grow flex flex-col justify-between py-1">
@@ -157,7 +213,8 @@ export default function CartPage() {
                   </div>
                 ))}
               </div>
-            )}
+            </div>
+          )}
           </div>
 
           {/* Right: Summary Sidebar */}
@@ -186,7 +243,7 @@ export default function CartPage() {
                   <div className="space-y-4 pt-4 border-t border-outline-variant">
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-medium text-on-surface-variant">Subtotal</span>
-                      <span className="font-bold">${cart.totalAmount.toLocaleString()}</span>
+                      <span className="font-bold">${subtotal.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-medium text-on-surface-variant">Estimated Shipping & Handling</span>
@@ -200,15 +257,28 @@ export default function CartPage() {
                     <div className="pt-4 border-t border-on-surface space-y-1">
                       <div className="flex justify-between items-center">
                         <span className="text-base font-black uppercase tracking-tight">Total</span>
-                        <span className="text-2xl font-black italic tracking-tighter">${cart.totalAmount.toLocaleString()}</span>
+                        <span className="text-2xl font-black italic tracking-tighter">${subtotal.toLocaleString()}</span>
                       </div>
                     </div>
 
                     <Button 
                       asChild 
-                      className="w-full h-16 rounded-xl bg-secondary-container text-on-secondary-container hover:bg-secondary-container/90 font-lexend font-black uppercase tracking-widest text-xs gap-3 mt-4 shadow-xl shadow-secondary-container/20"
+                      className={cn(
+                        "w-full h-16 rounded-xl bg-secondary-container text-on-secondary-container hover:bg-secondary-container/90 font-lexend font-black uppercase tracking-widest text-xs gap-3 mt-4 shadow-xl shadow-secondary-container/20",
+                        selectedIds.length === 0 && "opacity-50 cursor-not-allowed pointer-events-none"
+                      )}
                     >
-                      <Link href={`/${locale}/checkout`}>
+                      <Link 
+                        href={`/${locale}/checkout`}
+                        onClick={(e) => {
+                          if (selectedIds.length === 0) {
+                            e.preventDefault();
+                            toast.error("Please select at least one item to checkout.");
+                            return;
+                          }
+                          localStorage.setItem("sport_pro_checkout_selected_ids", JSON.stringify(selectedIds));
+                        }}
+                      >
                         Proceed to Checkout
                         <ArrowRight size={18} />
                       </Link>
