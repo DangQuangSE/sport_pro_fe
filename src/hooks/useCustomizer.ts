@@ -321,18 +321,54 @@ export function useCustomizer() {
     const designId = saveRes.data.id;
     const designImageUrl = saveRes.data.designImageUrl;
 
+    // Load selected checkout IDs from localStorage to target the correct item
+    let selectedIds: number[] = [];
+    const savedSelectedIds = localStorage.getItem("sport_pro_checkout_selected_ids");
+    if (savedSelectedIds) {
+      try {
+        selectedIds = JSON.parse(savedSelectedIds);
+      } catch (e) {
+        console.error("Failed to parse selected checkout IDs", e);
+      }
+    }
+
     const cartRes = await cartService.getMyCart();
     const cartItems = cartRes.data?.items || [];
     
-    const customizableItem = cartItems.find(item => item.isCustomizable ?? item.customizable);
+    // Find customizable item to link (prefer one in selectedIds first)
+    let customizableItem = cartItems.find(item => 
+      selectedIds.includes(item.id) && (item.isCustomizable ?? item.customizable)
+    );
+    if (!customizableItem) {
+      customizableItem = cartItems.find(item => item.isCustomizable ?? item.customizable);
+    }
 
     if (customizableItem) {
+      // 1. Add new customized item
       await cartService.addOrUpdateItem({
         variantId: customizableItem.variantId,
         quantity: customizableItem.quantity,
         customDesignId: designId,
         isReplace: true
       });
+
+      // 2. Remove the old non-customized item
+      await cartService.removeItem(customizableItem.id);
+
+      // 3. Fetch latest cart and update selectedIds in localStorage
+      const updatedCartRes = await cartService.getMyCart();
+      const updatedCartItems = updatedCartRes.data?.items || [];
+      const newItem = updatedCartItems.find(item => item.customDesignId === designId);
+
+      if (newItem) {
+        const index = selectedIds.indexOf(customizableItem.id);
+        if (index !== -1) {
+          selectedIds[index] = newItem.id;
+        } else {
+          selectedIds.push(newItem.id);
+        }
+        localStorage.setItem("sport_pro_checkout_selected_ids", JSON.stringify(selectedIds));
+      }
     } else {
       console.warn("No customizable item found in cart. Creating fallback/local data.");
     }

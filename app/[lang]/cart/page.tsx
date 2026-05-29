@@ -34,7 +34,7 @@ export default function CartPage() {
   }, [cart]);
 
   const selectedItems = cart ? cart.items.filter(item => selectedIds.includes(item.id)) : [];
-  const subtotal = selectedItems.reduce((sum, item) => sum + (item.salePrice * item.quantity), 0);
+  const subtotal = selectedItems.reduce((sum, item) => sum + (item.salePrice * 25000 * item.quantity), 0);
 
   const handleUpdateQuantity = async (variantId: number, newQty: number) => {
     try {
@@ -179,7 +179,7 @@ export default function CartPage() {
                             </p>
                           </div>
                         </div>
-                        <p className="text-lg font-black italic tracking-tighter">${item.salePrice.toLocaleString()}</p>
+                         <p className="text-lg font-black italic tracking-tighter">{(item.salePrice * 25000).toLocaleString('vi-VN')} ₫</p>
                       </div>
 
                       <div className="flex items-center justify-between mt-6">
@@ -243,7 +243,7 @@ export default function CartPage() {
                   <div className="space-y-4 pt-4 border-t border-outline-variant">
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-medium text-on-surface-variant">Subtotal</span>
-                      <span className="font-bold">${subtotal.toLocaleString()}</span>
+                      <span className="font-bold">{subtotal.toLocaleString('vi-VN')} ₫</span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-medium text-on-surface-variant">Estimated Shipping & Handling</span>
@@ -257,7 +257,7 @@ export default function CartPage() {
                     <div className="pt-4 border-t border-on-surface space-y-1">
                       <div className="flex justify-between items-center">
                         <span className="text-base font-black uppercase tracking-tight">Total</span>
-                        <span className="text-2xl font-black italic tracking-tighter">${subtotal.toLocaleString()}</span>
+                        <span className="text-2xl font-black italic tracking-tighter">{subtotal.toLocaleString('vi-VN')} ₫</span>
                       </div>
                     </div>
 

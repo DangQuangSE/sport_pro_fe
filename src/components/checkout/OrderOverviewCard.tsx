@@ -59,24 +59,24 @@ export function OrderOverviewCard({
                 {cart.items.reduce((sum, item) => sum + item.quantity, 0)}{" "}
                 products)
               </span>
-              <span className="text-[#1a1c1f]">${estimatedCost.toLocaleString()}</span>
+              <span className="text-[#1a1c1f]">{estimatedCost.toLocaleString('vi-VN')} ₫</span>
             </div>
 
             <div className="flex justify-between items-center">
               <span>{t("checkout.standardDelivery")}</span>
-              <span className="text-[#1a1c1f]">${standardDelivery.toLocaleString()}</span>
+              <span className="text-[#1a1c1f]">{standardDelivery.toLocaleString('vi-VN')} ₫</span>
             </div>
 
             <div className="flex justify-between items-center">
               <span>{t("checkout.expectedTax")}</span>
-              <span className="text-[#1a1c1f]">${expectedTax.toLocaleString()}</span>
+              <span className="text-[#1a1c1f]">{expectedTax.toLocaleString('vi-VN')} ₫</span>
             </div>
 
             {customDesign && (
               <div className="space-y-1.5 pt-2 pb-1 border-t border-[#e2e2e7]/60 border-dashed">
                 <div className="flex justify-between items-center text-primary font-black">
                   <span>Thiết kế in ({customDesign.materialName})</span>
-                  <span>+${printingCost.toFixed(2)}</span>
+                  <span>+{printingCost.toLocaleString('vi-VN')} ₫</span>
                 </div>
                 <div className="bg-[#f9f9fe] p-3 rounded-xl border border-primary/10 text-[10px] font-semibold text-[#717786] space-y-1 leading-relaxed">
                   <p className="font-bold text-primary uppercase text-[8px] tracking-widest mb-1">
@@ -85,20 +85,18 @@ export function OrderOverviewCard({
                   <div className="flex justify-between">
                     <span>Chất liệu ({customDesign.materialName}):</span>
                     <span className="font-mono text-[#1a1c1f]">
-                      $
                       {(
-                        (customDesign.printingPrice -
-                          customDesign.textsCount * 10000 -
-                          customDesign.imagesCount * 25000) /
-                        25000
-                      ).toFixed(2)}
+                        customDesign.printingPrice -
+                        customDesign.textsCount * 10000 -
+                        customDesign.imagesCount * 25000
+                      ).toLocaleString('vi-VN')} ₫
                     </span>
                   </div>
                   {customDesign.textsCount > 0 && (
                     <div className="flex justify-between">
                       <span>Lớp chữ ({customDesign.textsCount} lớp):</span>
                       <span className="font-mono text-[#1a1c1f]">
-                        +${((customDesign.textsCount * 10000) / 25000).toFixed(2)}
+                        +{(customDesign.textsCount * 10000).toLocaleString('vi-VN')} ₫
                       </span>
                     </div>
                   )}
@@ -106,7 +104,7 @@ export function OrderOverviewCard({
                     <div className="flex justify-between">
                       <span>Ảnh logo ({customDesign.imagesCount} ảnh):</span>
                       <span className="font-mono text-[#1a1c1f]">
-                        +${((customDesign.imagesCount * 25000) / 25000).toFixed(2)}
+                        +{(customDesign.imagesCount * 25000).toLocaleString('vi-VN')} ₫
                       </span>
                     </div>
                   )}
@@ -122,7 +120,7 @@ export function OrderOverviewCard({
                 className="text-2xl font-black italic tracking-tighter text-[#1a1c1f]"
                 style={{ fontFamily: "var(--font-lexend)" }}
               >
-                ${totalPayment.toLocaleString()}
+                {totalPayment.toLocaleString('vi-VN')} ₫
               </span>
             </div>
           </div>

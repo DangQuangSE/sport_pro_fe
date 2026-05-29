@@ -88,7 +88,7 @@ export function CustomDesignCard({
 
             <span className="text-[#717786]">Tổng cộng chi phí in:</span>
             <span className="text-primary font-black italic">
-              +${printingCost.toFixed(2)}
+              +{printingCost.toLocaleString('vi-VN')} ₫
             </span>
           </div>
         </div>

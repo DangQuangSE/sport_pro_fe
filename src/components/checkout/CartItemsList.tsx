@@ -66,7 +66,7 @@ export function CartItemsList({
                   <span>
                     Custom In:{" "}
                     {item.printingPrice
-                      ? `+$${(item.printingPrice / 25000).toFixed(2)}`
+                      ? `+${item.printingPrice.toLocaleString('vi-VN')} ₫`
                       : ""}
                   </span>
                 </div>
@@ -112,7 +112,7 @@ export function CartItemsList({
               className="text-base font-black italic text-[#1a1c1f] shrink-0"
               style={{ fontFamily: "var(--font-lexend)" }}
             >
-              ${(item.salePrice * item.quantity).toLocaleString()}
+              {(item.salePrice * 25000 * item.quantity).toLocaleString('vi-VN')} ₫
             </span>
           </div>
         ))}

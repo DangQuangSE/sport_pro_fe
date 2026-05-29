@@ -27,7 +27,7 @@ export default function CustomizerBottomBar({
         
         <div className="flex items-center gap-6">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-0.5">TẠM TÍNH THIẾT KẾ</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-0.5">TỔNG CỘNG SẢN PHẨM</p>
             <h3 className="text-2xl font-black italic text-primary" style={{ fontFamily: 'var(--font-lexend)' }}>
               {formatCurrency(totalPrice)}
             </h3>
