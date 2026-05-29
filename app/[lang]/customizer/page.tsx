@@ -1,14 +1,16 @@
 "use client";
 
-import React from "react";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, Wrench, Loader2 } from "lucide-react";
+import React, { useState } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { ArrowLeft, Wrench, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useCustomizer } from "@/hooks/useCustomizer";
 import CustomizerSidebar from "@/components/customizer/CustomizerSidebar";
 import CustomizerCanvas from "@/components/customizer/CustomizerCanvas";
 import CustomizerBottomBar from "@/components/customizer/CustomizerBottomBar";
+import { Modal } from "@/components/ui/modal";
+import { toast } from "sonner";
 
 export default function ProductCustomizerPage() {
   const router = useRouter();
@@ -45,9 +47,48 @@ export default function ProductCustomizerPage() {
     handleRemoveImage,
     handleResetDesign,
     handleConfirmAndReturn,
+    handleSaveDesignAndLinkToCart,
     handleDragText,
     handleDragImage
   } = useCustomizer();
+
+  const params = useParams();
+  const locale = (params?.lang as string) || "vi";
+
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleConfirmClick = () => {
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleSaveAndCheckout = async () => {
+    setIsSaving(true);
+    const toastId = toast.loading(
+      locale === "vi" 
+        ? "Đang biên dịch và lưu thiết kế của bạn..." 
+        : "Compiling and saving your layout design..."
+    );
+    try {
+      await handleSaveDesignAndLinkToCart();
+      toast.success(
+        locale === "vi"
+          ? "Đã lưu và liên kết thiết kế với giỏ hàng thành công!"
+          : "Design saved and linked to your cart successfully!",
+        { id: toastId }
+      );
+      setIsConfirmModalOpen(false);
+      router.push(`/${locale}/checkout`);
+    } catch (err: any) {
+      console.error("Save design failed", err);
+      toast.error(
+        err.message || (locale === "vi" ? "Lưu thiết kế thất bại. Vui lòng thử lại." : "Failed to save design layout. Please try again."),
+        { id: toastId }
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   // Format VND Currency
   const formatCurrency = (amount: number) => {
@@ -148,9 +189,80 @@ export default function ProductCustomizerPage() {
         printingPrice={printingPrice}
         selectedMaterialName={selectedMaterial?.name || "in"}
         handleResetDesign={handleResetDesign}
-        handleConfirmAndReturn={handleConfirmAndReturn}
+        handleConfirmAndReturn={handleConfirmClick}
         formatCurrency={formatCurrency}
       />
+
+      {/* Confirmation Modal */}
+      <Modal
+        isOpen={isConfirmModalOpen}
+        onClose={() => !isSaving && setIsConfirmModalOpen(false)}
+        title={locale === "vi" ? "Xác nhận thiết kế" : "Confirm Custom Design"}
+        className="max-w-[440px] text-[#1a1c1f]"
+      >
+        <div className="space-y-6 text-center">
+          {/* Decorative Icon */}
+          <div className="relative mx-auto mt-2">
+            <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl w-20 h-20 mx-auto" />
+            <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-[#fe9400] text-white flex items-center justify-center mx-auto shadow-lg shadow-primary/25 relative border border-white/20">
+              <Wrench size={22} className="animate-pulse" />
+            </div>
+          </div>
+
+          {/* Heading */}
+          <div className="space-y-2">
+            <h3 className="text-xl font-black italic tracking-tight uppercase leading-none text-[#1a1c1f]" style={{ fontFamily: 'var(--font-lexend)' }}>
+              {locale === "vi" ? "Kiểm tra lại thiết kế?" : "Double check design?"}
+            </h3>
+            <p className="text-xs text-[#717786] font-medium leading-relaxed px-2">
+              {locale === "vi" 
+                ? "Vui lòng xem kỹ vị trí in ấn, logo tải lên và chính tả. Thiết kế này sẽ được in ấn chính xác theo những gì bạn thấy." 
+                : "Please inspect printing layout, logos and text layers. This design will be produced exactly as shown in the preview."}
+            </p>
+          </div>
+
+          {/* Specs Card */}
+          <div className="bg-[#f9f9fe] rounded-2xl p-4 border border-[#e2e2e7] text-left space-y-2.5">
+            <p className="text-[10px] font-black uppercase tracking-widest text-[#717786] border-b border-[#e2e2e7]/60 pb-2">
+              {locale === "vi" ? "Thông tin in ấn" : "Printing Specifications"}
+            </p>
+            <div className="grid grid-cols-2 gap-y-2 text-xs font-semibold text-[#414755]">
+              <span className="text-[#717786]">{locale === "vi" ? "Chất liệu in:" : "Material:"}</span>
+              <span className="text-[#1a1c1f] font-bold text-right uppercase">{selectedMaterial?.name || "In chuyển nhiệt"}</span>
+
+              <span className="text-[#717786]">{locale === "vi" ? "Số dòng chữ:" : "Text Layers:"}</span>
+              <span className="text-[#1a1c1f] font-bold text-right">{texts.length} {locale === "vi" ? "lớp" : "layers"}</span>
+
+              <span className="text-[#717786]">{locale === "vi" ? "Ảnh logo:" : "Logo Images:"}</span>
+              <span className="text-[#1a1c1f] font-bold text-right">{images.length} {locale === "vi" ? "ảnh" : "logos"}</span>
+            </div>
+          </div>
+
+          {/* Action buttons (vertical layout to prevent horizontal scroll and look extremely sleek) */}
+          <div className="flex flex-col gap-2.5">
+            <Button
+              disabled={isSaving}
+              onClick={handleSaveAndCheckout}
+              className="w-full h-14 bg-gradient-to-r from-primary to-[#004493] hover:from-[#004493] hover:to-[#003675] text-white font-lexend font-black uppercase text-[10px] tracking-wider rounded-xl shadow-lg shadow-primary/10 transition-all duration-200 gap-2 items-center justify-center flex hover:scale-[1.02]"
+            >
+              {isSaving ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <CheckCircle2 size={16} />
+              )}
+              <span>{isSaving ? (locale === "vi" ? "Đang xử lý..." : "Processing...") : (locale === "vi" ? "Xác nhận & Thanh toán" : "Confirm & Pay")}</span>
+            </Button>
+            <Button
+              variant="ghost"
+              disabled={isSaving}
+              onClick={() => setIsConfirmModalOpen(false)}
+              className="w-full h-12 hover:bg-[#f9f9fe] text-[#717786] font-lexend font-black uppercase text-[10px] tracking-wider rounded-xl transition-all duration-200"
+            >
+              {locale === "vi" ? "Quay lại chỉnh sửa thêm" : "Go Back To Edit"}
+            </Button>
+          </div>
+        </div>
+      </Modal>
 
     </div>
   );

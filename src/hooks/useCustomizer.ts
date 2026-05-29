@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { apiClient, ApiResponse } from "@/lib/api-client";
+import { customDesignService } from "@/services/customDesignService";
+import { cartService } from "@/services/cartService";
 
 // Interfaces
 export interface PrintingMaterial {
@@ -206,6 +208,150 @@ export function useCustomizer() {
     setTexts(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
   };
 
+  const compileDesignToBlob = async (): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 800;
+      canvas.height = 1000;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Failed to get canvas context"));
+        return;
+      }
+
+      const bgImg = new Image();
+      bgImg.crossOrigin = "anonymous";
+      bgImg.src = "https://lh3.googleusercontent.com/aida-public/AB6AXuApAvuc8kUmi1kPVuDAo-oq_0nc-mqUK1nIR6tvQU4KX8XdymhuHs97bAa6NJgjNGVSQF26WChfvU6FHg-CPujrbgM73RaLRQlm9g7zS-7rbEMOQnW9RvZm2qhr0qezf_hhBjbWpFYXFoA94FUXFPLeyW3DsoMnShdOYvg7a3PtHyxONtqYfrfAWD3q2RsymdRhymbCyMOPNm3J1Gaa9CkGA0Ng38rcaTndLazCZ0IQaT6psrpzA8kVMXjpK-xVhJ8qTy-_IhTMo3U";
+      
+      bgImg.onload = async () => {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        const shirtWidth = canvas.width * 0.82;
+        const shirtHeight = (bgImg.height / bgImg.width) * shirtWidth;
+        const shirtX = (canvas.width - shirtWidth) / 2;
+        const shirtY = (canvas.height - shirtHeight) / 2;
+        
+        ctx.globalAlpha = 0.9;
+        ctx.drawImage(bgImg, shirtX, shirtY, shirtWidth, shirtHeight);
+        ctx.globalAlpha = 1.0;
+
+        const overlayWidth = canvas.width * 0.42;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+
+        const scaleFactor = overlayWidth / (420 * 0.42);
+
+        // Draw Texts
+        for (const t of texts) {
+          ctx.save();
+          ctx.font = `900 ${t.fontSize * scaleFactor}px Lexend, sans-serif`;
+          ctx.fillStyle = t.color;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          
+          const tx = centerX + (t.x * scaleFactor);
+          const ty = centerY + (t.y * scaleFactor);
+          
+          ctx.fillText(t.text, tx, ty);
+          ctx.restore();
+        }
+
+        // Draw Logos
+        for (const img of images) {
+          try {
+            const logoImg = await new Promise<HTMLImageElement>((resLogo, rejLogo) => {
+              const logo = new Image();
+              logo.crossOrigin = "anonymous";
+              logo.src = img.src;
+              logo.onload = () => resLogo(logo);
+              logo.onerror = (err) => rejLogo(err);
+            });
+
+            ctx.save();
+            const imgWidth = img.width * scaleFactor;
+            const imgHeight = img.height * scaleFactor;
+            const ix = centerX + (img.x * scaleFactor) - (imgWidth / 2);
+            const iy = centerY + (img.y * scaleFactor) - (imgHeight / 2);
+            
+            ctx.drawImage(logoImg, ix, iy, imgWidth, imgHeight);
+            ctx.restore();
+          } catch (logoErr) {
+            console.error("Failed to load logo image for drawing", logoErr);
+          }
+        }
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error("Canvas conversion to Blob failed"));
+          }
+        }, "image/png");
+      };
+
+      bgImg.onerror = (err) => {
+        reject(new Error("Failed to load background shirt image"));
+      };
+    });
+  };
+
+  const handleSaveDesignAndLinkToCart = async () => {
+    if (!selectedMaterial) {
+      throw new Error("No printing material selected");
+    }
+
+    const blob = await compileDesignToBlob();
+    const file = new File([blob], "custom_design.png", { type: "image/png" });
+
+    const designMetadata = JSON.stringify({
+      texts: texts,
+      images: images
+    });
+
+    const requestData = {
+      materialId: selectedMaterial.id,
+      numTextLines: texts.length,
+      numImages: images.length,
+      metadata: designMetadata
+    };
+
+    const saveRes = await customDesignService.saveDesign(file, requestData);
+    const designId = saveRes.data.id;
+    const designImageUrl = saveRes.data.designImageUrl;
+
+    const cartRes = await cartService.getMyCart();
+    const cartItems = cartRes.data?.items || [];
+    
+    const shirtItem = cartItems.find(item => 
+      item.productName.toLowerCase().includes("tee") || 
+      item.productName.toLowerCase().includes("shirt")
+    );
+
+    if (shirtItem) {
+      await cartService.addOrUpdateItem({
+        variantId: shirtItem.variantId,
+        quantity: shirtItem.quantity,
+        customDesignId: designId,
+        isReplace: true
+      });
+    } else {
+      console.warn("No customizable shirt found in cart. Creating fallback/local data.");
+    }
+
+    const customDesignLocalData = {
+      printingPrice: printingPrice,
+      materialName: selectedMaterial.name,
+      designImageUrl: designImageUrl,
+      textsCount: texts.length,
+      imagesCount: images.length,
+      customDesignId: designId
+    };
+    localStorage.setItem("sport_pro_custom_design", JSON.stringify(customDesignLocalData));
+
+    return { designId, designImageUrl };
+  };
+
   // Confirm design and redirect back to Checkout
   const handleConfirmAndReturn = () => {
     const customDesignData = {
@@ -280,6 +426,7 @@ export function useCustomizer() {
     handleRemoveImage,
     handleResetDesign,
     handleConfirmAndReturn,
+    handleSaveDesignAndLinkToCart,
     handleDragText,
     handleDragImage
   };
