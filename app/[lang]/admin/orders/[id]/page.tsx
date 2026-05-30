@@ -20,7 +20,8 @@ import {
   Mail,
   Phone,
   RefreshCcw,
-  Edit2
+  Edit2,
+  Download
 } from "lucide-react";
 import { adminService } from "@/services/adminService";
 import { Button } from "@/components/ui/button";
@@ -63,6 +64,27 @@ export default function AdminOrderDetailPage() {
       setIsDesignModalOpen(false);
     } finally {
       setIsDesignLoading(false);
+    }
+  };
+
+  const handleDownloadLogo = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename || "logo.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      toast.success(t("admin.orders.detail.downloadLogoSuccess"));
+    } catch (error) {
+      console.error("Failed to download logo", error);
+      toast.error(t("admin.orders.detail.downloadLogoError"));
+      // Fallback: Open in a new tab
+      window.open(url, "_blank");
     }
   };
 
@@ -469,14 +491,14 @@ export default function AdminOrderDetailPage() {
       <Modal
         isOpen={isDesignModalOpen}
         onClose={() => setIsDesignModalOpen(false)}
-        title={locale === "vi" ? "Thông tin thiết kế in ấn" : "Printing Layout Design Details"}
+        title={t("admin.orders.detail.designModalTitle")}
         className="max-w-2xl text-on-surface"
       >
         {isDesignLoading ? (
           <div className="flex flex-col items-center justify-center py-12 text-on-surface-variant gap-4">
             <Loader2 size={32} className="animate-spin text-primary" />
             <p className="text-[10px] font-black uppercase tracking-widest italic">
-              {locale === "vi" ? "Đang tải chi tiết thiết kế..." : "Loading layout details..."}
+              {t("admin.orders.detail.loadingDetails")}
             </p>
           </div>
         ) : selectedDesign ? (() => {
@@ -488,16 +510,16 @@ export default function AdminOrderDetailPage() {
           } catch (e) {
             console.error("Failed to parse design metadata", e);
           }
-
+ 
           const texts = metadata?.texts || [];
           const images = metadata?.images || [];
-
+ 
           return (
             <div className="space-y-6 text-left">
               {/* Mockup image */}
               <div className="space-y-2">
                 <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/70 block">
-                  {locale === "vi" ? "Bản thiết kế mẫu" : "Mockup Layout"}
+                  {t("admin.orders.detail.mockupLayout")}
                 </span>
                 <div className="relative w-full h-72 bg-surface-container rounded-2xl flex items-center justify-center p-4 border border-outline-variant overflow-hidden bg-slate-100">
                   <img
@@ -507,12 +529,12 @@ export default function AdminOrderDetailPage() {
                   />
                 </div>
               </div>
-
+ 
               {/* General specs */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-surface-container/50 border border-outline-variant/60">
                 <div className="space-y-1">
                   <span className="text-[9px] font-bold text-on-surface-variant/80 uppercase block">
-                    {locale === "vi" ? "Chất liệu in" : "Material"}
+                    {t("admin.orders.detail.material")}
                   </span>
                   <span className="text-xs font-black text-primary uppercase">
                     {selectedDesign.printingMaterialName}
@@ -520,7 +542,7 @@ export default function AdminOrderDetailPage() {
                 </div>
                 <div className="space-y-1">
                   <span className="text-[9px] font-bold text-on-surface-variant/80 uppercase block">
-                    {locale === "vi" ? "Dòng chữ" : "Texts Count"}
+                    {t("admin.orders.detail.textsCount")}
                   </span>
                   <span className="text-xs font-black text-on-surface">
                     {selectedDesign.numTextLines}
@@ -528,7 +550,7 @@ export default function AdminOrderDetailPage() {
                 </div>
                 <div className="space-y-1">
                   <span className="text-[9px] font-bold text-on-surface-variant/80 uppercase block">
-                    {locale === "vi" ? "Ảnh / Logo" : "Images Count"}
+                    {t("admin.orders.detail.imagesCount")}
                   </span>
                   <span className="text-xs font-black text-on-surface">
                     {selectedDesign.numImages}
@@ -536,7 +558,7 @@ export default function AdminOrderDetailPage() {
                 </div>
                 <div className="space-y-1">
                   <span className="text-[9px] font-bold text-on-surface-variant/80 uppercase block">
-                    {locale === "vi" ? "Tổng chi phí" : "Price"}
+                    {t("admin.orders.detail.price")}
                   </span>
                   <span className="text-xs font-black text-success">
                     {locale === "vi"
@@ -545,17 +567,17 @@ export default function AdminOrderDetailPage() {
                   </span>
                 </div>
               </div>
-
+ 
               {/* Custom Elements details */}
               <div className="space-y-4">
                 <h4 className="text-xs font-black uppercase tracking-wider text-on-surface border-b border-outline-variant pb-2">
-                  {locale === "vi" ? "Chi tiết các lớp in ấn" : "Custom elements specifications"}
+                  {t("admin.orders.detail.customElementsSpecs")}
                 </h4>
-
+ 
                 {/* Text Layers */}
                 <div className="space-y-3">
                   <span className="text-[10px] font-black uppercase tracking-wider text-on-surface-variant flex items-center gap-1.5">
-                    🔤 {locale === "vi" ? "Các lớp chữ" : "Custom Text Layers"} ({texts.length})
+                    🔤 {t("admin.orders.detail.customTextLayers")} ({texts.length})
                   </span>
                   {texts.length > 0 ? (
                     <div className="divide-y divide-outline-variant/50 border border-outline-variant/60 rounded-xl overflow-hidden bg-surface">
@@ -585,15 +607,15 @@ export default function AdminOrderDetailPage() {
                     </div>
                   ) : (
                     <p className="text-[10px] text-on-surface-variant/70 italic pl-4">
-                      {locale === "vi" ? "Không có lớp chữ nào." : "No custom text added."}
+                      {t("admin.orders.detail.noCustomText")}
                     </p>
                   )}
                 </div>
-
+ 
                 {/* Image Layers */}
                 <div className="space-y-3 pt-2">
                   <span className="text-[10px] font-black uppercase tracking-wider text-on-surface-variant flex items-center gap-1.5">
-                    🖼️ {locale === "vi" ? "Các lớp ảnh / logo" : "Custom Logo Layers"} ({images.length})
+                    🖼️ {t("admin.orders.detail.customLogoLayers")} ({images.length})
                   </span>
                   {images.length > 0 ? (
                     <div className="divide-y divide-outline-variant/50 border border-outline-variant/60 rounded-xl overflow-hidden bg-surface">
@@ -616,27 +638,36 @@ export default function AdminOrderDetailPage() {
                               </p>
                             </div>
                           </div>
-                          <span className="text-[10px] text-on-surface-variant font-mono font-bold shrink-0">
-                            X: {Math.round(img.x || 0)}, Y: {Math.round(img.y || 0)}
-                          </span>
+                          <div className="flex items-center gap-4 shrink-0">
+                            <span className="text-[10px] text-on-surface-variant font-mono font-bold">
+                              X: {Math.round(img.x || 0)}, Y: {Math.round(img.y || 0)}
+                            </span>
+                            <button
+                              onClick={() => handleDownloadLogo(img.src, img.name || `logo_${idx + 1}.png`)}
+                              title={t("admin.orders.detail.downloadLogoTooltip")}
+                              className="p-1.5 rounded-lg border border-outline-variant hover:bg-primary/10 hover:border-primary text-on-surface-variant hover:text-primary transition-all duration-200 cursor-pointer"
+                            >
+                              <Download size={14} />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
                   ) : (
                     <p className="text-[10px] text-on-surface-variant/70 italic pl-4">
-                      {locale === "vi" ? "Không có ảnh logo nào." : "No custom logos added."}
+                      {t("admin.orders.detail.noCustomLogo")}
                     </p>
                   )}
                 </div>
               </div>
-
+ 
               {/* Action buttons */}
               <div className="pt-4 flex justify-end gap-3 border-t border-outline-variant">
                 <Button 
                   onClick={() => setIsDesignModalOpen(false)}
                   className="rounded-xl px-5 py-2 font-black uppercase tracking-widest text-xs h-10 border border-outline-variant bg-surface text-on-surface hover:bg-surface-variant/30"
                 >
-                  {locale === "vi" ? "Đóng" : "Close"}
+                  {t("admin.orders.detail.close")}
                 </Button>
                 <a
                   href={selectedDesign.designImageUrl}
@@ -644,14 +675,14 @@ export default function AdminOrderDetailPage() {
                   rel="noreferrer"
                   className="inline-flex items-center justify-center bg-primary text-surface rounded-xl px-5 py-2 font-black uppercase tracking-widest text-xs h-10 hover:bg-primary-dark transition-colors shadow-sm"
                 >
-                  {locale === "vi" ? "Mở Ảnh Gốc" : "Open Original Image"}
+                  {t("admin.orders.detail.openOriginal")}
                 </a>
               </div>
             </div>
           );
         })() : (
           <p className="text-center py-6 text-xs text-on-surface-variant">
-            {locale === "vi" ? "Không có dữ liệu thiết kế." : "No design data found."}
+            {t("admin.orders.detail.noDesignData")}
           </p>
         )}
       </Modal>

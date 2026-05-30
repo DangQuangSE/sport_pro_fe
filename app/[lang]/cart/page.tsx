@@ -10,7 +10,8 @@ import {
   ArrowRight, 
   ChevronLeft,
   Loader2,
-  PackageCheck
+  PackageCheck,
+  Wrench
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/home/Navbar";
@@ -19,11 +20,106 @@ import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
+import { apiClient, ApiResponse } from "@/lib/api-client";
+import { cartService } from "@/services/cartService";
 
 export default function CartPage() {
-  const { cart, isLoading, updateQuantity, removeFromCart } = useCart();
+  const { cart, isLoading, updateQuantity, removeFromCart, refreshCart } = useCart();
   const { t, locale } = useTranslation();
   const [selectedIds, setSelectedIds] = React.useState<number[]>([]);
+  const [customDesign, setCustomDesign] = React.useState<any | null>(null);
+
+  React.useEffect(() => {
+    if (!cart) return;
+
+    const customizedItem = cart.items.find(
+      (item) => item.customDesignId !== null && item.customDesignId !== undefined
+    );
+
+    if (customizedItem && customizedItem.customDesignId) {
+      const fetchDesignDetails = async () => {
+        try {
+          const res = await apiClient.get<ApiResponse<any>>(
+            `/custom-designs/${customizedItem.customDesignId}`
+          );
+          setCustomDesign({
+            printingPrice: res.data.totalPrintingPrice,
+            materialName: res.data.printingMaterialName,
+            designImageUrl: res.data.designImageUrl,
+            textsCount: res.data.numTextLines,
+            imagesCount: res.data.numImages,
+            customDesignId: customizedItem.customDesignId,
+          });
+        } catch (e) {
+          console.error(
+            "Failed to fetch custom design from backend, falling back to local storage",
+            e
+          );
+          const savedDesign = localStorage.getItem("sport_pro_custom_design");
+          if (savedDesign) {
+            try {
+              setCustomDesign(JSON.parse(savedDesign));
+            } catch (err) {
+              console.error("Failed to parse local design", err);
+            }
+          }
+        }
+      };
+      fetchDesignDetails();
+    } else {
+      setCustomDesign(null);
+    }
+  }, [cart]);
+
+  const handleRemoveDesign = async () => {
+    if (!cart) return;
+    const customizedItem = cart.items.find(
+      (item) => item.customDesignId !== null && item.customDesignId !== undefined
+    );
+    if (!customizedItem) return;
+
+    const toastId = toast.loading(
+      locale === "vi"
+        ? "Đang xóa thiết kế khỏi giỏ hàng..."
+        : "Removing design from cart..."
+    );
+    try {
+      await cartService.addOrUpdateItem({
+        variantId: customizedItem.variantId,
+        quantity: customizedItem.quantity,
+        customDesignId: undefined,
+        isReplace: true,
+      });
+
+      localStorage.removeItem("sport_pro_custom_design");
+      setCustomDesign(null);
+      await refreshCart();
+
+      toast.success(
+        locale === "vi"
+          ? "Đã xóa thiết kế in ấn khỏi giỏ hàng!"
+          : "Custom design removed from cart successfully!",
+        { id: toastId }
+      );
+    } catch (err: any) {
+      console.error("Failed to remove design", err);
+      toast.error(
+        err.message ||
+          (locale === "vi" ? "Xóa thiết kế thất bại." : "Failed to remove design."),
+        { id: toastId }
+      );
+    }
+  };
+
+  const selectedItems = cart ? cart.items.filter(item => selectedIds.includes(item.id)) : [];
+  const baseSubtotal = selectedItems.reduce((sum, item) => sum + (item.salePrice * 25000 * item.quantity), 0);
+  const printingCost = selectedItems.reduce((sum, item) => {
+    if (item.customDesignId && item.printingPrice) {
+      return sum + (item.printingPrice * item.quantity);
+    }
+    return sum;
+  }, 0);
+  const subtotal = baseSubtotal + printingCost;
 
   // Sync selectedIds with cart items to remove any deleted items
   React.useEffect(() => {
@@ -32,9 +128,6 @@ export default function CartPage() {
       setSelectedIds(prev => prev.filter(id => currentIds.includes(id)));
     }
   }, [cart]);
-
-  const selectedItems = cart ? cart.items.filter(item => selectedIds.includes(item.id)) : [];
-  const subtotal = selectedItems.reduce((sum, item) => sum + (item.salePrice * 25000 * item.quantity), 0);
 
   const handleUpdateQuantity = async (variantId: number, newQty: number) => {
     try {
@@ -129,89 +222,175 @@ export default function CartPage() {
                 </div>
 
                 <div className="space-y-4">
-                  {cart.items.map((item) => (
-                    <div 
-                      key={item.id} 
-                      className="flex flex-col md:flex-row items-start md:items-center gap-6 p-6 border-b border-outline-variant last:border-0 relative"
-                    >
-                      {/* Checkbox */}
-                      <div className="flex items-center self-stretch md:self-auto py-2">
-                        <input 
-                          type="checkbox"
-                          checked={selectedIds.includes(item.id)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedIds([...selectedIds, item.id]);
-                            } else {
-                              setSelectedIds(selectedIds.filter(id => id !== item.id));
-                            }
-                          }}
-                          className="w-5 h-5 rounded-lg border-2 border-outline-variant text-primary focus:ring-primary accent-primary cursor-pointer transition-all"
-                        />
-                      </div>
+                  {cart.items.map((item) => {
+                    const hasDesign = !!item.customDesignId && !!customDesign;
+                    return (
+                      <div 
+                        key={item.id} 
+                        className="flex flex-col gap-4 py-6 border-b border-outline-variant last:border-0 relative text-left animate-in fade-in duration-500"
+                      >
+                        {/* Product Row */}
+                        <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+                          {/* Checkbox */}
+                          <div className="flex items-center self-stretch md:self-auto py-2">
+                            <input 
+                              type="checkbox"
+                              checked={selectedIds.includes(item.id)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedIds([...selectedIds, item.id]);
+                                } else {
+                                  setSelectedIds(selectedIds.filter(id => id !== item.id));
+                                }
+                              }}
+                              className="w-5 h-5 rounded-lg border-2 border-outline-variant text-primary focus:ring-primary accent-primary cursor-pointer transition-all"
+                            />
+                          </div>
 
-                      {/* Product Image */}
-                      <div className="relative w-full md:w-32 aspect-square rounded-xl bg-surface-container overflow-hidden shrink-0">
-                        <img 
-                          src={item.designImageUrl || "/placeholder-product.png"} 
-                          alt={item.productName} 
-                          className="w-full h-full object-contain p-2" 
-                        />
-                      </div>
+                          {/* Product Image */}
+                          <div className="relative w-full md:w-32 aspect-square rounded-xl bg-surface-container overflow-hidden shrink-0 border border-outline-variant/60">
+                            <img 
+                              src={item.productImageUrl || item.designImageUrl || "/placeholder-product.png"} 
+                              alt={item.productName} 
+                              className="w-full h-full object-contain p-2" 
+                            />
+                          </div>
 
-                    {/* Product Info */}
-                    <div className="flex-grow flex flex-col justify-between py-1">
-                      <div className="flex justify-between items-start">
-                        <div className="space-y-1">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-primary">Performance Gear</p>
-                          <Link 
-                            href={`/${locale}/product/${item.productSlug}`}
-                            className="text-lg font-bold uppercase tracking-tight hover:text-primary transition-colors block"
-                          >
-                            {item.productName}
-                          </Link>
-                          <div className="flex flex-wrap gap-x-6 gap-y-1 pt-1">
-                            <p className="text-xs text-on-surface-variant font-medium">
-                              Color: <span className="text-on-surface font-bold uppercase">{item.color}</span>
-                            </p>
-                            <p className="text-xs text-on-surface-variant font-medium">
-                              Size: <span className="text-on-surface font-bold">{item.size}</span>
-                            </p>
+                          {/* Product Info */}
+                          <div className="flex-grow flex flex-col justify-between py-1">
+                            <div className="flex justify-between items-start">
+                              <div className="space-y-1">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-primary">Performance Gear</p>
+                                <Link 
+                                  href={`/${locale}/product/${item.productSlug}`}
+                                  className="text-lg font-bold uppercase tracking-tight hover:text-primary transition-colors block"
+                                >
+                                  {item.productName}
+                                </Link>
+                                <div className="flex flex-wrap gap-x-6 gap-y-1 pt-1">
+                                  <p className="text-xs text-on-surface-variant font-medium">
+                                    Color: <span className="text-on-surface font-bold uppercase">{item.color}</span>
+                                  </p>
+                                  <p className="text-xs text-on-surface-variant font-medium">
+                                    Size: <span className="text-on-surface font-bold">{item.size}</span>
+                                  </p>
+                                </div>
+                                {item.customDesignId && item.printingPrice && (
+                                  <div className="inline-flex items-center gap-1.5 bg-primary/5 text-primary text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded border border-primary/20 mt-1">
+                                    <Wrench size={10} />
+                                    <span>
+                                      Custom In: +{(item.printingPrice).toLocaleString('vi-VN')} ₫
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                              <p className="text-lg font-black italic tracking-tighter">{(item.salePrice * 25000).toLocaleString('vi-VN')} ₫</p>
+                            </div>
+
+                            <div className="flex items-center justify-between mt-6">
+                              {/* Quantity Control */}
+                              <div className="flex items-center gap-4 border border-outline-variant rounded-xl px-2 h-10 bg-white">
+                                <button 
+                                  className="p-1 hover:text-primary disabled:opacity-30"
+                                  onClick={() => handleUpdateQuantity(item.variantId, Math.max(0, item.quantity - 1))}
+                                  disabled={item.quantity <= 1}
+                                >
+                                  <Minus size={14} />
+                                </button>
+                                <span className="w-4 text-center text-xs font-black">{item.quantity}</span>
+                                <button 
+                                  className="p-1 hover:text-primary"
+                                  onClick={() => handleUpdateQuantity(item.variantId, item.quantity + 1)}
+                                >
+                                  <Plus size={14} />
+                                </button>
+                              </div>
+
+                              <button 
+                                className="text-on-surface-variant hover:text-error flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors"
+                                onClick={() => handleRemoveFromCart(item.id)}
+                              >
+                                <Trash2 size={14} />
+                                Remove
+                              </button>
+                            </div>
                           </div>
                         </div>
-                         <p className="text-lg font-black italic tracking-tighter">{(item.salePrice * 25000).toLocaleString('vi-VN')} ₫</p>
-                      </div>
 
-                      <div className="flex items-center justify-between mt-6">
-                        {/* Quantity Control */}
-                        <div className="flex items-center gap-4 border border-outline-variant rounded-xl px-2 h-10">
-                          <button 
-                            className="p-1 hover:text-primary disabled:opacity-30"
-                            onClick={() => handleUpdateQuantity(item.variantId, Math.max(0, item.quantity - 1))}
-                            disabled={item.quantity <= 1}
-                          >
-                            <Minus size={14} />
-                          </button>
-                          <span className="w-4 text-center text-xs font-black">{item.quantity}</span>
-                          <button 
-                            className="p-1 hover:text-primary"
-                            onClick={() => handleUpdateQuantity(item.variantId, item.quantity + 1)}
-                          >
-                            <Plus size={14} />
-                          </button>
-                        </div>
+                        {/* Nested Custom Design details if applicable */}
+                        {hasDesign && (
+                          <div className="ml-4 md:ml-[180px] bg-[#f9f9fe] border border-primary/10 rounded-2xl p-5 space-y-4 relative text-left border-dashed">
+                            {/* Decorative connector line linking product to printing details */}
+                            <div className="absolute -left-6 top-8 w-6 h-px border-t border-dashed border-[#c1c6d7] hidden md:block" />
+                            
+                            <div className="flex justify-between items-center pb-3 border-b border-[#e2e2e7]">
+                              <div className="flex items-center gap-2">
+                                <Wrench className="text-primary" size={14} />
+                                <h4
+                                  className="text-[11px] font-black uppercase tracking-wider text-[#1a1c1f]"
+                                  style={{ fontFamily: "var(--font-lexend)" }}
+                                >
+                                  {locale === "vi" ? "Chi tiết thiết kế in ấn của sản phẩm" : "Custom design specifications"}
+                                </h4>
+                              </div>
+                              <div className="flex gap-3 items-center">
+                                <Link
+                                  href={`/${locale}/customizer`}
+                                  className="text-[9px] font-black uppercase tracking-widest text-primary hover:underline"
+                                >
+                                  {locale === "vi" ? "Chỉnh sửa thiết kế" : "Edit design"}
+                                </Link>
+                                <span className="text-[#e2e2e7] text-xs">|</span>
+                                <button
+                                  type="button"
+                                  onClick={handleRemoveDesign}
+                                  className="text-[9px] font-black uppercase tracking-widest text-error hover:underline cursor-pointer"
+                                >
+                                  {locale === "vi" ? "Xóa thiết kế" : "Delete design"}
+                                </button>
+                              </div>
+                            </div>
 
-                        <button 
-                          className="text-on-surface-variant hover:text-error flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors"
-                          onClick={() => handleRemoveFromCart(item.id)}
-                        >
-                          <Trash2 size={14} />
-                          Remove
-                        </button>
+                            <div className="flex flex-col sm:flex-row gap-5 items-center">
+                              {/* Design Preview Image */}
+                              <div className="w-16 h-16 bg-[#F2F2F7] rounded-xl flex items-center justify-center p-1.5 relative overflow-hidden border border-[#e2e2e7] shrink-0 shadow-inner">
+                                <img
+                                  src={customDesign.designImageUrl}
+                                  className="w-full h-full object-contain"
+                                  alt="Your Custom Jersey Design"
+                                />
+                              </div>
+
+                              {/* Breakdown Specifications */}
+                              <div className="flex-grow w-full space-y-1 text-[11px] font-semibold text-[#414755] text-left">
+                                <div className="grid grid-cols-2 gap-x-4 gap-y-1 bg-white p-3.5 rounded-xl border border-[#e2e2e7]">
+                                  <span className="text-[#717786]">{locale === "vi" ? "Chất liệu tuyển chọn:" : "Material:"}</span>
+                                  <span className="text-[#1a1c1f] font-bold uppercase text-right text-xs">
+                                    {customDesign.materialName}
+                                  </span>
+
+                                  <span className="text-[#717786]">{locale === "vi" ? "Số lớp chữ in thêm:" : "Text layers:"}</span>
+                                  <span className="text-[#1a1c1f] font-bold text-right">
+                                    {customDesign.textsCount} {locale === "vi" ? "lớp" : "layers"}
+                                  </span>
+
+                                  <span className="text-[#717786]">{locale === "vi" ? "Số logo tải lên:" : "Uploaded logos:"}</span>
+                                  <span className="text-[#1a1c1f] font-bold text-right">
+                                    {customDesign.imagesCount} {locale === "vi" ? "ảnh" : "images"}
+                                  </span>
+
+                                  <span className="text-[#717786]">{locale === "vi" ? "Tổng cộng chi phí in:" : "Total printing cost:"}</span>
+                                  <span className="text-primary font-black italic text-right text-xs">
+                                    +{(customDesign.printingPrice * item.quantity).toLocaleString('vi-VN')} ₫
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  </div>
-                ))}
+                    );
+                  })}
               </div>
             </div>
           )}

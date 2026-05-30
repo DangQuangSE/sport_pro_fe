@@ -301,7 +301,25 @@
         "expectedTax": "Expected Tax spec",
         "totalFulfillmentValue": "Total Fulfillment Value",
         "method": "Method",
-        "noEmail": "No registered email"
+        "noEmail": "No registered email",
+        "downloadLogoSuccess": "Logo downloaded successfully!",
+        "downloadLogoError": "Failed to download logo.",
+        "downloadLogoTooltip": "Download this logo",
+        "designModalTitle": "Printing Layout Design Details",
+        "loadingDetails": "Loading layout details...",
+        "mockupLayout": "Mockup Layout",
+        "material": "Material",
+        "textsCount": "Texts Count",
+        "imagesCount": "Images Count",
+        "price": "Price",
+        "customElementsSpecs": "Custom elements specifications",
+        "customTextLayers": "Custom Text Layers",
+        "noCustomText": "No custom text added.",
+        "customLogoLayers": "Custom Logo Layers",
+        "noCustomLogo": "No custom logos added.",
+        "noDesignData": "No design data found.",
+        "close": "Close",
+        "openOriginal": "Open Original Image"
       }
     },
     "productForm": {

@@ -10,7 +10,6 @@ import { CheckoutHeader } from "@/components/checkout/CheckoutHeader";
 import { CheckoutFooter } from "@/components/checkout/CheckoutFooter";
 import { OrderSuccessPage } from "@/components/checkout/OrderSuccessPage";
 import { CartItemsList } from "@/components/checkout/CartItemsList";
-import { CustomDesignCard } from "@/components/checkout/CustomDesignCard";
 import { DeliveryInfoForm } from "@/components/checkout/DeliveryInfoForm";
 import { PaymentMethodCard } from "@/components/checkout/PaymentMethodCard";
 import { OrderOverviewCard } from "@/components/checkout/OrderOverviewCard";
@@ -97,17 +96,11 @@ export default function CheckoutPage() {
                 t={t}
                 onUpdateQuantity={updateQuantity}
                 onRemoveFromCart={removeFromCart}
+                customDesign={customDesign}
+                printingCost={printingCost}
+                onRemoveDesign={handleRemoveDesign}
+                locale={locale}
               />
-
-              {/* Card A2: Custom Design Preview */}
-              {customDesign && (
-                <CustomDesignCard
-                  customDesign={customDesign}
-                  printingCost={printingCost}
-                  locale={locale}
-                  onRemoveDesign={handleRemoveDesign}
-                />
-              )}
 
               {/* Card B: Delivery Information */}
               <DeliveryInfoForm

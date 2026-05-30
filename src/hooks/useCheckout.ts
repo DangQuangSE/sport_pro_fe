@@ -16,6 +16,7 @@ export interface CustomDesignInfo {
   designImageUrl: string;
   textsCount: number;
   imagesCount: number;
+  customDesignId?: number;
 }
 
 export function useCheckout() {
@@ -83,6 +84,7 @@ export function useCheckout() {
             designImageUrl: res.data.designImageUrl,
             textsCount: res.data.numTextLines,
             imagesCount: res.data.numImages,
+            customDesignId: customizedItem.customDesignId,
           });
         } catch (e) {
           console.error(

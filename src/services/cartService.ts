@@ -23,6 +23,7 @@ export interface CartItemResponse {
   printingPrice?: number;
   isCustomizable?: boolean;
   customizable?: boolean;
+  productImageUrl?: string;
 }
 
 export interface CartItemRequest {
