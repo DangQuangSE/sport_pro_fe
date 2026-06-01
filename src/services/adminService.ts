@@ -243,6 +243,20 @@ export const adminService = {
   deletePrintingColor: (id: number) => {
     return apiClient.delete<ApiResponse<void>>(`/admin/printing/colors/${id}`);
   },
+
+  // Analytics
+  getDailyRevenue: (start: string, end: string) => {
+    return apiClient.get<ApiResponse<RevenueReportResponse[]>>(`/v1/admin/analytics/revenue?start=${start}&end=${end}`);
+  },
+  getTopSellingProducts: (limit: number = 10) => {
+    return apiClient.get<ApiResponse<TopProductResponse[]>>(`/v1/admin/analytics/top-products?limit=${limit}`);
+  },
+  getTrendingDesigns: (limit: number = 10) => {
+    return apiClient.get<ApiResponse<TrendingDesignResponse[]>>(`/v1/admin/analytics/trending-designs?limit=${limit}`);
+  },
+  getOrderStatistics: (start: string, end: string) => {
+    return apiClient.get<ApiResponse<OrderStatsResponse>>(`/v1/admin/analytics/order-stats?start=${start}&end=${end}`);
+  },
 };
 
 // --- Printing Interfaces ---
@@ -277,5 +291,27 @@ export interface PrintingPriceConfigRequest {
   type: "TEXT" | "IMAGE";
   unitPrice: number;
   description?: string;
+}
+
+export interface RevenueReportResponse {
+  date: string;
+  revenue: number;
+}
+
+export interface TopProductResponse {
+  productId: number;
+  productName: string;
+  totalQuantitySold: number;
+}
+
+export interface TrendingDesignResponse {
+  designId: number;
+  designImageUrl: string;
+  orderCount: number;
+}
+
+export interface OrderStatsResponse {
+  totalOrders: number;
+  statusCounts: Record<string, number>;
 }
 
