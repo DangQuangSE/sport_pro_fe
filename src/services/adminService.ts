@@ -243,6 +243,9 @@ export const adminService = {
   deletePrintingColor: (id: number) => {
     return apiClient.delete<ApiResponse<void>>(`/admin/printing/colors/${id}`);
   },
+  getUsers: () => {
+    return apiClient.get<ApiResponse<any[]>>("/admin/users");
+  },
 
   // Analytics
   getDailyRevenue: (start: string, end: string) => {
