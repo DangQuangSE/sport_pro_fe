@@ -1,6 +1,5 @@
 import Navbar from "@/components/home/Navbar";
 import HeroSection from "@/components/home/HeroSection";
-import CategoryStrip from "@/components/home/CategoryStrip";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import PromoBanner from "@/components/home/PromoBanner";
 import Footer from "@/components/home/Footer";
@@ -16,7 +15,6 @@ export default function HomePage() {
       
       <main className="flex-grow pt-20">
         <HeroSection />
-        <CategoryStrip />
         <FeaturedProducts />
         <PromoBanner />
       </main>

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Jockey+One&family=Russo+One&family=Tourney:wght@600;800&family=Jersey+25&display=swap');
 @import "tailwindcss";
 
 @theme inline {
@@ -40,6 +41,13 @@
 
   --font-lexend: var(--font-lexend), sans-serif;
   --font-inter: var(--font-inter), sans-serif;
+  
+  --font-anton: 'Anton', sans-serif;
+  --font-bebas: 'Bebas Neue', sans-serif;
+  --font-jockey: 'Jockey One', sans-serif;
+  --font-russo: 'Russo One', sans-serif;
+  --font-tourney: 'Tourney', sans-serif;
+  --font-jersey: 'Jersey 25', sans-serif;
 
   --font-display-xl: 48px;
   --font-display-lg: 36px;

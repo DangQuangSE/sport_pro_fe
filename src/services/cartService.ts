@@ -21,6 +21,9 @@ export interface CartItemResponse {
   customDesignId?: number;
   designImageUrl?: string;
   printingPrice?: number;
+  isCustomizable?: boolean;
+  customizable?: boolean;
+  productImageUrl?: string;
 }
 
 export interface CartItemRequest {

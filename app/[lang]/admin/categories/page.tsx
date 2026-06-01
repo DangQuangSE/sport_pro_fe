@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Category } from "@/services/adminService";
 import { useTranslation } from "@/hooks/useTranslation";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function CategoriesPage() {
   const { t, locale } = useTranslation();
@@ -48,16 +49,19 @@ export default function CategoriesPage() {
     
     if (result.success) {
       setIsModalOpen(false);
+      toast.success(editingCategory ? "Category updated successfully!" : "Category created successfully!");
     } else {
-      alert("An error occurred. Please try again.");
+      toast.error((result.error as string) || "An error occurred. Please try again.");
     }
   };
 
   const handleDelete = async (id: number) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       const result = await deleteCategory(id);
-      if (!result.success) {
-        alert("Failed to delete category");
+      if (result.success) {
+        toast.success("Category deleted successfully!");
+      } else {
+        toast.error((result.error as string) || "Failed to delete category");
       }
     }
   };

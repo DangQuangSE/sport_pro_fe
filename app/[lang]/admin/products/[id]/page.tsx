@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Modal } from "@/components/ui/modal";
+import { toast } from "sonner";
 
 type Step = "basic" | "variants" | "images";
 
@@ -124,7 +125,7 @@ export default function EditProductPage() {
         setImages(p.images);
       } catch (error) {
         console.error("Failed to fetch product data", error);
-        alert("Failed to load product details");
+        toast.error("Failed to load product details");
       } finally {
         setIsLoading(false);
       }
@@ -142,8 +143,9 @@ export default function EditProductPage() {
         brandId: Number(basicInfo.brandId)
       });
       setActiveStep("variants");
+      toast.success("Core specifications updated!");
     } catch (error) {
-      alert(t("admin.productForm.failedUpdate"));
+      toast.error(t("admin.productForm.failedUpdate"));
     } finally {
       setIsSubmitting(false);
     }
@@ -157,9 +159,10 @@ export default function EditProductPage() {
         categoryId: Number(basicInfo.categoryId),
         brandId: Number(basicInfo.brandId)
       });
+      toast.success("Product successfully updated!");
       router.push(`/${locale}/admin/products`);
     } catch (error) {
-      alert(t("admin.productForm.failedUpdate"));
+      toast.error(t("admin.productForm.failedUpdate"));
     } finally {
       setIsSubmitting(false);
     }
@@ -176,8 +179,9 @@ export default function EditProductPage() {
       setVariants([...variants, response.data]);
       setIsAddingVariant(false);
       setNewVariant({ sku: "", size: "", colorId: "", originalPrice: 0, salePrice: null, stockQuantity: 0 });
+      toast.success("Variant added successfully!");
     } catch (error) {
-      alert("Failed to add variant");
+      toast.error("Failed to add variant");
     } finally {
       setIsSubmitting(false);
     }
@@ -214,8 +218,9 @@ export default function EditProductPage() {
       } : v));
       setEditingVariantId(null);
       setEditingVariantData(null);
+      toast.success("Variant updated successfully!");
     } catch (error) {
-      alert(t("admin.productForm.failedVariant") || "Failed to update variant");
+      toast.error(t("admin.productForm.failedVariant") || "Failed to update variant");
     } finally {
       setIsSubmitting(false);
     }
@@ -231,8 +236,9 @@ export default function EditProductPage() {
         try {
           await adminService.deleteVariant(variantId);
           setVariants(variants.filter(v => v.id !== variantId));
+          toast.success("Variant deleted successfully!");
         } catch (error) {
-          alert(t("admin.productForm.failedVariant") || "Failed to delete variant");
+          toast.error(t("admin.productForm.failedVariant") || "Failed to delete variant");
         }
       }
     });
@@ -249,8 +255,9 @@ export default function EditProductPage() {
         const response = await adminService.addImage(id, formData);
         setImages(prev => [...prev, response.data]);
       }
+      toast.success("Images uploaded successfully!");
     } catch (error) {
-      alert("Failed to upload images");
+      toast.error("Failed to upload images");
     } finally {
       setIsSubmitting(false);
     }
@@ -266,8 +273,9 @@ export default function EditProductPage() {
         try {
           await adminService.deleteImage(imageId);
           setImages(images.filter(img => img.id !== imageId));
+          toast.success("Image deleted successfully!");
         } catch (error) {
-          alert("Failed to delete image");
+          toast.error("Failed to delete image");
         }
       }
     });

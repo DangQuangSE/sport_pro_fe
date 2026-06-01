@@ -30,7 +30,8 @@ export function CategoryFormModal({
     description: "",
     parentId: undefined,
     displayOrder: 0,
-    isActive: true
+    isActive: true,
+    isCustomizable: false
   });
 
   useEffect(() => {
@@ -40,7 +41,9 @@ export function CategoryFormModal({
         description: initialData.description || "",
         parentId: initialData.parentId || undefined,
         displayOrder: initialData.displayOrder ?? 0,
-        isActive: initialData.active ?? initialData.isActive ?? true
+        isActive: initialData.active ?? initialData.isActive ?? true,
+        isCustomizable: initialData.isCustomizable ?? initialData.customizable ?? false,
+        customizable: initialData.isCustomizable ?? initialData.customizable ?? false
       });
     } else {
       setFormData({
@@ -48,7 +51,9 @@ export function CategoryFormModal({
         description: "",
         parentId: undefined,
         displayOrder: categories.length + 1,
-        isActive: true
+        isActive: true,
+        isCustomizable: false,
+        customizable: false
       });
     }
   }, [initialData, categories.length]);
@@ -136,6 +141,19 @@ export function CategoryFormModal({
           />
           <Label htmlFor="isActive" className="cursor-pointer text-sm font-medium">
             Active and visible on storefront
+          </Label>
+        </div>
+
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-surface-variant/30 border border-outline-variant/50 transition-all hover:bg-surface-variant/50">
+          <input 
+            type="checkbox" 
+            id="isCustomizable"
+            className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary transition-all cursor-pointer"
+            checked={formData.isCustomizable ?? formData.customizable ?? false}
+            onChange={(e) => setFormData({...formData, isCustomizable: e.target.checked, customizable: e.target.checked})}
+          />
+          <Label htmlFor="isCustomizable" className="cursor-pointer text-sm font-medium">
+            Allow Custom Printing / Cho phép in ấn thiết kế
           </Label>
         </div>
       </form>

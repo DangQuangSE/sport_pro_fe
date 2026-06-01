@@ -43,6 +43,7 @@ export function CategoryTable({
             <TableHead>Parent</TableHead>
             <TableHead>Order</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Custom Printing</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -50,14 +51,14 @@ export function CategoryTable({
           {isLoading ? (
             Array.from({ length: 5 }).map((_, i) => (
               <TableRow key={i}>
-                {Array.from({ length: 7 }).map((_, j) => (
+                {Array.from({ length: 8 }).map((_, j) => (
                   <TableCell key={j}><Skeleton className="h-6 w-full" /></TableCell>
                 ))}
               </TableRow>
             ))
           ) : categories.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="h-32 text-center text-on-surface-variant italic">
+              <TableCell colSpan={8} className="h-32 text-center text-on-surface-variant italic">
                 No categories found.
               </TableCell>
             </TableRow>
@@ -98,6 +99,19 @@ export function CategoryTable({
                     return (
                       <Badge variant={isActive ? "success" : "secondary"}>
                         {isActive ? "Active" : "Inactive"}
+                      </Badge>
+                    );
+                  })()}
+                </TableCell>
+                <TableCell>
+                  {(() => {
+                    const isCustom = category.isCustomizable ?? category.customizable;
+                    return (
+                      <Badge className={isCustom 
+                        ? "bg-[#0058bc] text-white border-transparent hover:bg-[#004493]" 
+                        : "bg-[#717786] text-white border-transparent hover:bg-[#5a606e]"
+                      }>
+                        {isCustom ? "Allowed" : "Standard"}
                       </Badge>
                     );
                   })()}

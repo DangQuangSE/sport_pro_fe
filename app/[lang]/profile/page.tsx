@@ -27,6 +27,7 @@ import {
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import MembershipBadge from "@/components/ui/MembershipBadge";
 
 const TIER_THRESHOLDS = {
   BRONZE: { limit: 0, next: "SILVER", nextLimit: 5000000, color: "from-amber-600 via-amber-700 to-amber-900", text: "text-amber-500" },
@@ -172,21 +173,11 @@ export default function UserProfilePage() {
   }
 
   // Calculate membership details
-  // Note: For now, if BE totalSpending is null or undefined, default to 0.
-  // In a real application, totalSpending can be retrieved from orders or be computed.
-  // Let's assume totalSpending is mock calculated or mapped from BE user entity.
-  // Since UserProfileResponse on BE doesn't directly expose totalSpending in the record (only tier),
-  // we can mock-deduce or represent the progress elegantly.
-  // Let's mock a totalSpending for the user based on their tier, or assume it's calculated.
   const userTier = (profile.tier || "BRONZE").toUpperCase() as keyof typeof TIER_THRESHOLDS;
   const tierInfo = TIER_THRESHOLDS[userTier] || TIER_THRESHOLDS.BRONZE;
 
-  // Let's assign a beautiful mock totalSpending based on tier so the user gets a dynamic visual experience!
-  let simulatedSpending = 0;
-  if (userTier === "BRONZE") simulatedSpending = 1250000;
-  else if (userTier === "SILVER") simulatedSpending = 7500000;
-  else if (userTier === "GOLD") simulatedSpending = 18500000;
-  else if (userTier === "PLATINUM") simulatedSpending = 35000000;
+  // Dynamic spending fetched directly from the backend database!
+  const simulatedSpending = profile.totalSpending ?? 0;
 
   const nextTier = tierInfo.next;
   const nextLimit = tierInfo.nextLimit;
@@ -272,9 +263,12 @@ export default function UserProfilePage() {
               <div className="space-y-4">
                 <div className="space-y-1">
                   <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Athlete</p>
-                  <p className="text-xl font-black uppercase tracking-wide">
-                    {profile.lastName} {profile.firstName}
-                  </p>
+                  <div className="flex items-center gap-3">
+                    <p className="text-xl font-black uppercase tracking-wide">
+                      {profile.lastName} {profile.firstName}
+                    </p>
+                    <MembershipBadge tier={profile.tier} size="sm" showLabel={true} className="bg-white/10 border-white/20 text-white hover:bg-white/20" />
+                  </div>
                 </div>
                 <div className="flex justify-between items-end border-t border-white/10 pt-4">
                   <div>

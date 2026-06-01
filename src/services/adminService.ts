@@ -22,6 +22,8 @@ export interface Category {
   imageUrl?: string;
   active?: boolean;   // Jackson serializes Java `boolean isActive` as "active"
   isActive?: boolean; // kept for backward compatibility
+  isCustomizable?: boolean;
+  customizable?: boolean;
   displayOrder: number;
   createdAt: string;
   updatedAt: string;
@@ -34,6 +36,8 @@ export interface CategoryRequest {
   imageUrl?: string;
   displayOrder?: number;
   isActive?: boolean;
+  isCustomizable?: boolean;
+  customizable?: boolean;
 }
 
 export interface Brand {
@@ -180,6 +184,10 @@ export const adminService = {
       body: JSON.stringify({ status })
     });
   },
+  getCustomDesignDetails: (id: number) => {
+    return apiClient.get<ApiResponse<any>>(`/admin/custom-designs/${id}`);
+  },
+
 
   // Colors
   getColors: () => {
@@ -194,4 +202,119 @@ export const adminService = {
   deleteColor: (id: number) => {
     return apiClient.delete<ApiResponse<void>>(`/admin/colors/${id}`);
   },
+
+  // --- Printing ---
+  getPrintingMaterials: () => {
+    return apiClient.get<ApiResponse<PrintingMaterial[]>>("/admin/printing/materials");
+  },
+  createPrintingMaterial: (data: PrintingMaterialRequest) => {
+    return apiClient.post<ApiResponse<PrintingMaterial>>("/admin/printing/materials", data);
+  },
+  updatePrintingMaterial: (id: number, data: PrintingMaterialRequest) => {
+    return apiClient.put<ApiResponse<PrintingMaterial>>(`/admin/printing/materials/${id}`, data);
+  },
+  deletePrintingMaterial: (id: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/printing/materials/${id}`);
+  },
+
+  getPrintingPriceConfigs: () => {
+    return apiClient.get<ApiResponse<PrintingPriceConfig[]>>("/admin/printing/price-configs");
+  },
+  createPrintingPriceConfig: (data: PrintingPriceConfigRequest) => {
+    return apiClient.post<ApiResponse<PrintingPriceConfig>>("/admin/printing/price-configs", data);
+  },
+  updatePrintingPriceConfig: (id: number, data: PrintingPriceConfigRequest) => {
+    return apiClient.put<ApiResponse<PrintingPriceConfig>>(`/admin/printing/price-configs/${id}`, data);
+  },
+  deletePrintingPriceConfig: (id: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/printing/price-configs/${id}`);
+  },
+
+  // --- Printing Colors ---
+  getPrintingColors: () => {
+    return apiClient.get<ApiResponse<Color[]>>("/admin/printing/colors");
+  },
+  createPrintingColor: (data: ColorRequest) => {
+    return apiClient.post<ApiResponse<Color>>("/admin/printing/colors", data);
+  },
+  updatePrintingColor: (id: number, data: ColorRequest) => {
+    return apiClient.put<ApiResponse<Color>>(`/admin/printing/colors/${id}`, data);
+  },
+  deletePrintingColor: (id: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/printing/colors/${id}`);
+  },
+  getUsers: () => {
+    return apiClient.get<ApiResponse<any[]>>("/admin/users");
+  },
+
+  // Analytics
+  getDailyRevenue: (start: string, end: string) => {
+    return apiClient.get<ApiResponse<RevenueReportResponse[]>>(`/v1/admin/analytics/revenue?start=${start}&end=${end}`);
+  },
+  getTopSellingProducts: (limit: number = 10) => {
+    return apiClient.get<ApiResponse<TopProductResponse[]>>(`/v1/admin/analytics/top-products?limit=${limit}`);
+  },
+  getTrendingDesigns: (limit: number = 10) => {
+    return apiClient.get<ApiResponse<TrendingDesignResponse[]>>(`/v1/admin/analytics/trending-designs?limit=${limit}`);
+  },
+  getOrderStatistics: (start: string, end: string) => {
+    return apiClient.get<ApiResponse<OrderStatsResponse>>(`/v1/admin/analytics/order-stats?start=${start}&end=${end}`);
+  },
 };
+
+// --- Printing Interfaces ---
+export interface PrintingMaterial {
+  id: number;
+  name: string;
+  description?: string;
+  basePrice: number;
+  active?: boolean;    // Jackson serialize isActive as "active"
+  isActive?: boolean;  // support both formats
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface PrintingMaterialRequest {
+  name: string;
+  description?: string;
+  basePrice: number;
+  isActive: boolean;
+}
+
+export interface PrintingPriceConfig {
+  id: number;
+  type: "TEXT" | "IMAGE";
+  unitPrice: number;
+  description?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface PrintingPriceConfigRequest {
+  type: "TEXT" | "IMAGE";
+  unitPrice: number;
+  description?: string;
+}
+
+export interface RevenueReportResponse {
+  date: string;
+  revenue: number;
+}
+
+export interface TopProductResponse {
+  productId: number;
+  productName: string;
+  totalQuantitySold: number;
+}
+
+export interface TrendingDesignResponse {
+  designId: number;
+  designImageUrl: string;
+  orderCount: number;
+}
+
+export interface OrderStatsResponse {
+  totalOrders: number;
+  statusCounts: Record<string, number>;
+}
+

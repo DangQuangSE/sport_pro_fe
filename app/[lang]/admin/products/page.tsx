@@ -17,6 +17,8 @@ import { useTranslation } from "@/hooks/useTranslation";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+
 
 export default function AdminProductsPage() {
   const { t, locale } = useTranslation();
@@ -49,8 +51,9 @@ export default function AdminProductsPage() {
       const result = await deleteProduct(id);
       if (result.success) {
         fetchProducts({ page, keyword: searchQuery, size: 10 });
+        toast.success("Product deleted successfully!");
       } else {
-        alert("Failed to delete product");
+        toast.error("Failed to delete product");
       }
     }
   };

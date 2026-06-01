@@ -38,11 +38,11 @@ function LargeCard({ product }: Readonly<CardProps>) {
       </div>
 
       {/* Product Image */}
-      <div className="w-full aspect-[4/3] bg-surface-container-low relative overflow-hidden flex items-center justify-center p-8">
+      <div className="w-full aspect-[4/3] bg-surface-container-low relative overflow-hidden flex items-center justify-center p-4">
         <img
           src={product.imageUrl || "/placeholder-product.png"}
           alt={product.name}
-          className="object-contain p-8 w-full h-full max-h-[300px] group-hover:scale-105 transition-transform duration-500 drop-shadow-xl"
+          className="object-contain w-full h-full max-h-[350px] group-hover:scale-110 transition-transform duration-500 drop-shadow-xl"
         />
       </div>
 
@@ -102,33 +102,35 @@ function SmallCard({ product }: Readonly<CardProps>) {
       )}
     >
       {/* Image */}
-      <div className="w-2/5 bg-surface-container-low relative overflow-hidden flex items-center justify-center p-4 shrink-0">
+      <div className="w-[180px] bg-surface-container-low relative overflow-hidden flex items-center justify-center p-4 shrink-0">
         {hasDiscount && (
           <span className="absolute top-2 left-2 bg-secondary-container text-white text-[9px] font-bold uppercase px-2 py-0.5 rounded-full z-10">
             {t("catalog.promo")}
           </span>
         )}
-        <div className="relative w-full h-full min-h-[100px] flex items-center justify-center">
+        <div className="relative w-full h-full min-h-[160px] flex items-center justify-center">
           <img
             src={product.imageUrl || "/placeholder-product.png"}
             alt={product.name}
-            className="object-contain max-h-[90px] w-auto group-hover:scale-105 transition-transform duration-500 drop-shadow-md"
+            className="object-contain max-h-[150px] w-full h-full group-hover:scale-110 transition-transform duration-500 drop-shadow-md"
           />
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-4 w-3/5 flex flex-col justify-center gap-1">
-        <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-outline">
-          {product.categoryName || "Accessories"}
-        </span>
-        <h3
-          className="text-[16px] font-semibold leading-tight text-on-background line-clamp-1"
-          style={{ fontFamily: "var(--font-lexend)" }}
-        >
-          {product.name}
-        </h3>
-        <span className="text-[14px] font-semibold text-on-surface-variant mt-auto">
+      <div className="p-6 flex-grow flex flex-col justify-between gap-2">
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-outline">
+            {product.categoryName || "Accessories"}
+          </span>
+          <h3
+            className="text-[18px] font-semibold leading-snug text-on-background line-clamp-2"
+            style={{ fontFamily: "var(--font-lexend)" }}
+          >
+            {product.name}
+          </h3>
+        </div>
+        <span className="text-[16px] font-bold text-on-surface-variant mt-auto">
           {activePrice ? `${activePrice.toLocaleString()} đ` : (locale === "vi" ? "Liên hệ" : "Contact us")}
         </span>
       </div>
@@ -150,7 +152,7 @@ export default function FeaturedProducts() {
   const small = products.slice(1, 3);
 
   return (
-    <section className="max-w-[1280px] mx-auto px-8 py-16">
+    <section className="max-w-[1280px] mx-auto px-8 pt-4 pb-16">
       {/* Section Header */}
       <div className="flex justify-between items-end mb-10">
         <div>

@@ -187,6 +187,7 @@
       "brands": "Thương hiệu",
       "colors": "Màu sắc",
       "orders": "Đơn hàng",
+      "printing": "Cấu hình in ấn",
       "users": "Người dùng",
       "analytics": "Thống kê",
       "logout": "Đăng xuất"
@@ -300,7 +301,25 @@
         "expectedTax": "Thuế dự kiến",
         "totalFulfillmentValue": "Tổng giá trị đơn hàng",
         "method": "Phương thức thanh toán",
-        "noEmail": "Không có email đăng ký"
+        "noEmail": "Không có email đăng ký",
+        "downloadLogoSuccess": "Tải logo thành công!",
+        "downloadLogoError": "Tải logo thất bại.",
+        "downloadLogoTooltip": "Tải ảnh logo này",
+        "designModalTitle": "Thông tin thiết kế in ấn",
+        "loadingDetails": "Đang tải chi tiết thiết kế...",
+        "mockupLayout": "Bản thiết kế mẫu",
+        "material": "Chất liệu in",
+        "textsCount": "Dòng chữ",
+        "imagesCount": "Ảnh / Logo",
+        "price": "Tổng chi phí",
+        "customElementsSpecs": "Chi tiết các lớp in ấn",
+        "customTextLayers": "Các lớp chữ",
+        "noCustomText": "Không có lớp chữ nào.",
+        "customLogoLayers": "Các lớp ảnh / logo",
+        "noCustomLogo": "Không có ảnh logo nào.",
+        "noDesignData": "Không có dữ liệu thiết kế.",
+        "close": "Đóng",
+        "openOriginal": "Mở Ảnh Gốc"
       }
     },
     "productForm": {

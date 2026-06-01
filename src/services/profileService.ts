@@ -8,6 +8,7 @@ export interface UserProfileResponse {
   avatar: string | null;
   role: string;
   tier: string; // BRONZE, SILVER, GOLD, PLATINUM
+  totalSpending: number;
 }
 
 export interface UpdateProfileRequest {

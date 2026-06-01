@@ -31,9 +31,9 @@ export default function HeroSection() {
     <section
       className={cn(
         "max-w-[1280px] mx-auto px-8",
-        "py-16 lg:py-24",
+        "pt-12 pb-6 lg:pt-16 lg:pb-8",
         "grid grid-cols-1 lg:grid-cols-12 gap-8",
-        "items-center min-h-[calc(100dvh-80px)]"
+        "items-center min-h-[auto] lg:min-h-[500px]"
       )}
     >
       {/* Left — Text Content */}
