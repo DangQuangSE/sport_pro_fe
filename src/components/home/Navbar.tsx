@@ -11,6 +11,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useRouter } from "next/navigation";
 import { productService } from "@/services/productService";
 import { motion, AnimatePresence } from "framer-motion";
+import MembershipBadge from "@/components/ui/MembershipBadge";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function Navbar() {
@@ -221,13 +222,20 @@ export default function Navbar() {
           )}
 
           {/* User Profile / Login Link */}
-          <Link
-            href={isLoggedIn ? `/${locale}/profile` : `/${locale}/login`}
-            aria-label="Account"
-            className="text-on-surface hover:text-primary transition-colors"
-          >
-            <User className="w-5 h-5" />
-          </Link>
+          <div className="flex items-center gap-2">
+            {isLoggedIn && user && (
+              <Link href={`/${locale}/profile`} className="hidden sm:inline-flex shrink-0">
+                <MembershipBadge tier={user.tier} size="sm" showLabel={true} />
+              </Link>
+            )}
+            <Link
+              href={isLoggedIn ? `/${locale}/profile` : `/${locale}/login`}
+              aria-label="Account"
+              className="text-on-surface hover:text-primary transition-colors flex items-center"
+            >
+              <User className="w-5 h-5" />
+            </Link>
+          </div>
 
           {/* Cart */}
           <Link
@@ -348,6 +356,12 @@ export default function Navbar() {
           )}
 
           <div className="border-t border-outline-variant mt-4 pt-4 flex flex-col gap-4">
+            {isLoggedIn && user && (
+              <div className="flex items-center justify-between px-1">
+                <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Membership Status</span>
+                <MembershipBadge tier={user.tier} size="sm" showLabel={true} />
+              </div>
+            )}
             {isLoggedIn ? (
               <button
                 suppressHydrationWarning

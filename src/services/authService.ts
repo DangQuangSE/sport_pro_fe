@@ -11,6 +11,8 @@ export interface UserMe {
   email: string;
   role: string;
   authorities: any[];
+  tier: string; // BRONZE, SILVER, GOLD, PLATINUM
+  totalSpending?: number;
 }
 
 export const authService = {
