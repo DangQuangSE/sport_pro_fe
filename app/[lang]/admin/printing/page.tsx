@@ -21,6 +21,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { usePrinting } from "@/hooks/admin/usePrinting";
 import { useAdminPrintingColors } from "@/hooks/admin/useAdminPrintingColors";
 import { useAdminFonts } from "@/hooks/admin/useAdminFonts";
+import { toast } from "sonner";
 
 // Extracted Subcomponents & Modals & Utilities
 import MaterialsTab from "./components/MaterialsTab";

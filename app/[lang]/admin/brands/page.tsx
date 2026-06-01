@@ -52,7 +52,7 @@ export default function BrandsPage() {
       setIsModalOpen(false);
       toast.success(editingBrand ? "Brand updated successfully!" : "Brand created successfully!");
     } else {
-      toast.error(result.error || "An error occurred. Please try again.");
+      toast.error((result.error as string) || "An error occurred. Please try again.");
     }
   };
 
@@ -62,7 +62,7 @@ export default function BrandsPage() {
       if (result.success) {
         toast.success("Brand deleted successfully!");
       } else {
-        toast.error(result.error || "Failed to delete brand");
+        toast.error((result.error as string) || "Failed to delete brand");
       }
     }
   };

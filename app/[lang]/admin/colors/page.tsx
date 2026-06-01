@@ -91,7 +91,7 @@ export default function AdminColorsPage() {
       setIsFormOpen(false);
       toast.success(editingColor ? "Color updated successfully!" : "Color created successfully!");
     } else {
-      toast.error(result.error || "Operation failed");
+      toast.error((result.error as string) || "Operation failed");
     }
   };
 

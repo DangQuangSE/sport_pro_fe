@@ -51,7 +51,7 @@ export default function CategoriesPage() {
       setIsModalOpen(false);
       toast.success(editingCategory ? "Category updated successfully!" : "Category created successfully!");
     } else {
-      toast.error(result.error || "An error occurred. Please try again.");
+      toast.error((result.error as string) || "An error occurred. Please try again.");
     }
   };
 
@@ -61,7 +61,7 @@ export default function CategoriesPage() {
       if (result.success) {
         toast.success("Category deleted successfully!");
       } else {
-        toast.error(result.error || "Failed to delete category");
+        toast.error((result.error as string) || "Failed to delete category");
       }
     }
   };
