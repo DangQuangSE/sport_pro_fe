@@ -121,16 +121,16 @@
   },
   "product": {
     "details": {
-      "inStock": "Còn hàng - Sẵn sàng giao",
+      "inStock": "Còn hàng - Sẵn sàng vận chuyển",
       "outOfStock": "Hết hàng",
       "color": "Màu sắc",
       "sizeUs": "Kích cỡ (US)",
       "sizeGuide": "Hướng dẫn chọn size",
       "quantity": "Số lượng",
-      "addToCart": "Thêm vào giỏ hàng",
+      "addToCart": "Thêm vào giỏ",
       "newRelease": "Sản phẩm mới",
       "specs": "Thông số kỹ thuật",
-      "shippingAndReturns": "Giao hàng & Đổi trả",
+      "shippingAndReturns": "Giao hàng & Trả hàng",
       "authRequired": "Yêu cầu đăng nhập",
       "pleaseLoginCart": "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.",
       "addedToBag": "Đã thêm vào giỏ hàng!",
@@ -139,6 +139,15 @@
     },
     "related": {
       "title": "Có thể bạn cũng thích"
+    },
+    "reviews": {
+      "title": "Đánh giá từ khách hàng",
+      "averageRating": "Đánh giá trung bình",
+      "basedOn": "dựa trên {count} lượt đánh giá",
+      "noReviews": "Chưa có đánh giá nào. Hãy là người đầu tiên trải nghiệm và đánh giá sản phẩm này!",
+      "verifiedBuyer": "Khách hàng đã mua",
+      "replyTitle": "Phản hồi từ Đội ngũ Sport Pro",
+      "submit": "Gửi Đánh giá"
     }
   },
   "catalog": {
@@ -190,7 +199,34 @@
       "printing": "Cấu hình in ấn",
       "users": "Người dùng",
       "analytics": "Thống kê",
+      "reviews": "Đánh giá",
       "logout": "Đăng xuất"
+    },
+    "reviews": {
+      "title": "Quản lý Đánh giá",
+      "subtitle": "Theo dõi, kiểm duyệt và phản hồi ý kiến từ khách hàng",
+      "table": {
+        "product": "Sản phẩm",
+        "customer": "Khách hàng",
+        "rating": "Đánh giá",
+        "comment": "Nội dung",
+        "date": "Ngày gửi",
+        "actions": "Thao tác",
+        "noReviews": "Chưa có đánh giá nào của khách hàng trong hệ thống."
+      },
+      "replyModal": {
+        "title": "Phản hồi Đánh giá",
+        "placeholder": "Nhập phản hồi chính thức của bạn đến khách hàng...",
+        "submit": "Gửi Phản hồi",
+        "cancel": "Hủy bỏ",
+        "success": "Đã gửi phản hồi thành công!",
+        "error": "Gửi phản hồi thất bại."
+      },
+      "delete": {
+        "confirm": "Bạn có chắc chắn muốn xóa đánh giá này không? Thao tác này không thể hoàn tác.",
+        "success": "Xóa đánh giá thành công!",
+        "error": "Xóa đánh giá thất bại."
+      }
     },
     "colors": {
       "subtitle": "Cấu hình danh mục hạt màu Swatch cho biến thể sản phẩm",
@@ -499,7 +535,20 @@
       "items": "Danh sách sản phẩm",
       "loadingDetail": "Đang tải chi tiết đơn hàng...",
       "errorDetail": "Không thể tải chi tiết đơn hàng này. Vui lòng thử lại sau.",
-      "notFound": "Không tìm thấy đơn hàng yêu cầu."
+      "notFound": "Không tìm thấy đơn hàng yêu cầu.",
+      "writeReview": "Viết Đánh giá",
+      "alreadyReviewed": "Đã Đánh giá",
+      "reviewModal": {
+        "title": "Đánh giá sản phẩm",
+        "ratingLabel": "Xếp hạng hiệu năng",
+        "commentLabel": "Ý kiến của bạn",
+        "commentPlaceholder": "Sản phẩm này hoạt động như thế nào? Chia sẻ trải nghiệm của bạn...",
+        "imagesLabel": "Thêm ảnh thực tế (Không bắt buộc)",
+        "submit": "Gửi Đánh giá",
+        "cancel": "Hủy bỏ",
+        "success": "Gửi đánh giá thành công!",
+        "error": "Gửi đánh giá thất bại."
+      }
     }
   }
 }

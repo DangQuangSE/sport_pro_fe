@@ -8,7 +8,10 @@ import ProductGallery from "@/components/product/ProductGallery";
 import ProductInfo from "@/components/product/ProductInfo";
 import RelatedProducts from "@/components/product/RelatedProducts";
 import { productService, ProductDetailResponse } from "@/services/productService";
-import { Loader2, AlertCircle } from "lucide-react";
+import { reviewService, ReviewResponse } from "@/services/reviewService";
+import { Loader2, AlertCircle, Star, User, Calendar } from "lucide-react";
+import { Modal } from "@/components/ui/modal";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
 
 export default function ProductDetailPage() {
@@ -19,6 +22,32 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<ProductDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Reviews State
+  const [reviews, setReviews] = useState<ReviewResponse[]>([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [reviewsPage, setReviewsPage] = useState(0);
+  const [reviewsTotalPages, setReviewsTotalPages] = useState(1);
+  const [reviewsCount, setReviewsCount] = useState(0);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!product) return;
+    const fetchReviews = async () => {
+      try {
+        setReviewsLoading(true);
+        const res = await reviewService.getProductReviews(product.id, reviewsPage, 5);
+        setReviews(res.data.content);
+        setReviewsTotalPages(res.data.totalPages);
+        setReviewsCount(res.data.totalElements);
+      } catch (err) {
+        console.error("Failed to fetch product reviews:", err);
+      } finally {
+        setReviewsLoading(false);
+      }
+    };
+    fetchReviews();
+  }, [product, reviewsPage]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -96,6 +125,171 @@ export default function ProductDetailPage() {
             <ProductInfo product={product} />
           </div>
         </div>
+
+        {/* Reviews Section */}
+        <div className="mt-32 pt-20 border-t border-outline-variant text-left">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12">
+            <h3 
+              className="text-2xl sm:text-3xl font-black italic tracking-tighter text-on-surface uppercase leading-none"
+              style={{ fontFamily: "var(--font-lexend)" }}
+            >
+              {t("product.reviews.title") || "Athlete Feedback"} ({reviewsCount})
+            </h3>
+          </div>
+
+          {reviewsLoading && reviews.length === 0 ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="animate-spin text-primary" size={24} />
+            </div>
+          ) : reviews.length === 0 ? (
+            <div className="bg-surface-variant/20 border border-outline-variant rounded-3xl p-8 text-center text-on-surface-variant font-medium italic">
+              {t("product.reviews.noReviews") || "No reviews yet. Be the first to field test this gear!"}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+              {/* Ratings Summary Column */}
+              <div className="lg:col-span-4 space-y-6">
+                <div className="bg-surface-container/20 border border-outline-variant/60 rounded-3xl p-8 flex flex-col items-center justify-center text-center">
+                  <span className="font-lexend font-black text-5xl text-on-surface italic leading-none">
+                    {product.averageRating?.toFixed(1) || "5.0"}
+                  </span>
+                  
+                  <div className="flex gap-0.5 text-warning my-3">
+                    {[...Array(5)].map((_, i) => {
+                      const avg = product.averageRating ?? 5;
+                      return (
+                        <Star 
+                          key={i} 
+                          size={18} 
+                          fill={i < Math.round(avg) ? "currentColor" : "none"} 
+                          className={i < Math.round(avg) ? "text-warning" : "text-outline-variant"} 
+                        />
+                      );
+                    })}
+                  </div>
+
+                  <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70">
+                    {t("product.reviews.averageRating") || "Average Rating"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Reviews List Column */}
+              <div className="lg:col-span-8 space-y-6">
+                <div className="border border-outline-variant rounded-3xl divide-y divide-outline-variant bg-surface overflow-hidden">
+                  {reviews.map((review) => (
+                    <div key={review.id} className="p-6 space-y-4">
+                      
+                      {/* Reviewer Details */}
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-full bg-surface-variant border border-outline-variant flex items-center justify-center overflow-hidden shrink-0">
+                            {review.userAvatar ? (
+                              <img src={review.userAvatar} alt={review.userName} className="w-full h-full object-cover" />
+                            ) : (
+                              <User size={16} className="text-on-surface-variant/60" />
+                            )}
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-xs text-on-surface font-lexend">{review.userName}</h4>
+                            <p className="text-[9px] font-bold text-on-surface-variant/50 flex items-center gap-1 mt-0.5">
+                              <Calendar size={10} />
+                              {new Date(review.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-0.5 text-warning">
+                          {[...Array(5)].map((_, i) => (
+                            <Star 
+                              key={i} 
+                              size={12} 
+                              fill={i < review.rating ? "currentColor" : "none"} 
+                              className={i < review.rating ? "text-warning" : "text-outline-variant"} 
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Comment & Images */}
+                      <div className="space-y-3 pl-12">
+                        <p className="text-sm text-on-surface leading-relaxed font-semibold">{review.comment}</p>
+                        
+                        {review.images && review.images.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {review.images.map((imgUrl, idx) => (
+                              <div 
+                                key={idx}
+                                onClick={() => setZoomedImage(imgUrl)}
+                                className="w-16 h-16 rounded-xl overflow-hidden border border-outline-variant cursor-zoom-in hover:brightness-90 transition-all shadow-sm"
+                              >
+                                <img src={imgUrl} alt={`Customer image ${idx+1}`} className="w-full h-full object-cover" />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Admin Reply */}
+                        {review.replyComment && (
+                          <div className="bg-surface-variant/20 border border-outline-variant/50 rounded-2xl p-4 mt-2">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-primary">
+                              {t("product.reviews.replyTitle") || "Sport Pro Team Response"}
+                            </p>
+                            <p className="text-xs font-semibold text-on-surface-variant mt-1">{review.replyComment}</p>
+                          </div>
+                        )}
+                      </div>
+
+                    </div>
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {reviewsTotalPages > 1 && (
+                  <div className="flex items-center justify-between bg-surface border border-outline-variant p-4 rounded-2xl shadow-sm">
+                    <span className="text-xs font-bold text-on-surface-variant">
+                      Showing page {reviewsPage + 1} of {reviewsTotalPages}
+                    </span>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={reviewsPage === 0}
+                        onClick={() => setReviewsPage(reviewsPage - 1)}
+                        className="rounded-xl border-outline-variant h-9 px-4 font-bold text-xs"
+                      >
+                        Previous
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={reviewsPage === reviewsTotalPages - 1}
+                        onClick={() => setReviewsPage(reviewsPage + 1)}
+                        className="rounded-xl border-outline-variant h-9 px-4 font-bold text-xs"
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Zoom Image Modal */}
+        <Modal
+          isOpen={zoomedImage !== null}
+          onClose={() => setZoomedImage(null)}
+          title="Photo Viewer"
+          className="max-w-2xl"
+        >
+          {zoomedImage && (
+            <div className="flex items-center justify-center overflow-hidden rounded-xl bg-black/5 p-2">
+              <img src={zoomedImage} alt="Zoomed View" className="max-h-[60vh] max-w-full object-contain" />
+            </div>
+          )}
+        </Modal>
 
         {/* Recommendations Section */}
         <div className="mt-32 pt-20 border-t border-outline-variant">

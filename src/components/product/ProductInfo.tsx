@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ChevronDown, Heart, ShoppingBag, Loader2, CheckCircle2 } from "lucide-react";
+import { ChevronDown, Heart, ShoppingBag, Loader2, CheckCircle2, Star } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -120,6 +120,32 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
       >
         {product.name}
       </h1>
+
+      {/* Product Rating Summary */}
+      <div className="flex items-center gap-2 mb-4">
+        <div className="flex gap-0.5 text-warning">
+          {[...Array(5)].map((_, i) => {
+            const avg = product.averageRating ?? 0;
+            return (
+              <Star 
+                key={i} 
+                size={14} 
+                fill={i < Math.round(avg) ? "currentColor" : "none"} 
+                className={i < Math.round(avg) ? "text-warning" : "text-outline-variant"} 
+              />
+            );
+          })}
+        </div>
+        {product.reviewCount !== undefined && product.reviewCount > 0 ? (
+          <span className="text-[11px] font-bold text-on-surface-variant font-mono">
+            {product.averageRating?.toFixed(1)} ({product.reviewCount} reviews)
+          </span>
+        ) : (
+          <span className="text-[11px] font-bold text-on-surface-variant opacity-60">
+            No reviews yet
+          </span>
+        )}
+      </div>
 
       <div className="flex items-baseline gap-4 mb-8">
         <span
