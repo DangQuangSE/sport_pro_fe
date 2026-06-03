@@ -61,7 +61,7 @@ export default function OrderDetailPage() {
     if (!e.target.files) return;
     const files = Array.from(e.target.files);
     if (selectedFiles.length + files.length > 3) {
-      toast.error("You can upload a maximum of 3 images.");
+      toast.error(t("profile.orders.reviewModal.errorMaxImages") || "You can upload a maximum of 3 images.");
       return;
     }
     setSelectedFiles(prev => [...prev, ...files]);
@@ -77,11 +77,11 @@ export default function OrderDetailPage() {
   const handleSubmitReview = async () => {
     if (!selectedOrderItem) return;
     if (rating === 0) {
-      toast.error("Please select a rating.");
+      toast.error(t("profile.orders.reviewModal.errorRating") || "Please select a rating.");
       return;
     }
     if (!comment.trim()) {
-      toast.error("Please enter a comment.");
+      toast.error(t("profile.orders.reviewModal.errorComment") || "Please enter a comment.");
       return;
     }
 
@@ -396,7 +396,7 @@ export default function OrderDetailPage() {
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-black uppercase text-on-surface truncate">{selectedOrderItem.productName}</p>
-                <p className="text-[10px] font-bold text-on-surface-variant/70 uppercase">Size: {selectedOrderItem.size} | Color: {selectedOrderItem.color}</p>
+                <p className="text-[10px] font-bold text-on-surface-variant/70 uppercase">{t("product.details.sizeUs") || "Size"}: {selectedOrderItem.size} | {t("product.details.color") || "Color"}: {selectedOrderItem.color}</p>
               </div>
             </div>
           )}
@@ -462,7 +462,7 @@ export default function OrderDetailPage() {
               {previewUrls.length < 3 && (
                 <label className="w-16 h-16 rounded-xl border-2 border-dashed border-outline-variant/80 hover:border-primary flex flex-col items-center justify-center cursor-pointer transition-colors hover:bg-surface-variant/15 group">
                   <Upload size={18} className="text-on-surface-variant group-hover:text-primary transition-colors" />
-                  <span className="text-[8px] font-black text-on-surface-variant uppercase mt-1 group-hover:text-primary transition-colors">Add</span>
+                  <span className="text-[8px] font-black text-on-surface-variant uppercase mt-1 group-hover:text-primary transition-colors">{t("profile.orders.reviewModal.add") || "Add"}</span>
                   <input
                     type="file"
                     multiple
@@ -473,7 +473,7 @@ export default function OrderDetailPage() {
                 </label>
               )}
             </div>
-            <p className="text-[9px] font-bold text-on-surface-variant/60">Upload up to 3 photos. Recommended size: square aspect ratio.</p>
+            <p className="text-[9px] font-bold text-on-surface-variant/60">{t("profile.orders.reviewModal.helperText") || "Upload up to 3 photos. Recommended size: square aspect ratio."}</p>
           </div>
         </div>
       </Modal>

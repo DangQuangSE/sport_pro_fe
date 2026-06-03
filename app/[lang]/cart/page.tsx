@@ -133,16 +133,16 @@ export default function CartPage() {
     try {
       await updateQuantity(variantId, newQty);
     } catch (err: any) {
-      toast.error(err.message || "Failed to update quantity");
+      toast.error(err.message || (locale === "vi" ? "Cập nhật số lượng thất bại" : "Failed to update quantity"));
     }
   };
 
   const handleRemoveFromCart = async (itemId: number) => {
     try {
       await removeFromCart(itemId);
-      toast.success("Item removed from bag.");
+      toast.success(locale === "vi" ? "Đã xóa sản phẩm khỏi giỏ hàng." : "Item removed from bag.");
     } catch (err: any) {
-      toast.error(err.message || "Failed to remove item");
+      toast.error(err.message || (locale === "vi" ? "Xóa sản phẩm thất bại" : "Failed to remove item"));
     }
   };
 
@@ -153,7 +153,9 @@ export default function CartPage() {
         <main className="flex-grow flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
             <Loader2 size={48} className="animate-spin text-primary" />
-            <p className="font-lexend font-bold uppercase tracking-widest text-xs text-on-surface-variant">Syncing your gear...</p>
+            <p className="font-lexend font-bold uppercase tracking-widest text-xs text-on-surface-variant">
+              {locale === "vi" ? "Đang đồng bộ giỏ hàng..." : "Syncing your gear..."}
+            </p>
           </div>
         </main>
         <Footer />
@@ -173,7 +175,8 @@ export default function CartPage() {
           <div className="flex-grow space-y-10">
             <div className="space-y-2">
               <h1 className="text-[48px] font-black tracking-tighter text-on-surface uppercase leading-none" style={{ fontFamily: 'var(--font-lexend)' }}>
-                Your Bag <span className="text-on-surface-variant/40 ml-4">({cart?.items?.length ?? 0})</span>
+                {locale === "vi" ? "Giỏ Hàng" : "Your Bag"}{" "}
+                <span className="text-on-surface-variant/40 ml-4">({cart?.items?.length ?? 0})</span>
               </h1>
             </div>
 
@@ -183,13 +186,17 @@ export default function CartPage() {
                   <ShoppingBag size={40} strokeWidth={1.5} />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold uppercase tracking-tight">Your bag is empty</h3>
+                  <h3 className="text-xl font-bold uppercase tracking-tight">
+                    {locale === "vi" ? "Giỏ hàng của bạn đang trống" : "Your bag is empty"}
+                  </h3>
                   <p className="text-on-surface-variant max-w-xs mx-auto text-sm font-medium">
-                    Once you find something you like, it will show up here.
+                    {locale === "vi" ? "Khi bạn tìm thấy sản phẩm yêu thích, chúng sẽ xuất hiện ở đây." : "Once you find something you like, it will show up here."}
                   </p>
                 </div>
                 <Button asChild className="h-14 px-10 rounded-xl bg-primary hover:bg-primary/90 font-lexend font-black uppercase tracking-widest text-xs">
-                  <Link href={`/${locale}/products`}>Shop New Arrivals</Link>
+                  <Link href={`/${locale}/products`}>
+                    {locale === "vi" ? "Mua sắm BST Mới" : "Shop New Arrivals"}
+                  </Link>
                 </Button>
               </div>
             ) : (
@@ -260,7 +267,9 @@ export default function CartPage() {
                           <div className="flex-grow flex flex-col justify-between py-1">
                             <div className="flex justify-between items-start">
                               <div className="space-y-1">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-primary">Performance Gear</p>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-primary">
+                                  {locale === "vi" ? "Trang bị hiệu năng" : "Performance Gear"}
+                                </p>
                                 <Link 
                                   href={`/${locale}/product/${item.productSlug}`}
                                   className="text-lg font-bold uppercase tracking-tight hover:text-primary transition-colors block"
@@ -269,17 +278,17 @@ export default function CartPage() {
                                 </Link>
                                 <div className="flex flex-wrap gap-x-6 gap-y-1 pt-1">
                                   <p className="text-xs text-on-surface-variant font-medium">
-                                    Color: <span className="text-on-surface font-bold uppercase">{item.color}</span>
+                                    {t("product.details.color") || "Color"}: <span className="text-on-surface font-bold uppercase">{item.color}</span>
                                   </p>
                                   <p className="text-xs text-on-surface-variant font-medium">
-                                    Size: <span className="text-on-surface font-bold">{item.size}</span>
+                                    {locale === "vi" ? "Kích cỡ" : "Size"}: <span className="text-on-surface font-bold">{item.size}</span>
                                   </p>
                                 </div>
                                 {item.customDesignId && item.printingPrice && (
                                   <div className="inline-flex items-center gap-1.5 bg-primary/5 text-primary text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded border border-primary/20 mt-1">
                                     <Wrench size={10} />
                                     <span>
-                                      Custom In: +{(item.printingPrice).toLocaleString('vi-VN')} ₫
+                                      {locale === "vi" ? "In tùy chọn" : "Custom In"}: +{(item.printingPrice).toLocaleString('vi-VN')} ₫
                                     </span>
                                   </div>
                                 )}
@@ -311,7 +320,7 @@ export default function CartPage() {
                                 onClick={() => handleRemoveFromCart(item.id)}
                               >
                                 <Trash2 size={14} />
-                                Remove
+                                {locale === "vi" ? "Xóa" : "Remove"}
                               </button>
                             </div>
                           </div>
@@ -401,19 +410,21 @@ export default function CartPage() {
             <div className="w-full lg:w-[420px] shrink-0">
               <div className="sticky top-32 space-y-8">
                 <div className="space-y-6">
-                  <h3 className="text-xl font-black uppercase tracking-tight">Summary</h3>
+                  <h3 className="text-xl font-black uppercase tracking-tight">{t("checkout.orderSummary") || "Summary"}</h3>
                   
                   {/* Promo Code */}
                   <div className="space-y-2">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Do you have a Promo Code?</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
+                      {locale === "vi" ? "Bạn có mã khuyến mãi?" : "Do you have a Promo Code?"}
+                    </p>
                     <div className="flex gap-2">
                       <input 
                         type="text" 
-                        placeholder="ENTER CODE"
+                        placeholder={locale === "vi" ? "NHẬP MÃ KHUYẾN MÃI" : "ENTER CODE"}
                         className="flex-grow h-12 px-4 rounded-xl border border-outline-variant bg-transparent text-xs font-bold uppercase tracking-widest focus:border-primary outline-none"
                       />
                       <Button variant="outline" className="h-12 px-6 rounded-xl border-on-surface bg-on-surface text-surface hover:bg-on-surface/90 text-[10px] font-black uppercase tracking-widest">
-                        Apply
+                        {t("checkout.apply") || "Apply"}
                       </Button>
                     </div>
                   </div>
@@ -421,21 +432,21 @@ export default function CartPage() {
                   {/* Calculations */}
                   <div className="space-y-4 pt-4 border-t border-outline-variant">
                     <div className="flex justify-between items-center text-sm">
-                      <span className="font-medium text-on-surface-variant">Subtotal</span>
+                      <span className="font-medium text-on-surface-variant">{t("checkout.subtotal") || "Subtotal"}</span>
                       <span className="font-bold">{subtotal.toLocaleString('vi-VN')} ₫</span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
-                      <span className="font-medium text-on-surface-variant">Estimated Shipping & Handling</span>
-                      <span className="font-bold">Free</span>
+                      <span className="font-medium text-on-surface-variant">{t("checkout.shipping") || "Estimated Shipping & Handling"}</span>
+                      <span className="font-bold">{t("checkout.shippingFree") || "Free"}</span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
-                      <span className="font-medium text-on-surface-variant">Estimated Tax</span>
+                      <span className="font-medium text-on-surface-variant">{t("checkout.expectedTax") || "Estimated Tax"}</span>
                       <span className="font-bold">—</span>
                     </div>
                     
                     <div className="pt-4 border-t border-on-surface space-y-1">
                       <div className="flex justify-between items-center">
-                        <span className="text-base font-black uppercase tracking-tight">Total</span>
+                        <span className="text-base font-black uppercase tracking-tight">{t("checkout.total") || "Total"}</span>
                         <span className="text-2xl font-black italic tracking-tighter">{subtotal.toLocaleString('vi-VN')} ₫</span>
                       </div>
                     </div>
@@ -452,13 +463,13 @@ export default function CartPage() {
                         onClick={(e) => {
                           if (selectedIds.length === 0) {
                             e.preventDefault();
-                            toast.error("Please select at least one item to checkout.");
+                            toast.error(locale === "vi" ? "Vui lòng chọn ít nhất một sản phẩm để thanh toán." : "Please select at least one item to checkout.");
                             return;
                           }
                           localStorage.setItem("sport_pro_checkout_selected_ids", JSON.stringify(selectedIds));
                         }}
                       >
-                        Proceed to Checkout
+                        {locale === "vi" ? "Tiến hành Thanh toán" : "Proceed to Checkout"}
                         <ArrowRight size={18} />
                       </Link>
                     </Button>
@@ -469,11 +480,15 @@ export default function CartPage() {
                 <div className="flex items-center justify-center gap-8 pt-4 border-t border-outline-variant opacity-50">
                   <div className="flex flex-col items-center gap-1">
                     <PackageCheck size={20} />
-                    <span className="text-[8px] font-black uppercase tracking-widest">Secure Pay</span>
+                    <span className="text-[8px] font-black uppercase tracking-widest">
+                      {locale === "vi" ? "Thanh toán Bảo mật" : "Secure Pay"}
+                    </span>
                   </div>
                   <div className="flex flex-col items-center gap-1">
                     <ShoppingBag size={20} />
-                    <span className="text-[8px] font-black uppercase tracking-widest">Express Ship</span>
+                    <span className="text-[8px] font-black uppercase tracking-widest">
+                      {locale === "vi" ? "Giao hàng Nhanh" : "Express Ship"}
+                    </span>
                   </div>
                 </div>
               </div>

@@ -5,6 +5,7 @@ import { ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { CustomText, CustomImage } from "@/hooks/useCustomizer";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface CustomizerCanvasProps {
   readonly texts: CustomText[];
@@ -34,6 +35,7 @@ export default function CustomizerCanvas({
   setActiveTextId
 }: CustomizerCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   const handlePointerDown = (
     e: React.PointerEvent<HTMLDivElement>,
@@ -79,7 +81,7 @@ export default function CustomizerCanvas({
           size="icon" 
           className="h-10 w-10 text-on-surface-variant hover:text-primary"
           onClick={() => setZoomLevel(prev => Math.min(prev + 0.1, 1.5))}
-          title="Zoom In"
+          title={t("product.details.zoomIn") || "Zoom In"}
         >
           <ZoomIn size={18} />
         </Button>
@@ -88,7 +90,7 @@ export default function CustomizerCanvas({
           size="icon" 
           className="h-10 w-10 text-on-surface-variant hover:text-primary"
           onClick={() => setZoomLevel(prev => Math.max(prev - 0.1, 0.7))}
-          title="Zoom Out"
+          title={t("product.details.zoomOut") || "Zoom Out"}
         >
           <ZoomOut size={18} />
         </Button>
@@ -98,7 +100,7 @@ export default function CustomizerCanvas({
           size="icon" 
           className="h-10 w-10 text-on-surface-variant hover:text-primary"
           onClick={handleResetDesign}
-          title="Reset Design"
+          title={t("product.details.resetDesign") || "Reset Design"}
         >
           <RotateCcw size={18} />
         </Button>

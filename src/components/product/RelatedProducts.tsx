@@ -51,7 +51,7 @@ export default function RelatedProducts({ categoryId }: Readonly<RelatedProducts
         className="text-[32px] uppercase italic font-black text-on-surface tracking-tighter text-center"
         style={{ fontFamily: "var(--font-lexend)" }}
       >
-        Complete Your Look
+        {t("product.related.title") || "Complete Your Look"}
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
         {products.map((product) => {
@@ -72,7 +72,7 @@ export default function RelatedProducts({ categoryId }: Readonly<RelatedProducts
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute top-4 left-4 bg-on-surface text-surface text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                  Quick View
+                  {t("product.details.quickView") || "Quick View"}
                 </div>
               </div>
               <div className="space-y-1">

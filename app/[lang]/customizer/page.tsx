@@ -103,7 +103,7 @@ export default function ProductCustomizerPage() {
       <div className="flex flex-col items-center justify-center min-h-screen space-y-6 bg-[#f9f9fe]">
         <Loader2 size={48} className="animate-spin text-primary" />
         <p className="font-mono text-sm tracking-wider uppercase text-on-surface-variant">
-          Initializing Customizer Workspace...
+          {t("customizer.initializing") || "Initializing Customizer Workspace..."}
         </p>
       </div>
     );
@@ -132,7 +132,7 @@ export default function ProductCustomizerPage() {
           Trình thiết kế sản phẩm (Nâng cao)
         </h2>
         <div className="text-right text-xs">
-          <span className="font-bold text-on-surface-variant uppercase tracking-widest">Active Variant</span>
+          <span className="font-bold text-on-surface-variant uppercase tracking-widest">{t("customizer.activeVariant") || "Active Variant"}</span>
           <p className="font-black text-primary italic">Sport Pro Premium Shirt</p>
         </div>
       </header>

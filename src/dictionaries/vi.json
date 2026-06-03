@@ -59,7 +59,9 @@
       "shop": "Mua sắm",
       "sale": "Giảm giá",
       "admin": "Quản trị",
-      "searchPlaceholder": "Tìm kiếm ..."
+      "searchPlaceholder": "Tìm kiếm ...",
+      "account": "Tài khoản",
+      "cart": "Giỏ hàng — {count} sản phẩm"
     },
     "hero": {
       "overline": "Xuân / Hè 2026",
@@ -135,7 +137,17 @@
       "pleaseLoginCart": "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.",
       "addedToBag": "Đã thêm vào giỏ hàng!",
       "selectColor": "Chọn màu sắc",
-      "selectSize": "Chọn kích cỡ"
+      "selectSize": "Chọn kích cỡ",
+      "wishlist": "Thêm vào Yêu thích",
+      "noReviews": "Chưa có đánh giá nào",
+      "reviewsCount": "({count} đánh giá)",
+      "description": "Mô tả sản phẩm",
+      "shippingDesc1": "Miễn phí vận chuyển tiêu chuẩn cho đơn hàng từ 500.000 đ. Tùy chọn giao nhanh khả dụng khi thanh toán.",
+      "shippingDesc2": "Chấp nhận trả hàng trong vòng 30 ngày kể từ ngày nhận hàng với tình trạng chưa sử dụng.",
+      "quickView": "Xem nhanh",
+      "zoomIn": "Phóng to",
+      "zoomOut": "Thu nhỏ",
+      "resetDesign": "Đặt lại thiết kế"
     },
     "related": {
       "title": "Có thể bạn cũng thích"
@@ -147,7 +159,11 @@
       "noReviews": "Chưa có đánh giá nào. Hãy là người đầu tiên trải nghiệm và đánh giá sản phẩm này!",
       "verifiedBuyer": "Khách hàng đã mua",
       "replyTitle": "Phản hồi từ Đội ngũ Sport Pro",
-      "submit": "Gửi Đánh giá"
+      "submit": "Gửi Đánh giá",
+      "photoViewer": "Xem ảnh",
+      "previous": "Trước",
+      "next": "Sau",
+      "showingPage": "Hiển thị trang {page} trên {totalPages}"
     }
   },
   "catalog": {
@@ -189,6 +205,23 @@
     "1m3m": "1 Triệu - 3 Triệu"
   },
   "admin": {
+    "title": "Quản trị Hệ thống",
+    "dashboard": {
+      "title": "Trung tâm Điều hành",
+      "syncing": "Đang đồng bộ hoạt động điều hành...",
+      "totalRevenue": "Tổng Doanh thu",
+      "activeOrders": "Đơn hàng Hoạt động",
+      "totalProducts": "Tổng Sản phẩm",
+      "newCustomers": "Khách hàng Mới",
+      "revenueAnalytics": "Phân tích Doanh thu",
+      "revenueAnalyticsSub": "Dòng doanh thu thô hàng ngày — 30 ngày qua",
+      "recentOrders": "Đơn hàng Gần đây",
+      "viewAllOrders": "Xem Tất cả Đơn hàng",
+      "awaitingSales": "Đang chờ dữ liệu bán hàng",
+      "awaitingSalesSub": "Biểu đồ doanh thu hàng ngày sẽ hiển thị khi có đơn hàng được giao thành công.",
+      "awaitingTransactions": "Đang chờ giao dịch",
+      "orderHash": "Đơn hàng #{id}"
+    },
     "sidebar": {
       "dashboard": "Bảng điều khiển",
       "products": "Sản phẩm",
@@ -226,7 +259,22 @@
         "confirm": "Bạn có chắc chắn muốn xóa đánh giá này không? Thao tác này không thể hoàn tác.",
         "success": "Xóa đánh giá thành công!",
         "error": "Xóa đánh giá thất bại."
-      }
+      },
+      "totalFeedback": "Tổng số phản hồi",
+      "at": "lúc",
+      "editReply": "Chỉnh sửa phản hồi",
+      "addReply": "Thêm phản hồi chính thức",
+      "deleteBtn": "Xóa đánh giá",
+      "deleteModalTitle": "Xóa Đánh giá",
+      "deleteModalConfirm": "Xác nhận xóa",
+      "zoomModalTitle": "Xem ảnh",
+      "replyModalLabel": "Nội dung phản hồi",
+      "showingPage": "Hiển thị trang {page} trên {totalPages}",
+      "previous": "Trước",
+      "next": "Tiếp theo",
+      "errorLoad": "Không thể tải danh sách đánh giá.",
+      "errorEmpty": "Vui lòng nhập nội dung phản hồi.",
+      "loading": "Đang tải ý kiến từ vận động viên..."
     },
     "colors": {
       "subtitle": "Cấu hình danh mục hạt màu Swatch cho biến thể sản phẩm",
@@ -247,6 +295,12 @@
       "edit": "Sửa sản phẩm",
       "delete": "Xóa sản phẩm",
       "search": "Tìm sản phẩm...",
+      "confirmDelete": "Bạn có chắc chắn muốn xóa sản phẩm này không?",
+      "deleteSuccess": "Xóa sản phẩm thành công!",
+      "deleteError": "Xóa sản phẩm thất bại.",
+      "catalog": "Danh mục Sản phẩm",
+      "filter": "Bộ lọc",
+      "sort": "Sắp xếp",
       "table": {
         "product": "Sản phẩm",
         "sku": "Mã SKU",
@@ -255,7 +309,11 @@
         "price": "Giá bán",
         "stock": "Kho",
         "status": "Trạng thái",
-        "actions": "Thao tác"
+        "actions": "Thao tác",
+        "noProducts": "Không tìm thấy sản phẩm nào trong danh mục.",
+        "active": "Hoạt động",
+        "inactive": "Không hoạt động",
+        "outOfStock": "Hết hàng"
       }
     },
     "categories": {
@@ -456,19 +514,19 @@
     "lastName": "HỌ",
     "streetAddress": "ĐỊA CHỈ ĐƯỜNG PHỐ",
     "paymentMethods": "PHƯƠNG THỨC THANH TOÁN",
-    "transferQr": "TRANSFER MONEY VIA QR CODE",
+    "transferQr": "CHUYỂN KHOẢN NGÂN HÀNG QUA MÃ QR",
     "orderOverview": "TỔNG QUAN ĐƠN HÀNG",
     "estimated": "Ước tính",
     "standardDelivery": "Giao hàng tiêu chuẩn",
     "expectedTax": "Thuế dự kiến",
-    "customizeButton": "CUSTOMIZE TEXT & LOGO PRINTING",
-    "confirmButton": "CONFIRM & SEND ORDER",
+    "customizeButton": "TÙY CHỈNH IN CHỮ & LOGO",
+    "confirmButton": "XÁC NHẬN & GỬI ĐƠN HÀNG",
     "notice": "Đơn hàng của bạn sẽ được xác nhận khi chúng tôi nhận được khoản thanh toán. Bằng việc đặt hàng, bạn đồng ý với Điều khoản Dịch vụ và Chính sách Bảo mật của chúng tôi.",
     "security": "BẢO MẬT",
     "clause": "ĐIỀU KHOẢN",
-    "returnsExchanges": "ĐỔI TRẢ VÀ HÒA TIỀN",
+    "returnsExchanges": "ĐỔI TRẢ VÀ HOÀN TIỀN",
     "contact": "LIÊN HỆ",
-    "footerDesign": "DESIGNED FOR PERFORMANCE. ALL RIGHTS RESERVED."
+    "footerDesign": "THIẾT KẾ CHO HIỆU NĂNG. BẢO LƯU MỌI QUYỀN."
   },
   "profile": {
     "title": "Hồ Sơ Cá Nhân",
@@ -547,8 +605,18 @@
         "submit": "Gửi Đánh giá",
         "cancel": "Hủy bỏ",
         "success": "Gửi đánh giá thành công!",
-        "error": "Gửi đánh giá thất bại."
+        "error": "Gửi đánh giá thất bại.",
+        "helperText": "Tải lên tối đa 3 ảnh. Đề xuất: tỷ lệ vuông.",
+        "photoViewer": "Xem ảnh",
+        "add": "Thêm",
+        "errorMaxImages": "Bạn chỉ có thể tải lên tối đa 3 ảnh.",
+        "errorRating": "Vui lòng chọn số sao đánh giá.",
+        "errorComment": "Vui lòng nhập nội dung đánh giá."
       }
     }
+  },
+  "customizer": {
+    "initializing": "Đang khởi tạo không gian thiết kế...",
+    "activeVariant": "Biến thể hoạt động"
   }
 }

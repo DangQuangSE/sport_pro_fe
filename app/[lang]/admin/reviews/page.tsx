@@ -55,7 +55,7 @@ export default function AdminReviewsPage() {
       setTotalElements(res.data.totalElements);
     } catch (err) {
       console.error("Failed to load reviews:", err);
-      toast.error("Failed to load customer reviews.");
+      toast.error(t("admin.reviews.errorLoad") || "Failed to load customer reviews.");
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +74,7 @@ export default function AdminReviewsPage() {
   const handleSendReply = async () => {
     if (!selectedReview) return;
     if (!replyText.trim()) {
-      toast.error("Please enter a reply message.");
+      toast.error(t("admin.reviews.errorEmpty") || "Please enter a reply message.");
       return;
     }
 
@@ -141,7 +141,7 @@ export default function AdminReviewsPage() {
       <div className="flex flex-col items-center justify-center min-h-[400px] space-y-6 animate-in fade-in duration-300">
         <Loader2 size={40} className="animate-spin text-primary" />
         <p className="text-on-surface-variant font-mono font-medium text-sm tracking-wider uppercase">
-          Loading athlete feedback...
+          {t("admin.reviews.loading") || "Loading athlete feedback..."}
         </p>
       </div>
     );
@@ -175,7 +175,7 @@ export default function AdminReviewsPage() {
         <div className="bg-surface-variant/40 border border-outline-variant/60 rounded-2xl px-5 py-3 self-start md:self-auto flex items-center gap-3">
           <MessageCircle className="text-primary" size={20} />
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70">Total Feedback</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70">{t("admin.reviews.totalFeedback") || "Total Feedback"}</p>
             <p className="font-lexend font-black text-lg text-on-surface leading-none mt-0.5">{totalElements}</p>
           </div>
         </div>
@@ -207,7 +207,7 @@ export default function AdminReviewsPage() {
                       <h4 className="font-bold text-sm text-on-surface font-lexend">{review.userName}</h4>
                       <p className="text-[10px] font-bold text-on-surface-variant/60 flex items-center gap-1 mt-0.5">
                         <Calendar size={12} />
-                        {new Date(review.createdAt).toLocaleDateString()} at {new Date(review.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {new Date(review.createdAt).toLocaleDateString()} {t("admin.reviews.at") || "at"} {new Date(review.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
                   </div>
@@ -247,13 +247,13 @@ export default function AdminReviewsPage() {
                       <div className="bg-surface-variant/30 rounded-2xl border border-outline-variant/50 p-4 space-y-2 relative">
                         <CornerDownRight size={16} className="absolute left-4 top-4.5 text-primary shrink-0" />
                         <div className="pl-6 text-left">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-primary leading-none">Sport Pro Response</p>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-primary leading-none">{t("admin.reviews.replyTitle") || "Sport Pro Response"}</p>
                           <p className="text-xs font-semibold text-on-surface-variant mt-1.5">{review.replyComment}</p>
                           <button
                             onClick={() => handleOpenReply(review)}
                             className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/80 hover:text-primary transition-colors mt-2 underline"
                           >
-                            Edit Reply
+                            {t("admin.reviews.editReply") || "Edit Reply"}
                           </button>
                         </div>
                       </div>
@@ -263,7 +263,7 @@ export default function AdminReviewsPage() {
                         className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary hover:text-primary/90 transition-colors"
                       >
                         <MessageSquare size={14} />
-                        Add official Response
+                        {t("admin.reviews.addReply") || "Add official Response"}
                       </button>
                     )}
                   </div>
@@ -277,7 +277,7 @@ export default function AdminReviewsPage() {
                       className="h-9 px-4 rounded-xl border-outline-variant text-error hover:bg-error/10 hover:border-error/30 hover:text-error transition-all gap-1.5 font-bold text-xs uppercase"
                     >
                       <Trash2 size={14} />
-                      Delete Review
+                      {t("admin.reviews.deleteBtn") || "Delete Review"}
                     </Button>
                   </div>
                 </div>
@@ -290,7 +290,7 @@ export default function AdminReviewsPage() {
           {totalPages > 1 && (
             <div className="flex items-center justify-between bg-surface border border-outline-variant p-4 rounded-2xl shadow-sm">
               <span className="text-xs font-bold text-on-surface-variant">
-                Showing page {page + 1} of {totalPages}
+                {t("admin.reviews.showingPage")?.replace("{page}", String(page + 1)).replace("{totalPages}", String(totalPages)) || `Showing page ${page + 1} of ${totalPages}`}
               </span>
               <div className="flex gap-2">
                 <Button
@@ -300,7 +300,7 @@ export default function AdminReviewsPage() {
                   onClick={() => setPage(page - 1)}
                   className="rounded-xl border-outline-variant"
                 >
-                  Previous
+                  {t("admin.reviews.previous") || "Previous"}
                 </Button>
                 <Button
                   variant="outline"
@@ -309,7 +309,7 @@ export default function AdminReviewsPage() {
                   onClick={() => setPage(page + 1)}
                   className="rounded-xl border-outline-variant"
                 >
-                  Next
+                  {t("admin.reviews.next") || "Next"}
                 </Button>
               </div>
             </div>
@@ -351,7 +351,7 @@ export default function AdminReviewsPage() {
             </div>
           )}
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Response Message</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">{t("admin.reviews.replyModal.replyModalLabel") || "Response Message"}</label>
             <textarea
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
@@ -368,7 +368,7 @@ export default function AdminReviewsPage() {
       <Modal
         isOpen={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
-        title="Delete Review"
+        title={t("admin.reviews.deleteModalTitle") || "Delete Review"}
         footer={
           <>
             <Button 
@@ -377,7 +377,7 @@ export default function AdminReviewsPage() {
               className="rounded-xl font-bold h-11 border-outline-variant"
               disabled={isSubmitting}
             >
-              Cancel
+              {t("admin.reviews.replyModal.cancel") || "Cancel"}
             </Button>
             <Button 
               variant="destructive"
@@ -386,7 +386,7 @@ export default function AdminReviewsPage() {
               disabled={isSubmitting}
             >
               {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : null}
-              Confirm Delete
+              {t("admin.reviews.deleteModalConfirm") || "Confirm Delete"}
             </Button>
           </>
         }
@@ -400,7 +400,7 @@ export default function AdminReviewsPage() {
       <Modal
         isOpen={zoomedImage !== null}
         onClose={() => setZoomedImage(null)}
-        title="Photo Viewer"
+        title={t("admin.reviews.zoomModalTitle") || "Photo Viewer"}
         className="max-w-2xl"
       >
         {zoomedImage && (

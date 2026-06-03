@@ -248,7 +248,7 @@ export default function ProductDetailPage() {
                 {reviewsTotalPages > 1 && (
                   <div className="flex items-center justify-between bg-surface border border-outline-variant p-4 rounded-2xl shadow-sm">
                     <span className="text-xs font-bold text-on-surface-variant">
-                      Showing page {reviewsPage + 1} of {reviewsTotalPages}
+                      {t("product.reviews.showingPage")?.replace("{page}", String(reviewsPage + 1)).replace("{totalPages}", String(reviewsTotalPages)) || `Showing page ${reviewsPage + 1} of ${reviewsTotalPages}`}
                     </span>
                     <div className="flex gap-2">
                       <Button
@@ -258,7 +258,7 @@ export default function ProductDetailPage() {
                         onClick={() => setReviewsPage(reviewsPage - 1)}
                         className="rounded-xl border-outline-variant h-9 px-4 font-bold text-xs"
                       >
-                        Previous
+                        {t("product.reviews.previous") || "Previous"}
                       </Button>
                       <Button
                         variant="outline"
@@ -267,7 +267,7 @@ export default function ProductDetailPage() {
                         onClick={() => setReviewsPage(reviewsPage + 1)}
                         className="rounded-xl border-outline-variant h-9 px-4 font-bold text-xs"
                       >
-                        Next
+                        {t("product.reviews.next") || "Next"}
                       </Button>
                     </div>
                   </div>
@@ -281,7 +281,7 @@ export default function ProductDetailPage() {
         <Modal
           isOpen={zoomedImage !== null}
           onClose={() => setZoomedImage(null)}
-          title="Photo Viewer"
+          title={t("product.reviews.photoViewer") || "Photo Viewer"}
           className="max-w-2xl"
         >
           {zoomedImage && (
