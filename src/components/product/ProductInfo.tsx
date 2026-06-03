@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ChevronDown, Heart, ShoppingBag, Loader2, CheckCircle2 } from "lucide-react";
+import { ChevronDown, Heart, ShoppingBag, Loader2, CheckCircle2, Star } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -120,6 +120,32 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
       >
         {product.name}
       </h1>
+
+      {/* Product Rating Summary */}
+      <div className="flex items-center gap-2 mb-4">
+        <div className="flex gap-0.5 text-warning">
+          {[...Array(5)].map((_, i) => {
+            const avg = product.averageRating ?? 0;
+            return (
+              <Star 
+                key={i} 
+                size={14} 
+                fill={i < Math.round(avg) ? "currentColor" : "none"} 
+                className={i < Math.round(avg) ? "text-warning" : "text-outline-variant"} 
+              />
+            );
+          })}
+        </div>
+        {product.reviewCount !== undefined && product.reviewCount > 0 ? (
+          <span className="text-[11px] font-bold text-on-surface-variant font-mono">
+            {product.averageRating?.toFixed(1)} {t("product.details.reviewsCount")?.replace("{count}", String(product.reviewCount)) || `(${product.reviewCount} reviews)`}
+          </span>
+        ) : (
+          <span className="text-[11px] font-bold text-on-surface-variant opacity-60">
+            {t("product.details.noReviews") || "No reviews yet"}
+          </span>
+        )}
+      </div>
 
       <div className="flex items-baseline gap-4 mb-8">
         <span
@@ -267,11 +293,11 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
 
         {/* Wishlist */}
         <button
-          aria-label="Add to Wishlist"
+          aria-label={t("product.details.wishlist") || "Add to Wishlist"}
           className="w-full h-14 border border-outline-variant bg-surface text-on-surface-variant hover:text-on-surface hover:border-on-surface flex items-center justify-center gap-3 transition-all duration-300 rounded-xl font-bold text-xs uppercase tracking-widest cursor-pointer"
         >
           <Heart className="w-5 h-5" />
-          Add to Wishlist
+          {t("product.details.wishlist") || "Add to Wishlist"}
         </button>
       </div>
 
@@ -282,11 +308,11 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
             className="flex justify-between items-center text-[18px] font-bold text-on-surface cursor-pointer p-6 list-none [&::-webkit-details-marker]:hidden uppercase tracking-tight"
             style={{ fontFamily: "var(--font-lexend)" }}
           >
-            Product Description
+            {t("product.details.description") || "Product Description"}
             <ChevronDown className="w-5 h-5 transition duration-300 group-open:rotate-180 text-on-surface-variant" />
           </summary>
           <div className="p-6 pt-0 text-on-surface-variant text-[15px] leading-[1.6]">
-            {product.description || "No description provided for this high-performance gear."}
+            {product.description || (locale === "vi" ? "Chưa có mô tả kỹ thuật cho trang bị hiệu năng này." : "No description provided for this high-performance gear.")}
           </div>
         </details>
         <details className="group">
@@ -294,15 +320,15 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
             className="flex justify-between items-center text-[18px] font-bold text-on-surface cursor-pointer p-6 list-none [&::-webkit-details-marker]:hidden uppercase tracking-tight"
             style={{ fontFamily: "var(--font-lexend)" }}
           >
-            Shipping & Returns
+            {t("product.details.shippingAndReturns") || "Shipping & Returns"}
             <ChevronDown className="w-5 h-5 transition duration-300 group-open:rotate-180 text-on-surface-variant" />
           </summary>
           <div className="p-6 pt-0 text-on-surface-variant text-[15px] leading-[1.6]">
             <p className="mb-2">
-              Free standard shipping on orders over 500,000 VND. Expedited options available at checkout.
+              {t("product.details.shippingDesc1") || "Free standard shipping on orders over 500,000 VND. Expedited options available at checkout."}
             </p>
             <p>
-              Returns accepted within 30 days of delivery in unworn condition.
+              {t("product.details.shippingDesc2") || "Returns accepted within 30 days of delivery in unworn condition."}
             </p>
           </div>
         </details>

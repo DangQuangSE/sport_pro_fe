@@ -16,7 +16,8 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  LogOut
+  LogOut,
+  MessageSquare
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthContext } from "@/contexts/AuthContext";
@@ -30,6 +31,7 @@ const sidebarItems = [
   { icon: Palette, labelKey: "admin.sidebar.colors", defaultLabel: "Colors", href: "/admin/colors" },
   { icon: Printer, labelKey: "admin.sidebar.printing", defaultLabel: "Printing", href: "/admin/printing" },
   { icon: ShoppingCart, labelKey: "admin.sidebar.orders", defaultLabel: "Orders", href: "/admin/orders" },
+  { icon: MessageSquare, labelKey: "admin.sidebar.reviews", defaultLabel: "Reviews", href: "/admin/reviews" },
   { icon: Users, labelKey: "admin.sidebar.users", defaultLabel: "Users", href: "/admin/users" },
   { icon: BarChart3, labelKey: "admin.sidebar.analytics", defaultLabel: "Analytics", href: "/admin/analytics" },
 ];

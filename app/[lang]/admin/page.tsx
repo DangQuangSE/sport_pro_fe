@@ -18,10 +18,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { adminService, RevenueReportResponse } from "@/services/adminService";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function AdminDashboardPage() {
   const params = useParams();
   const locale = params?.lang as string || "en";
+  const { t } = useTranslation();
 
   const [isLoading, setIsLoading] = useState(true);
   const [totalRevenue, setTotalRevenue] = useState("0 đ");
@@ -117,8 +119,8 @@ export default function AdminDashboardPage() {
       return (
         <div className="text-center text-on-surface-variant/60 py-10 space-y-2">
           <Calendar size={32} className="mx-auto text-outline animate-bounce" />
-          <p className="text-xs uppercase tracking-widest font-black">Awaiting Sales Records</p>
-          <p className="text-[10px] text-outline font-medium">Daily revenue graphs populate as successfully delivered orders accumulate.</p>
+          <p className="text-xs uppercase tracking-widest font-black">{t("admin.dashboard.awaitingSales") || "Awaiting Sales Records"}</p>
+          <p className="text-[10px] text-outline font-medium">{t("admin.dashboard.awaitingSalesSub") || "Daily revenue graphs populate as successfully delivered orders accumulate."}</p>
         </div>
       );
     }
@@ -214,35 +216,35 @@ export default function AdminDashboardPage() {
     return (
       <div className="min-h-[500px] flex flex-col items-center justify-center gap-4 text-on-surface-variant">
         <Loader2 size={40} className="animate-spin text-primary" />
-        <p className="text-xs font-bold uppercase tracking-widest italic animate-pulse">Syncing Command Operations...</p>
+        <p className="text-xs font-bold uppercase tracking-widest italic animate-pulse">{t("admin.dashboard.syncing") || "Syncing Command Operations..."}</p>
       </div>
     );
   }
 
   const stats = [
     { 
-      label: "Total Revenue", 
+      label: t("admin.dashboard.totalRevenue") || "Total Revenue", 
       value: totalRevenue, 
       change: "+12.5%", 
       trend: "up",
       icon: TrendingUp 
     },
     { 
-      label: "Active Orders", 
+      label: t("admin.dashboard.activeOrders") || "Active Orders", 
       value: activeOrdersCount.toString(), 
       change: "+5.2%", 
       trend: "up",
       icon: ShoppingCart 
     },
     { 
-      label: "Total Products", 
+      label: t("admin.dashboard.totalProducts") || "Total Products", 
       value: totalProductsCount.toString(), 
       change: "0%", 
       trend: "neutral",
       icon: Package 
     },
     { 
-      label: "New Customers", 
+      label: t("admin.dashboard.newCustomers") || "New Customers", 
       value: newCustomersCount.toString(), 
       change: "+14.8%", 
       trend: "up",
@@ -259,11 +261,12 @@ export default function AdminDashboardPage() {
           ADMIN
         </Link>
         <span className="text-[12px] leading-none">›</span>
-        <span className="text-on-surface">DASHBOARD</span>
+        <span className="text-on-surface">{t("admin.sidebar.dashboard") || "DASHBOARD"}</span>
       </div>
 
       <h2 className="text-5xl font-black italic tracking-tighter text-on-surface uppercase leading-none mb-8" style={{ fontFamily: "var(--font-lexend)" }}>
-        Command <span className="text-primary">Center</span>
+        {t("admin.dashboard.title")?.split(" ")[0] || "Command"}{" "}
+        <span className="text-primary">{t("admin.dashboard.title")?.split(" ").slice(1).join(" ") || "Center"}</span>
       </h2>
 
       {/* Stats Grid */}
@@ -302,8 +305,8 @@ export default function AdminDashboardPage() {
         <div className="lg:col-span-2 bg-surface p-8 rounded-[2rem] border-2 border-outline-variant flex flex-col justify-between overflow-hidden">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="font-lexend font-black text-on-surface uppercase tracking-widest text-sm italic">Revenue Analytics</h3>
-              <p className="text-[10px] text-on-surface-variant uppercase font-black tracking-wider mt-1">Gross daily revenue stream — past 30 days</p>
+              <h3 className="font-lexend font-black text-on-surface uppercase tracking-widest text-sm italic">{t("admin.dashboard.revenueAnalytics") || "Revenue Analytics"}</h3>
+              <p className="text-[10px] text-on-surface-variant uppercase font-black tracking-wider mt-1">{t("admin.dashboard.revenueAnalyticsSub") || "Gross daily revenue stream — past 30 days"}</p>
             </div>
             <TrendingUp className="text-primary animate-pulse" size={20} />
           </div>
@@ -315,7 +318,7 @@ export default function AdminDashboardPage() {
         {/* Real Dynamic Recent Orders list */}
         <div className="bg-surface p-8 rounded-[2rem] border-2 border-outline-variant min-h-[440px] flex flex-col">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-lexend font-black text-on-surface uppercase tracking-widest text-sm italic">Recent Orders</h3>
+            <h3 className="font-lexend font-black text-on-surface uppercase tracking-widest text-sm italic">{t("admin.dashboard.recentOrders") || "Recent Orders"}</h3>
             <Layers size={18} className="text-primary" />
           </div>
 
@@ -326,7 +329,7 @@ export default function AdminDashboardPage() {
                   <ShoppingCart size={24} />
                 </div>
                 <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-                  Awaiting Elite Transactions
+                  {t("admin.dashboard.awaitingTransactions") || "Awaiting Elite Transactions"}
                 </p>
               </div>
             ) : (
@@ -339,7 +342,7 @@ export default function AdminDashboardPage() {
                   >
                     <div className="space-y-1">
                       <p className="text-xs font-black uppercase tracking-wider text-on-surface group-hover/item:text-primary transition-colors">
-                        Order #{order.id}
+                        {t("admin.dashboard.orderHash")?.replace("{id}", String(order.id)) || `Order #${order.id}`}
                       </p>
                       <p className="text-[9px] font-bold text-on-surface-variant tracking-wider">
                         {formatDate(order.createdAt)}
@@ -361,7 +364,7 @@ export default function AdminDashboardPage() {
 
           <Link href={`/${locale}/admin/orders`} className="w-full mt-6">
             <Button variant="outline" className="w-full h-12 rounded-xl font-bold uppercase tracking-widest text-[10px]">
-              View All Orders
+              {t("admin.dashboard.viewAllOrders") || "View All Orders"}
             </Button>
           </Link>
         </div>

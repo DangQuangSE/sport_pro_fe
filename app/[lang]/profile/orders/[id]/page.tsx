@@ -15,14 +15,20 @@ import {
   MapPin,
   Clock,
   ShieldAlert,
-  ShoppingBag
+  ShoppingBag,
+  Star,
+  Upload,
+  X
 } from "lucide-react";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import { orderService, OrderResponse, OrderStatus } from "@/services/orderService";
+import { reviewService } from "@/services/reviewService";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function OrderDetailPage() {
   const { id } = useParams() as { id: string };
@@ -32,6 +38,69 @@ export default function OrderDetailPage() {
   const [order, setOrder] = useState<OrderResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Review states
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedOrderItem, setSelectedOrderItem] = useState<any | null>(null);
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+
+  const handleOpenReviewModal = (item: any) => {
+    setSelectedOrderItem(item);
+    setRating(5);
+    setComment("");
+    setSelectedFiles([]);
+    setPreviewUrls([]);
+    setIsReviewModalOpen(true);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const files = Array.from(e.target.files);
+    if (selectedFiles.length + files.length > 3) {
+      toast.error(t("profile.orders.reviewModal.errorMaxImages") || "You can upload a maximum of 3 images.");
+      return;
+    }
+    setSelectedFiles(prev => [...prev, ...files]);
+    const newUrls = files.map(file => URL.createObjectURL(file));
+    setPreviewUrls(prev => [...prev, ...newUrls]);
+  };
+
+  const removeFile = (idx: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== idx));
+    setPreviewUrls(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleSubmitReview = async () => {
+    if (!selectedOrderItem) return;
+    if (rating === 0) {
+      toast.error(t("profile.orders.reviewModal.errorRating") || "Please select a rating.");
+      return;
+    }
+    if (!comment.trim()) {
+      toast.error(t("profile.orders.reviewModal.errorComment") || "Please enter a comment.");
+      return;
+    }
+
+    try {
+      setIsSubmittingReview(true);
+      await reviewService.createReview(rating, comment, selectedOrderItem.id, selectedFiles);
+      toast.success(t("profile.orders.reviewModal.success") || "Review submitted successfully!");
+      setIsReviewModalOpen(false);
+      
+      // Reload order details to refresh the isReviewed status of items
+      const res = await orderService.getOrderDetails(Number(id));
+      setOrder(res.data);
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || t("profile.orders.reviewModal.error") || "Failed to submit review.");
+    } finally {
+      setIsSubmittingReview(false);
+    }
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -232,6 +301,22 @@ export default function OrderDetailPage() {
                         <span className="w-1.5 h-1.5 rounded-full bg-outline-variant" />
                         <span>QTY: <span className="text-on-surface">{item.quantity}</span></span>
                       </div>
+                      {order.status === OrderStatus.DELIVERED && (
+                        <div className="pt-2">
+                          {item.isReviewed ? (
+                            <span className="inline-flex items-center text-[10px] font-black tracking-wider uppercase text-success/80 border border-success/20 bg-success/5 px-2.5 py-0.5 rounded-full">
+                              {t("profile.orders.alreadyReviewed") || "Reviewed"}
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => handleOpenReviewModal(item)}
+                              className="text-[10px] font-black tracking-wider uppercase text-primary hover:underline hover:text-primary/95 transition-all"
+                            >
+                              {t("profile.orders.writeReview") || "Write Review"}
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <div className="text-right shrink-0 space-y-0.5">
                       <p className="text-xs font-semibold text-on-surface-variant/70">${item.price.toLocaleString()} each</p>
@@ -272,6 +357,126 @@ export default function OrderDetailPage() {
         </div>
 
       </main>
+
+      {/* Review Modal */}
+      <Modal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        title={t("profile.orders.reviewModal.title") || "Submit Gear Review"}
+        footer={
+          <>
+            <Button 
+              variant="outline" 
+              onClick={() => setIsReviewModalOpen(false)}
+              className="rounded-xl font-bold h-11 border-outline-variant"
+              disabled={isSubmittingReview}
+            >
+              {t("profile.orders.reviewModal.cancel") || "Cancel"}
+            </Button>
+            <Button 
+              onClick={handleSubmitReview}
+              className="rounded-xl font-bold h-11 shadow-md bg-primary text-on-primary hover:bg-primary/95"
+              disabled={isSubmittingReview}
+            >
+              {isSubmittingReview && <Loader2 size={16} className="animate-spin mr-1.5" />}
+              {t("profile.orders.reviewModal.submit") || "Submit Review"}
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-6 text-left">
+          {selectedOrderItem && (
+            <div className="flex gap-4 items-center bg-surface-variant/20 border border-outline-variant p-4 rounded-2xl">
+              <div className="w-12 h-12 bg-surface rounded-xl border border-outline-variant overflow-hidden shrink-0">
+                <img 
+                  src={selectedOrderItem.designImageUrl || "/placeholder-product.png"} 
+                  alt={selectedOrderItem.productName} 
+                  className="w-full h-full object-contain p-1"
+                />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-black uppercase text-on-surface truncate">{selectedOrderItem.productName}</p>
+                <p className="text-[10px] font-bold text-on-surface-variant/70 uppercase">{t("product.details.sizeUs") || "Size"}: {selectedOrderItem.size} | {t("product.details.color") || "Color"}: {selectedOrderItem.color}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Stars */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
+              {t("profile.orders.reviewModal.ratingLabel") || "Performance Rating"}
+            </label>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  type="button"
+                  onClick={() => setRating(star)}
+                  className="text-warning transition-transform hover:scale-110"
+                >
+                  <Star
+                    size={32}
+                    fill={star <= rating ? "currentColor" : "none"}
+                    className={star <= rating ? "text-warning" : "text-outline-variant"}
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Comment */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
+              {t("profile.orders.reviewModal.commentLabel") || "Detailed Review"}
+            </label>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="w-full min-h-[100px] p-4 rounded-xl border border-outline-variant/60 focus:border-primary focus:ring-1 focus:ring-primary text-sm font-semibold bg-surface"
+              placeholder={t("profile.orders.reviewModal.commentPlaceholder") || "How does this gear perform under pressure? Tell other athletes..."}
+              maxLength={500}
+              required
+            />
+          </div>
+
+          {/* Image Upload */}
+          <div className="space-y-3">
+            <label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant block">
+              {t("profile.orders.reviewModal.imagesLabel") || "Attach Action Photos (Optional)"}
+            </label>
+            
+            <div className="flex flex-wrap gap-3">
+              {previewUrls.map((url, idx) => (
+                <div key={idx} className="relative w-16 h-16 rounded-xl border border-outline-variant overflow-hidden group shadow-sm">
+                  <img src={url} alt="Upload Preview" className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeFile(idx)}
+                    className="absolute top-1 right-1 p-1 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80"
+                  >
+                    <X size={10} />
+                  </button>
+                </div>
+              ))}
+              
+              {previewUrls.length < 3 && (
+                <label className="w-16 h-16 rounded-xl border-2 border-dashed border-outline-variant/80 hover:border-primary flex flex-col items-center justify-center cursor-pointer transition-colors hover:bg-surface-variant/15 group">
+                  <Upload size={18} className="text-on-surface-variant group-hover:text-primary transition-colors" />
+                  <span className="text-[8px] font-black text-on-surface-variant uppercase mt-1 group-hover:text-primary transition-colors">{t("profile.orders.reviewModal.add") || "Add"}</span>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                </label>
+              )}
+            </div>
+            <p className="text-[9px] font-bold text-on-surface-variant/60">{t("profile.orders.reviewModal.helperText") || "Upload up to 3 photos. Recommended size: square aspect ratio."}</p>
+          </div>
+        </div>
+      </Modal>
 
       <Footer />
     </div>

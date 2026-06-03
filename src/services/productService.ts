@@ -30,6 +30,8 @@ export interface ProductDetailResponse {
   gender: string;
   images: ProductImageResponse[];
   variants: ProductVariantResponse[];
+  averageRating?: number;
+  reviewCount?: number;
 }
 
 export interface ProductImageResponse {

@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface ProductTableProps {
   readonly products: ProductListResponse[];
@@ -35,6 +36,7 @@ export function ProductTable({
   onDelete,
   onEdit
 }: ProductTableProps) {
+  const { t } = useTranslation();
   const getStatusVariant = (status: string) => {
     switch (status) {
       case "ACTIVE": return "success";
@@ -49,13 +51,15 @@ export function ProductTable({
       <Table>
         <TableHeader>
           <TableRow className="bg-surface-container/50 border-b-2 border-outline-variant">
-            <TableHead className="font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">Product</TableHead>
-            <TableHead className="font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">SKU</TableHead>
-            <TableHead className="font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">Category / Brand</TableHead>
-            <TableHead className="font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">Price</TableHead>
-            <TableHead className="font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">Stock</TableHead>
-            <TableHead className="font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">Status</TableHead>
-            <TableHead className="text-right font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">Actions</TableHead>
+            <TableHead className="font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">{t("admin.products.table.product") || "Product"}</TableHead>
+            <TableHead className="font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">{t("admin.products.table.sku") || "SKU"}</TableHead>
+            <TableHead className="font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">
+              {(t("admin.products.table.category") && t("admin.products.table.brand")) ? `${t("admin.products.table.category")} / ${t("admin.products.table.brand")}` : "Category / Brand"}
+            </TableHead>
+            <TableHead className="font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">{t("admin.products.table.price") || "Price"}</TableHead>
+            <TableHead className="font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">{t("admin.products.table.stock") || "Stock"}</TableHead>
+            <TableHead className="font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">{t("admin.products.table.status") || "Status"}</TableHead>
+            <TableHead className="text-right font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">{t("admin.products.table.actions") || "Actions"}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -70,7 +74,7 @@ export function ProductTable({
           ) : products.length === 0 ? (
             <TableRow>
               <TableCell colSpan={7} className="h-32 text-center text-on-surface-variant italic font-inter">
-                No products found in the catalog.
+                {t("admin.products.table.noProducts") || "No products found in the catalog."}
               </TableCell>
             </TableRow>
           ) : (
@@ -137,7 +141,7 @@ export function ProductTable({
                       />
                     </div>
                     <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant flex justify-between">
-                      <span>Stock</span>
+                      <span>{t("admin.products.table.stock") || "Stock"}</span>
                       <span className={cn(
                         product.totalStock === 0 ? "text-error" : "text-on-surface"
                       )}>{product.totalStock}</span>
@@ -149,7 +153,10 @@ export function ProductTable({
                     variant={getStatusVariant(product.status)}
                     className="font-lexend font-bold text-[9px] tracking-widest uppercase px-2 py-0.5"
                   >
-                    {product.status.replace("_", " ")}
+                    {product.status === "ACTIVE" ? (t("admin.products.table.active") || "Active") : 
+                     product.status === "INACTIVE" ? (t("admin.products.table.inactive") || "Inactive") : 
+                     product.status === "OUT_OF_STOCK" ? (t("admin.products.table.outOfStock") || "Out of Stock") : 
+                     product.status.replace("_", " ")}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">

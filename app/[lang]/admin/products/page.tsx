@@ -47,13 +47,13 @@ export default function AdminProductsPage() {
   }, [searchQuery, page, fetchProducts]);
 
   const handleDelete = async (id: number) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
+    if (window.confirm(t("admin.products.confirmDelete") || "Are you sure you want to delete this product?")) {
       const result = await deleteProduct(id);
       if (result.success) {
         fetchProducts({ page, keyword: searchQuery, size: 10 });
-        toast.success("Product deleted successfully!");
+        toast.success(t("admin.products.deleteSuccess") || "Product deleted successfully!");
       } else {
-        toast.error("Failed to delete product");
+        toast.error(t("admin.products.deleteError") || "Failed to delete product");
       }
     }
   };
@@ -71,13 +71,14 @@ export default function AdminProductsPage() {
           <div className="flex items-center gap-2 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
             <Link href={`/${locale}/admin`} className="hover:text-primary transition-colors flex items-center gap-1">
               <Home size={10} />
-              Admin
+              ADMIN
             </Link>
             <ChevronRight size={10} />
-            <span className="text-on-surface">Products</span>
+            <span className="text-on-surface">{t("admin.sidebar.products") || "Products"}</span>
           </div>
           <h2 className="text-2xl font-black italic tracking-tighter text-on-surface uppercase leading-none">
-            Products <span className="text-primary">Catalog</span>
+            {t("admin.products.catalog")?.split(" ")[0] || "Products"}{" "}
+            <span className="text-primary">{t("admin.products.catalog")?.split(" ").slice(1).join(" ") || "Catalog"}</span>
           </h2>
         </div>
 
@@ -87,7 +88,7 @@ export default function AdminProductsPage() {
           <div className="relative w-full sm:w-[260px] group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" size={16} />
             <Input
-              placeholder="Search products by name, SKU..."
+              placeholder={t("admin.products.search") || "Search products by name, SKU..."}
               className="pl-10 h-10 rounded-xl bg-surface-container-highest/30 border-outline-variant focus:bg-surface focus:border-primary transition-all font-inter text-xs shadow-inner"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -97,18 +98,18 @@ export default function AdminProductsPage() {
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <Button variant="outline" className="gap-1.5 h-10 rounded-xl border-outline-variant hover:border-primary transition-all text-xs font-bold w-full sm:w-auto px-3">
               <Filter size={14} />
-              Filters
+              {t("admin.products.filter") || "Filters"}
             </Button>
             <Button variant="outline" className="gap-1.5 h-10 rounded-xl border-outline-variant hover:border-primary transition-all text-xs font-bold w-full sm:w-auto px-3">
               <ArrowUpDown size={14} />
-              Sort
+              {t("admin.products.sort") || "Sort"}
             </Button>
             <Button
               className="gap-1.5 h-10 px-5 rounded-xl shadow-md hover:shadow-lg transition-all bg-secondary hover:bg-secondary/90 text-on-secondary font-lexend font-bold uppercase tracking-widest text-[10px] w-full sm:w-auto flex-shrink-0"
               onClick={() => router.push(`/${locale}/admin/products/new`)}
             >
               <Plus size={14} />
-              New Product
+              {t("admin.products.create") || "New Product"}
             </Button>
           </div>
         </div>
@@ -126,7 +127,10 @@ export default function AdminProductsPage() {
         {/* Pagination */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 py-6 border-t border-outline-variant/30 mt-4">
           <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-            Showing <span className="text-on-surface underline decoration-primary/30 decoration-2 underline-offset-4">{products.length}</span> of <span className="text-on-surface">{totalElements}</span> professional products
+            {t("catalog.showing") || "Showing"}{" "}
+            <span className="text-on-surface underline decoration-primary/30 decoration-2 underline-offset-4">{products.length}</span>{" "}
+            {t("catalog.of") || "of"} <span className="text-on-surface">{totalElements}</span>{" "}
+            {t("catalog.gears") || "professional products"}
           </p>
           <div className="flex items-center gap-3">
             <Button
@@ -136,7 +140,7 @@ export default function AdminProductsPage() {
               disabled={page === 0}
               onClick={() => setPage(page - 1)}
             >
-              Previous
+              {t("catalog.prev") || "Previous"}
             </Button>
             <div className="flex items-center gap-2">
               {Array.from({ length: Math.ceil(totalElements / 10) }).map((_, i) => (
@@ -163,7 +167,7 @@ export default function AdminProductsPage() {
               disabled={(page + 1) * 10 >= totalElements}
               onClick={() => setPage(page + 1)}
             >
-              Next
+              {t("catalog.next") || "Next"}
             </Button>
           </div>
         </div>

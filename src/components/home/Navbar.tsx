@@ -230,7 +230,7 @@ export default function Navbar() {
             )}
             <Link
               href={isLoggedIn ? `/${locale}/profile` : `/${locale}/login`}
-              aria-label="Account"
+              aria-label={t("home.nav.account") || "Account"}
               className="text-on-surface hover:text-primary transition-colors flex items-center"
             >
               <User className="w-5 h-5" />
@@ -241,7 +241,7 @@ export default function Navbar() {
           <Link
             href={`/${locale}/cart`}
             suppressHydrationWarning
-            aria-label={`Cart — ${cartCount} items`}
+            aria-label={t("home.nav.cart")?.replace("{count}", String(cartCount)) || `Cart — ${cartCount} items`}
             className="text-on-surface hover:text-primary transition-colors relative cursor-pointer block"
           >
             <ShoppingCart className="w-5 h-5" />

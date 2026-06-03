@@ -6,6 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import LanguageToggle from "@/components/ui/LanguageToggle";
 import Sidebar from "@/components/admin/Sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function AdminLayout({
   children,
@@ -16,6 +17,7 @@ export default function AdminLayout({
   const router = useRouter();
   const params = useParams();
   const lang = params.lang as string;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!isLoading) {
@@ -48,7 +50,7 @@ export default function AdminLayout({
       <div className="flex-grow flex flex-col min-w-0">
         <header className="h-20 border-b border-outline-variant bg-surface sticky top-0 z-10 flex items-center justify-between px-8">
           <h1 className="text-xl font-semibold text-on-surface capitalize">
-            Admin Management
+            {t("admin.title") || "Admin Management"}
           </h1>
           <div className="flex items-center gap-6">
             <LanguageToggle />
