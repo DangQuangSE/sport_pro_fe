@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
+import { BRAND_CONFIG } from "@/constants/brand";
 
 // ─── Footer ──────────────────────────────────────────────────────────────────
 export default function Footer() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
 
   const FOOTER_COLUMNS = [
     {
@@ -53,10 +54,14 @@ export default function Footer() {
         {/* Brand Column */}
         <div className="col-span-2 md:col-span-1 flex flex-col gap-5">
           <Link
-            href="/"
-            className="text-xl font-black italic tracking-tighter text-on-background flex items-center gap-0.5"
+            href={`/${locale}`}
+            className="flex items-center hover:opacity-90 transition-opacity"
           >
-            SPORT<span className="text-primary">PRO</span>
+            <img
+              src={BRAND_CONFIG.logo}
+              alt={BRAND_CONFIG.alt}
+              className="h-10 w-auto object-contain"
+            />
           </Link>
           <p className="text-[14px] leading-[1.6] text-on-surface-variant">
             {t("home.footer.description")}

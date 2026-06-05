@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { productService } from "@/services/productService";
 import { motion, AnimatePresence } from "framer-motion";
 import MembershipBadge from "@/components/ui/MembershipBadge";
+import { BRAND_CONFIG } from "@/constants/brand";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function Navbar() {
@@ -66,10 +67,14 @@ export default function Navbar() {
       <div className="flex justify-between items-center px-4 sm:px-8 h-20 w-full max-w-[1280px] mx-auto">
         {/* Brand */}
         <Link
-          href="/"
-          className="text-2xl font-black italic tracking-tighter text-on-background flex items-center gap-0.5"
+          href={`/${locale}`}
+          className="flex items-center hover:opacity-90 transition-opacity"
         >
-          SPORT<span className="text-primary">PRO</span>
+          <img
+            src={BRAND_CONFIG.logo}
+            alt={BRAND_CONFIG.alt}
+            className="h-12 w-auto object-contain"
+          />
         </Link>
 
         {/* Desktop Nav Links */}

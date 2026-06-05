@@ -22,6 +22,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useTranslation } from "@/hooks/useTranslation";
+import { BRAND_CONFIG } from "@/constants/brand";
 
 const sidebarItems = [
   { icon: LayoutDashboard, labelKey: "admin.sidebar.dashboard", defaultLabel: "Dashboard", href: "/admin" },
@@ -54,8 +55,12 @@ export default function Sidebar() {
       {/* Logo Area */}
       <div className="h-20 flex items-center justify-between px-6 border-b border-outline-variant">
         {!isCollapsed && (
-          <Link href={`/${locale}`} className="text-xl font-black italic tracking-tighter text-on-surface uppercase hover:opacity-80 transition-all">
-            SPORT <span className="text-primary">PRO</span>
+          <Link href={`/${locale}`} className="flex items-center hover:opacity-80 transition-all">
+            <img
+              src={BRAND_CONFIG.logo}
+              alt={BRAND_CONFIG.alt}
+              className="h-9 w-auto object-contain"
+            />
           </Link>
         )}
         <button 
