@@ -79,22 +79,37 @@ export function useCustomizer() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Pricing
-  const productBasePrice = 850000;
-  const [totalPrice, setTotalPrice] = useState(productBasePrice);
+  const [productBasePrice, setProductBasePrice] = useState(50.00); // Default to 50.00 (TShirt 2D)
+  const [totalPrice, setTotalPrice] = useState(50.00);
   const [printingPrice, setPrintingPrice] = useState(0);
 
   // Fetch configs from Backend
   useEffect(() => {
     const fetchConfigs = async () => {
       try {
+        // Fetch cart items to load active customizable item's price
+        try {
+          const cartRes = await cartService.getMyCart();
+          const cartItems = cartRes.data?.items || [];
+          const customizableItem = cartItems.find(item => item.isCustomizable ?? item.customizable);
+          if (customizableItem) {
+            setProductBasePrice(customizableItem.salePrice ?? customizableItem.originalPrice ?? 50.00);
+          }
+        } catch (cartErr) {
+          console.error("Failed to fetch product base price from cart, fallback to default", cartErr);
+        }
+
         const response = await apiClient.get<ApiResponse<{ 
           materials: PrintingMaterial[], 
           priceConfigs: PrintingPriceConfig[], 
           colors?: { id: number, name: string, hexCode: string, isActive?: boolean }[] 
         }>>("/public/printing/all");
+        
         const activeMats = response.data?.materials?.filter(m => m.isActive) || [];
+        const convertedConfigs = response.data?.priceConfigs || defaultPriceConfigs;
+
         setMaterials(activeMats.length > 0 ? activeMats : defaultMaterials);
-        setPriceConfigs(response.data?.priceConfigs || defaultPriceConfigs);
+        setPriceConfigs(convertedConfigs);
         setSelectedMaterial(activeMats.length > 0 ? activeMats[0] : defaultMaterials[0]);
 
         // Load Printing Colors from Backend public payload
@@ -127,7 +142,7 @@ export function useCustomizer() {
     const calculatedPrinting = materialBaseCost + textExtraCost + imageExtraCost;
     setPrintingPrice(calculatedPrinting);
     setTotalPrice(productBasePrice + calculatedPrinting);
-  }, [selectedMaterial, texts, images, priceConfigs]);
+  }, [selectedMaterial, texts, images, priceConfigs, productBasePrice]);
 
   // Add Text Layer
   const handleAddText = (e: React.FormEvent) => {

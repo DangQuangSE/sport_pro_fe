@@ -240,7 +240,7 @@ export default function OrderHistoryPage() {
                         </p>
                       </div>
                       <span className="text-xs font-black italic text-on-surface shrink-0">
-                        ${(item.price * item.quantity).toLocaleString()}
+                        {(item.price * item.quantity).toLocaleString('vi-VN')} ₫
                       </span>
                     </div>
                   ))}
@@ -254,7 +254,7 @@ export default function OrderHistoryPage() {
                   <div className="flex items-center gap-6">
                     <div className="text-right">
                       <p className="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-0.5">{t("profile.orders.total")}</p>
-                      <p className="text-lg font-black italic tracking-tighter text-on-surface">${order.totalAmount?.toLocaleString()}</p>
+                      <p className="text-lg font-black italic tracking-tighter text-on-surface">{order.totalAmount?.toLocaleString('vi-VN')} ₫</p>
                     </div>
                     
                     <Button asChild variant="outline" className="h-10 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest border-outline-variant hover:bg-surface-container/50">

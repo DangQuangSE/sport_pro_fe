@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
 import { ArrowLeft, Wrench, Loader2, CheckCircle2 } from "lucide-react";
+import { BRAND_CONFIG } from "@/constants/brand";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useCustomizer } from "@/hooks/useCustomizer";
@@ -113,8 +115,8 @@ export default function ProductCustomizerPage() {
     <div className="flex flex-col min-h-screen bg-[#f9f9fe] font-sans antialiased text-[#1a1c1f]">
       
       {/* Top Header Navigation */}
-      <header className="bg-white/90 backdrop-blur-md fixed top-0 w-full z-50 border-b border-[#e2e2e7] shadow-sm flex justify-between items-center px-8 h-20">
-        <div className="flex items-center gap-6">
+      <header className="bg-white/90 backdrop-blur-md fixed top-0 w-full z-50 border-b border-[#e2e2e7] shadow-sm flex justify-between items-center px-4 sm:px-8 h-20">
+        <div className="flex items-center gap-3 sm:gap-6">
           <Button 
             variant="outline" 
             size="icon" 
@@ -123,22 +125,29 @@ export default function ProductCustomizerPage() {
           >
             <ArrowLeft size={18} />
           </Button>
-          <span className="text-xl font-black italic tracking-tighter uppercase leading-none" style={{ fontFamily: 'var(--font-lexend)' }}>
-            SPORT<span className="text-primary">PRO</span>
-          </span>
+          <Link
+            href={`/${locale}`}
+            className="flex items-center hover:opacity-90 transition-opacity animate-fade-in"
+          >
+            <img
+              src={BRAND_CONFIG.logo}
+              alt={BRAND_CONFIG.alt}
+              className="h-10 w-auto object-contain"
+            />
+          </Link>
         </div>
         <h2 className="hidden md:block font-lexend font-black uppercase text-sm tracking-widest text-[#414755] border-l border-[#c1c6d7] pl-6 flex items-center gap-2">
           <Wrench size={14} className="text-primary" />
           Trình thiết kế sản phẩm (Nâng cao)
         </h2>
-        <div className="text-right text-xs">
+        <div className="hidden sm:block text-right text-xs">
           <span className="font-bold text-on-surface-variant uppercase tracking-widest">{t("customizer.activeVariant") || "Active Variant"}</span>
           <p className="font-black text-primary italic">Sport Pro Premium Shirt</p>
         </div>
       </header>
 
       {/* Main Workspace Split Screen */}
-      <main className="flex-grow pt-20 flex flex-col lg:flex-row max-w-[1280px] mx-auto w-full px-8 gap-8 h-[calc(100vh-80px)] overflow-hidden">
+      <main className="flex-grow pt-20 flex flex-col-reverse lg:flex-row max-w-[1280px] mx-auto w-full px-4 sm:px-8 gap-6 lg:gap-8 h-[calc(100vh-176px)] lg:h-[calc(100vh-80px)] overflow-hidden">
         
         {/* Left Control Sidebar */}
         <CustomizerSidebar 
@@ -191,6 +200,7 @@ export default function ProductCustomizerPage() {
         handleResetDesign={handleResetDesign}
         handleConfirmAndReturn={handleConfirmClick}
         formatCurrency={formatCurrency}
+        locale={locale}
       />
 
       {/* Confirmation Modal */}

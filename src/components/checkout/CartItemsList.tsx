@@ -134,7 +134,7 @@ export function CartItemsList({
                   className="text-base font-black italic text-[#1a1c1f] shrink-0"
                   style={{ fontFamily: "var(--font-lexend)" }}
                 >
-                  {(item.salePrice * item.quantity).toLocaleString('vi-VN')} ₫
+                  {`${(item.salePrice * item.quantity).toLocaleString('vi-VN')} ₫`}
                 </span>
               </div>
 

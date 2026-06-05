@@ -295,7 +295,9 @@ export default function CartPage() {
                                   </div>
                                 )}
                               </div>
-                              <p className="text-lg font-black italic tracking-tighter">{(item.salePrice).toLocaleString('vi-VN')} ₫</p>
+                              <p className="text-lg font-black italic tracking-tighter">
+                                {`${item.salePrice.toLocaleString('vi-VN')} ₫`}
+                              </p>
                             </div>
 
                             <div className="flex items-center justify-between mt-6">
@@ -435,7 +437,9 @@ export default function CartPage() {
                   <div className="space-y-4 pt-4 border-t border-outline-variant">
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-medium text-on-surface-variant">{t("checkout.subtotal") || "Subtotal"}</span>
-                      <span className="font-bold">{subtotal.toLocaleString('vi-VN')} ₫</span>
+                      <span className="font-bold">
+                        {`${subtotal.toLocaleString('vi-VN')} ₫`}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-medium text-on-surface-variant">{t("checkout.shipping") || "Estimated Shipping & Handling"}</span>
@@ -449,7 +453,9 @@ export default function CartPage() {
                     <div className="pt-4 border-t border-on-surface space-y-1">
                       <div className="flex justify-between items-center">
                         <span className="text-base font-black uppercase tracking-tight">{t("checkout.total") || "Total"}</span>
-                        <span className="text-2xl font-black italic tracking-tighter">{subtotal.toLocaleString('vi-VN')} ₫</span>
+                        <span className="text-2xl font-black italic tracking-tighter">
+                          {`${subtotal.toLocaleString('vi-VN')} ₫`}
+                        </span>
                       </div>
                     </div>
 

@@ -330,8 +330,8 @@ export default function OrderDetailPage() {
                       )}
                     </div>
                     <div className="text-right shrink-0 space-y-0.5">
-                      <p className="text-xs font-semibold text-on-surface-variant/70">${item.price.toLocaleString()} each</p>
-                      <p className="text-sm font-black italic text-on-surface">${(item.price * item.quantity).toLocaleString()}</p>
+                      <p className="text-xs font-semibold text-on-surface-variant/70">{item.price.toLocaleString('vi-VN')} ₫ each</p>
+                      <p className="text-sm font-black italic text-on-surface">{(item.price * item.quantity).toLocaleString('vi-VN')} ₫</p>
                     </div>
                   </div>
                 ))}
@@ -351,7 +351,7 @@ export default function OrderDetailPage() {
               <div className="space-y-4 text-xs font-semibold text-on-surface-variant">
                 <div className="flex justify-between">
                   <span>{t("profile.orders.subtotal")}</span>
-                  <span className="text-on-surface">${order.totalAmount?.toLocaleString()}</span>
+                  <span className="text-on-surface">{order.totalAmount?.toLocaleString('vi-VN')} ₫</span>
                 </div>
                 <div className="flex justify-between">
                   <span>{t("profile.orders.shipping")}</span>
@@ -359,7 +359,7 @@ export default function OrderDetailPage() {
                 </div>
                 <div className="flex justify-between border-t border-outline-variant/60 pt-4 text-sm font-black text-on-surface uppercase">
                   <span>{t("profile.orders.totalAmount")}</span>
-                  <span className="text-lg text-primary italic font-black">${order.totalAmount?.toLocaleString()}</span>
+                  <span className="text-lg text-primary italic font-black">{order.totalAmount?.toLocaleString('vi-VN')} ₫</span>
                 </div>
               </div>
             </div>

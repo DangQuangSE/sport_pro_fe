@@ -99,7 +99,7 @@ export function OrderSuccessPage({ successOrder, locale, t }: OrderSuccessPagePr
             <div className="flex justify-between border-t border-[#e2e2e7] pt-4 text-sm font-black uppercase text-[#1a1c1f]">
               <span>{t("checkout.total")}</span>
               <span className="text-lg text-primary italic font-black">
-                ${successOrder.totalAmount?.toLocaleString()}
+                {successOrder.totalAmount?.toLocaleString('vi-VN')} ₫
               </span>
             </div>
           </div>
