@@ -113,7 +113,7 @@ export default function CartPage() {
   };
 
   const selectedItems = cart ? cart.items.filter(item => selectedIds.includes(item.id)) : [];
-  const baseSubtotal = selectedItems.reduce((sum, item) => sum + (item.salePrice * 25000 * item.quantity), 0);
+  const baseSubtotal = selectedItems.reduce((sum, item) => sum + (item.salePrice * item.quantity), 0);
   const printingCost = selectedItems.reduce((sum, item) => {
     if (item.customDesignId && item.printingPrice) {
       return sum + (item.printingPrice * item.quantity);
@@ -295,7 +295,7 @@ export default function CartPage() {
                                   </div>
                                 )}
                               </div>
-                              <p className="text-lg font-black italic tracking-tighter">{(item.salePrice * 25000).toLocaleString('vi-VN')} ₫</p>
+                              <p className="text-lg font-black italic tracking-tighter">{(item.salePrice).toLocaleString('vi-VN')} ₫</p>
                             </div>
 
                             <div className="flex items-center justify-between mt-6">
