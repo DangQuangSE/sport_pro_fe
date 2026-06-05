@@ -65,18 +65,18 @@
       "language": "Language"
     },
     "hero": {
-      "overline": "Spring / Summer 2026",
-      "title": "Built for Athletes",
-      "titlePunctuation": "Designed for the City.",
-      "subtitle": "Performance gear for runners, lifters, and weekend warriors — curated from the world's top sports brands.",
-      "ctaPrimary": "Shop New Drops",
-      "ctaSecondary": "Explore Collection",
+      "overline": "QUANG VINH CUSTOM APPAREL",
+      "title": "Your Style,",
+      "titlePunctuation": "Limitless Printing.",
+      "subtitle": "Manufacturing custom corporate polo shirts, teamwear, student uniforms, and athletic apparel with premium printing quality.",
+      "ctaPrimary": "Design Now",
+      "ctaSecondary": "Explore Products",
       "trust": {
-        "shipping": "Free Ship over 500k VND",
-        "authentic": "Authentic Guarantee",
-        "returns": "30-Day Returns"
+        "shipping": "Free Shipping over 500k VND",
+        "authentic": "Premium Fabric Guarantee",
+        "returns": "Easy Returns & Exchange"
       },
-      "badge": "New Drop"
+      "badge": "New Design"
     },
     "categories": {
       "running": "Running",
@@ -88,28 +88,31 @@
     },
     "featured": {
       "title": "Featured This Week",
-      "subtitle": "Curated picks for your training goals.",
-      "viewAll": "View All"
+      "subtitle": "Our most popular custom uniform and apparel designs.",
+      "viewAll": "View All",
+      "defaultApparelDesc": "Premium apparel custom designed with high-quality fabric, comfortable fit, and custom print options.",
+      "defaultFootwearDesc": "Athletic footwear featuring maximum foot support and long-lasting durability.",
+      "defaultDesc": "Premium custom uniform crafted with superior fabrics, exquisite stitching, and state-of-the-art print technology."
     },
     "promo": {
-      "overline": "Limited Time",
-      "title": "Deals This Week",
-      "subtitle": "Up to 40% off selected professional gear. Equip yourself for less without compromising performance.",
-      "cta": "Shop Sale"
+      "overline": "Corporate Partnership",
+      "title": "Bulk Uniform Customization Deals",
+      "subtitle": "Free design consulting and up to 30% discount for bulk orders. Elevate your brand identity today.",
+      "cta": "Get a Quote"
     },
     "footer": {
-      "description": "Engineered for athletes. Designed for the city. We provide high-performance gear for those who refuse to stop moving.",
+      "description": "Quang Vinh Uniform specialize in manufacturing custom corporate shirts, student uniforms, and high-quality printed apparel tailored for your team.",
       "columns": {
         "shop": "Shop",
         "support": "Support",
         "legal": "Legal"
       },
       "links": {
-        "menApparel": "Men's Apparel",
-        "womenApparel": "Women's Apparel",
-        "footwear": "Footwear",
-        "accessories": "Accessories",
-        "sale": "Sale",
+        "menApparel": "Custom Polo Shirts",
+        "womenApparel": "Custom T-Shirts",
+        "footwear": "Corporate Uniforms",
+        "accessories": "School & Teamwear",
+        "sale": "Customizer Workshop",
         "contact": "Contact",
         "returns": "Returns",
         "orderTracking": "Order Tracking",
@@ -119,7 +122,7 @@
         "terms": "Terms",
         "careers": "Careers"
       },
-      "copyright": "© 2026 SPORT PRO. ENGINEERED FOR PERFORMANCE. ALL RIGHTS RESERVED."
+      "copyright": "© 2026 QUANG VINH UNIFORM. QUALITY & TRUST. ALL RIGHTS RESERVED."
     }
   },
   "product": {

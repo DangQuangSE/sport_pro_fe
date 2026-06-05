@@ -65,7 +65,7 @@ export default function HeroSection() {
           <span
             className={cn(
               "inline-block align-middle mx-2 sm:mx-3",
-              "w-[50px] h-[30px] sm:w-[60px] sm:h-[36px] lg:w-[80px] lg:h-[44px]",
+              "w-[75px] h-[45px] sm:w-[100px] sm:h-[60px] lg:w-[140px] lg:h-[84px]",
               "rounded-full overflow-hidden",
               "border-2 border-outline-variant shadow-sm",
               "-rotate-6"
@@ -73,9 +73,9 @@ export default function HeroSection() {
           >
             <Image
               src={HERO_INLINE_IMAGE}
-              alt="Close-up of athletic running shoe mesh texture"
-              width={80}
-              height={44}
+              alt="Close-up of high quality custom uniform fabric printing"
+              width={140}
+              height={84}
               className="w-full h-full object-cover"
             />
           </span>
@@ -91,7 +91,7 @@ export default function HeroSection() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <Link
-            href={`/${locale}/products`}
+            href={`/${locale}/customizer`}
             className={cn(
               "bg-secondary-container text-white text-center",
               "font-semibold text-[12px] uppercase tracking-[0.05em]",
@@ -159,7 +159,7 @@ export default function HeroSection() {
 
           <Image
             src={HERO_SHOE_IMAGE}
-            alt="High-performance neon green and black running shoe — studio shot"
+            alt="High-quality custom corporate uniforms and polo shirts mockup — studio shot"
             width={440}
             height={440}
             priority

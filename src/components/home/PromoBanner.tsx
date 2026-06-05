@@ -22,7 +22,7 @@ export default function PromoBanner() {
         <div className="absolute inset-0 z-0 opacity-20">
           <Image
             src={PROMO_BANNER_IMAGE}
-            alt="Abstract motion blur of runners on a track at night — high energy urban athletic vibe"
+            alt="Professional apparel manufacturing and screen printing workspace background"
             fill
             className="object-cover"
             sizes="100vw"

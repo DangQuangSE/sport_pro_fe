@@ -65,18 +65,18 @@
       "language": "Ngôn ngữ"
     },
     "hero": {
-      "overline": "Xuân / Hè 2026",
-      "title": "Dành cho Vận động viên",
-      "titlePunctuation": "Thiết kế cho Thành phố.",
-      "subtitle": "Trang bị hiệu năng cho người chạy bộ, tập gym và những chiến binh cuối tuần — tuyển chọn từ các thương hiệu thể thao hàng đầu thế giới.",
-      "ctaPrimary": "Mua sắm BST Mới",
-      "ctaSecondary": "Khám phá Thêm",
+      "overline": "XƯỞNG MAY ĐỒNG PHỤC QUANG VINH",
+      "title": "Phong cách của Bạn,",
+      "titlePunctuation": "In không giới hạn.",
+      "subtitle": "Chuyên may đo và sản xuất đồng phục doanh nghiệp, đồng phục học sinh, áo thun lớp và đồ thể thao in ấn theo yêu cầu chất lượng cao.",
+      "ctaPrimary": "Thiết kế Ngay",
+      "ctaSecondary": "Xem Bộ sưu tập",
       "trust": {
-        "shipping": "Miễn phí ship từ 500k",
-        "authentic": "Cam kết Chính hãng",
-        "returns": "Đổi trả 30 ngày"
+        "shipping": "Miễn phí vận chuyển từ 500k",
+        "authentic": "Cam kết Chất lượng vải",
+        "returns": "Hỗ trợ Đổi trả nhanh chóng"
       },
-      "badge": "Hàng mới"
+      "badge": "Mẫu Mới"
     },
     "categories": {
       "running": "Chạy bộ",
@@ -88,28 +88,31 @@
     },
     "featured": {
       "title": "Nổi bật Tuần này",
-      "subtitle": "Lựa chọn hàng đầu cho mục tiêu tập luyện của bạn.",
-      "viewAll": "Xem tất cả"
+      "subtitle": "Các thiết kế đồng phục nổi bật được khách hàng tin chọn nhiều nhất.",
+      "viewAll": "Xem tất cả",
+      "defaultApparelDesc": "Mẫu trang phục cao cấp được may đo tinh tế từ chất liệu vải chọn lọc, bền đẹp và co giãn tối ưu.",
+      "defaultFootwearDesc": "Thiết kế giày thể thao êm ái, hỗ trợ chuyển động tối đa và bền bỉ trong mọi điều kiện.",
+      "defaultDesc": "Sản phẩm đồng phục cao cấp được thiết kế tinh xảo, chất chất liệu co giãn thoáng mát cùng công nghệ in sắc nét."
     },
     "promo": {
-      "overline": "Thời gian có hạn",
-      "title": "Ưu đãi trong Tuần",
-      "subtitle": "Giảm đến 40% cho các trang bị chuyên nghiệp. Sẵn sàng bứt phá với mức giá tối ưu.",
-      "cta": "Mua ngay"
+      "overline": "Hợp tác Doanh nghiệp",
+      "title": "Ưu đãi Đặt may Đồng phục",
+      "subtitle": "Hỗ trợ thiết kế miễn phí và chiết khấu lên đến 30% cho các đơn hàng số lượng lớn. Nâng tầm hình ảnh thương hiệu của bạn ngay hôm nay.",
+      "cta": "Liên hệ Tư vấn"
     },
     "footer": {
-      "description": "Thiết kế cho vận động viên. Tối ưu cho thành phố. Chúng tôi cung cấp trang bị hiệu năng cao cho những ai không bao giờ dừng lại.",
+      "description": "Xưởng may đồng phục Quang Vinh chuyên thiết kế và may đo các mẫu đồng phục doanh nghiệp, đồng phục công sở, học sinh chất lượng cao.",
       "columns": {
         "shop": "Cửa hàng",
         "support": "Hỗ trợ",
         "legal": "Pháp lý"
       },
       "links": {
-        "menApparel": "Thời trang Nam",
-        "womenApparel": "Thời trang Nữ",
-        "footwear": "Giày thể thao",
-        "accessories": "Phụ kiện",
-        "sale": "Giảm giá",
+        "menApparel": "Đồng phục Polo",
+        "womenApparel": "Áo thun Đồng phục",
+        "footwear": "Đồng phục Công sở",
+        "accessories": "Đồng phục Lớp/Nhóm",
+        "sale": "Thiết kế theo yêu cầu",
         "contact": "Liên hệ",
         "returns": "Đổi trả",
         "orderTracking": "Theo dõi đơn hàng",
@@ -119,7 +122,7 @@
         "terms": "Điều khoản",
         "careers": "Tuyển dụng"
       },
-      "copyright": "© 2026 SPORT PRO. THIẾT KẾ CHO HIỆU NĂNG. BẢO LƯU MỌI QUYỀN."
+      "copyright": "© 2026 ĐỒNG PHỤC QUANG VINH. CHẤT LƯỢNG VÀ UY TÍN. BẢO LƯU MỌI QUYỀN."
     }
   },
   "product": {
