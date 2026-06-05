@@ -63,7 +63,7 @@ export default function Navbar() {
         "shadow-[0_2px_15px_-3px_rgba(0,0,0,0.04),0_4px_20px_-2px_rgba(0,0,0,0.02)]"
       )}
     >
-      <div className="flex justify-between items-center px-8 h-20 w-full max-w-[1280px] mx-auto">
+      <div className="flex justify-between items-center px-4 sm:px-8 h-20 w-full max-w-[1280px] mx-auto">
         {/* Brand */}
         <Link
           href="/"
@@ -171,7 +171,7 @@ export default function Navbar() {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center space-x-5">
+        <div className="flex items-center gap-3 sm:gap-5">
           {/* Search Pill — Desktop */}
           <div
             className={cn(
@@ -208,21 +208,21 @@ export default function Navbar() {
             <button
               suppressHydrationWarning
               onClick={logout}
-              className="text-[12px] font-bold uppercase tracking-wider text-on-surface hover:text-primary transition-colors cursor-pointer"
+              className="hidden md:block text-[12px] font-bold uppercase tracking-wider text-on-surface hover:text-primary transition-colors cursor-pointer"
             >
               {t("auth.signOutButton")}
             </button>
           ) : (
             <Link
               href={`/${locale}/login`}
-              className="text-[12px] font-bold uppercase tracking-wider text-on-surface hover:text-primary transition-colors"
+              className="hidden md:block text-[12px] font-bold uppercase tracking-wider text-on-surface hover:text-primary transition-colors"
             >
               {t("auth.signInButton")}
             </Link>
           )}
 
           {/* User Profile / Login Link */}
-          <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2">
             {isLoggedIn && user && (
               <Link href={`/${locale}/profile`} className="hidden sm:inline-flex shrink-0">
                 <MembershipBadge tier={user.tier} size="sm" showLabel={true} />
@@ -278,7 +278,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-outline-variant px-8 py-6 flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-80px)]">
+        <div className="md:hidden bg-white border-t border-outline-variant px-4 sm:px-8 py-6 flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-80px)]">
           {/* Shop All Gear link */}
           <Link
             href={`/${locale}/products`}
@@ -362,6 +362,21 @@ export default function Navbar() {
                 <MembershipBadge tier={user.tier} size="sm" showLabel={true} />
               </div>
             )}
+            {isLoggedIn && (
+              <Link
+                href={`/${locale}/profile`}
+                onClick={() => setMobileOpen(false)}
+                className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary py-2 transition-colors block"
+              >
+                {t("home.nav.account")}
+              </Link>
+            )}
+            <div className="flex items-center justify-between px-1 py-2 border-t border-outline-variant/40">
+              <span className="text-sm font-bold uppercase tracking-widest text-on-surface">
+                {t("home.nav.language")}
+              </span>
+              <LanguageToggle />
+            </div>
             {isLoggedIn ? (
               <button
                 suppressHydrationWarning
@@ -369,7 +384,7 @@ export default function Navbar() {
                   logout();
                   setMobileOpen(false);
                 }}
-                className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary text-left transition-colors cursor-pointer"
+                className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary text-left transition-colors cursor-pointer border-t border-outline-variant/40 pt-4"
               >
                 {t("auth.signOutButton")}
               </button>
@@ -377,7 +392,7 @@ export default function Navbar() {
               <Link
                 href={`/${locale}/login`}
                 onClick={() => setMobileOpen(false)}
-                className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary transition-colors"
+                className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary transition-colors border-t border-outline-variant/40 pt-4"
               >
                 {t("auth.signInButton")}
               </Link>

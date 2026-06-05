@@ -45,13 +45,13 @@ export default function Footer() {
   return (
     <footer
       className={cn(
-        "w-full py-16 px-8 mt-auto",
+        "w-full py-16 px-4 sm:px-8 mt-auto",
         "bg-surface-container-low border-t-4 border-surface-variant"
       )}
     >
-      <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div className="max-w-[1280px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12">
         {/* Brand Column */}
-        <div className="flex flex-col gap-5">
+        <div className="col-span-2 md:col-span-1 flex flex-col gap-5">
           <Link
             href="/"
             className="text-xl font-black italic tracking-tighter text-on-background flex items-center gap-0.5"
@@ -65,14 +65,14 @@ export default function Footer() {
 
         {/* Links Columns */}
         {FOOTER_COLUMNS.map((col) => (
-          <div key={col.id}>
+          <div key={col.id} className="col-span-1">
             <h4
-              className="text-[14px] font-bold uppercase tracking-[0.05em] text-on-background mb-6"
+              className="text-[14px] font-bold uppercase tracking-[0.05em] text-on-background mb-4 md:mb-6"
               style={{ fontFamily: "var(--font-lexend)" }}
             >
               {col.heading}
             </h4>
-            <ul className="space-y-4">
+            <ul className="space-y-3 md:space-y-4">
               {col.links.map((link) => (
                 <li key={link.id}>
                   <Link

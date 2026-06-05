@@ -61,7 +61,8 @@
       "admin": "Quản trị",
       "searchPlaceholder": "Tìm kiếm ...",
       "account": "Tài khoản",
-      "cart": "Giỏ hàng — {count} sản phẩm"
+      "cart": "Giỏ hàng — {count} sản phẩm",
+      "language": "Ngôn ngữ"
     },
     "hero": {
       "overline": "Xuân / Hè 2026",

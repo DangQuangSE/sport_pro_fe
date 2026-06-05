@@ -98,11 +98,11 @@ function SmallCard({ product }: Readonly<CardProps>) {
         "bg-surface-container-lowest border border-black/[0.04]",
         "rounded-xl overflow-hidden",
         "shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)]",
-        "transition-all duration-500 flex flex-row"
+        "transition-all duration-500 flex flex-col sm:flex-row"
       )}
     >
       {/* Image */}
-      <div className="w-[180px] bg-surface-container-low relative overflow-hidden flex items-center justify-center p-4 shrink-0">
+      <div className="w-full sm:w-[180px] bg-surface-container-low relative overflow-hidden flex items-center justify-center p-4 shrink-0">
         {hasDiscount && (
           <span className="absolute top-2 left-2 bg-secondary-container text-white text-[9px] font-bold uppercase px-2 py-0.5 rounded-full z-10">
             {t("catalog.promo")}
@@ -118,7 +118,7 @@ function SmallCard({ product }: Readonly<CardProps>) {
       </div>
 
       {/* Content */}
-      <div className="p-6 flex-grow flex flex-col justify-between gap-2">
+      <div className="p-4 sm:p-6 flex-grow flex flex-col justify-between gap-2">
         <div className="flex flex-col gap-1">
           <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-outline">
             {product.categoryName || "Accessories"}
@@ -152,7 +152,7 @@ export default function FeaturedProducts() {
   const small = products.slice(1, 3);
 
   return (
-    <section className="max-w-[1280px] mx-auto px-8 pt-4 pb-16">
+    <section className="max-w-[1280px] mx-auto px-4 sm:px-8 pt-4 pb-16">
       {/* Section Header */}
       <div className="flex justify-between items-end mb-10">
         <div>
@@ -229,6 +229,20 @@ export default function FeaturedProducts() {
           </div>
         </div>
       )}
+
+      {/* Mobile View All CTA */}
+      <div className="mt-8 flex md:hidden">
+        <Link
+          href={`/${locale}/products`}
+          className={cn(
+            "w-full py-4 rounded-xl flex items-center justify-center gap-2",
+            "border-2 border-primary text-primary font-bold text-sm uppercase tracking-wider",
+            "hover:bg-primary hover:text-white transition-colors"
+          )}
+        >
+          {t("home.featured.viewAll")} <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
     </section>
   );
 }
