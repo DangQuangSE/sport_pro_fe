@@ -13,6 +13,7 @@ import Footer from "@/components/home/Footer";
 import { useTranslation } from "@/hooks/useTranslation";
 import { productService, ProductListResponse } from "@/services/productService";
 import { Button } from "@/components/ui/button";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 import ProductCard from "./components/ProductCard";
 import ProductCardSkeleton from "./components/ProductCardSkeleton";
@@ -255,7 +256,12 @@ export default function ProductsCatalogPage() {
       <Navbar />
 
       {/* ─── MAIN CATALOG WORKSPACE ─────────────────────────────────────────── */}
-      <main className="flex-grow max-w-[1280px] mx-auto w-full px-4 sm:px-8 pt-24 sm:pt-32 pb-12 flex flex-col lg:flex-row lg:gap-20 gap-10">
+      <main className="flex-grow max-w-[1280px] mx-auto w-full px-4 sm:px-8 pt-24 sm:pt-32 pb-12">
+        <div className="mb-6">
+          <Breadcrumbs items={[{ label: t("catalog.title") }]} />
+        </div>
+        
+        <div className="flex flex-col lg:flex-row lg:gap-20 gap-10">
         
         {/* ─── SIDEBAR FILTERS (DESKTOP) ────────────────────────────────────── */}
         <FilterSidebar
@@ -407,6 +413,7 @@ export default function ProductsCatalogPage() {
           )}
 
         </section>
+        </div>
       </main>
 
       {/* ─── MOBILE FILTER DRAWER OVERLAY ────────────────────────────────────── */}

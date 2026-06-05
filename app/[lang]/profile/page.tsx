@@ -28,6 +28,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import MembershipBadge from "@/components/ui/MembershipBadge";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 const TIER_THRESHOLDS = {
   BRONZE: { limit: 0, next: "SILVER", nextLimit: 5000000, color: "from-amber-600 via-amber-700 to-amber-900", text: "text-amber-500" },
@@ -201,14 +202,10 @@ export default function UserProfilePage() {
     <div className="flex flex-col min-h-screen bg-surface">
       <Navbar />
 
-      <main className="flex-grow pt-32 pb-20 px-8 max-w-[1200px] mx-auto w-full animate-in fade-in duration-700">
+      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1200px] mx-auto w-full animate-in fade-in duration-700">
         {/* Navigation Breadcrumb */}
-        <div className="flex items-center gap-2 mb-6 font-bold text-[10px] text-on-surface-variant uppercase tracking-[0.15em]">
-          <Link href={`/${locale}`} className="hover:text-primary transition-colors">
-            HOME
-          </Link>
-          <span className="text-[14px] leading-none">›</span>
-          <span className="text-on-surface">{t("profile.title")}</span>
+        <div className="mb-6">
+          <Breadcrumbs items={[{ label: t("profile.title") || "Profile" }]} />
         </div>
 
         {/* Header Block */}

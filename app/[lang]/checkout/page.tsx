@@ -13,6 +13,7 @@ import { CartItemsList } from "@/components/checkout/CartItemsList";
 import { DeliveryInfoForm } from "@/components/checkout/DeliveryInfoForm";
 import { PaymentMethodCard } from "@/components/checkout/PaymentMethodCard";
 import { OrderOverviewCard } from "@/components/checkout/OrderOverviewCard";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 export default function CheckoutPage() {
   const {
@@ -56,7 +57,15 @@ export default function CheckoutPage() {
       />
 
       {/* 2. Main Two-Column Layout */}
-      <main className="flex-grow max-w-[1280px] mx-auto w-full px-8 py-16 animate-in fade-in duration-700">
+      <main className="flex-grow max-w-[1280px] mx-auto w-full px-4 sm:px-8 py-16 animate-in fade-in duration-700">
+        <Breadcrumbs 
+          items={[
+            { label: t("checkout.shoppingCart") || "Cart", href: "/cart" },
+            { label: t("checkout.title") || "Checkout" }
+          ]} 
+        />
+        
+        <div className="mt-8">
         {isCartEmpty ? (
           /* Empty Cart State */
           <div className="bg-white border border-[#e2e2e7] rounded-[2rem] shadow-[0_4px_12px_rgba(0,0,0,0.05)] p-20 flex flex-col items-center text-center gap-6 max-w-xl mx-auto my-12">
@@ -136,6 +145,7 @@ export default function CheckoutPage() {
             />
           </form>
         )}
+        </div>
       </main>
 
       {/* 3. Footer */}

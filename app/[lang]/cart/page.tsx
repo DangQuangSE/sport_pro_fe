@@ -20,6 +20,7 @@ import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { apiClient, ApiResponse } from "@/lib/api-client";
 import { cartService } from "@/services/cartService";
 
@@ -169,8 +170,9 @@ export default function CartPage() {
     <div className="flex flex-col min-h-screen bg-surface">
       <Navbar />
 
-      <main className="flex-grow pt-32 pb-20 px-8 max-w-[1280px] mx-auto w-full animate-in fade-in duration-700">
-        <div className="flex flex-col lg:flex-row gap-16">
+      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1280px] mx-auto w-full animate-in fade-in duration-700">
+        <Breadcrumbs items={[{ label: locale === "vi" ? "Giỏ hàng" : "Your Bag" }]} />
+        <div className="flex flex-col lg:flex-row gap-16 mt-8">
           {/* Left: Items List */}
           <div className="flex-grow space-y-10">
             <div className="space-y-2">

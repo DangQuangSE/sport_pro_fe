@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 export default function OrderDetailPage() {
   const { id } = useParams() as { id: string };
@@ -208,16 +209,26 @@ export default function OrderDetailPage() {
     <div className="flex flex-col min-h-screen bg-surface">
       <Navbar />
 
-      <main className="flex-grow pt-32 pb-20 px-8 max-w-[1000px] mx-auto w-full animate-in fade-in duration-700">
+      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1000px] mx-auto w-full animate-in fade-in duration-700">
         
-        {/* Back Link */}
-        <Link 
-          href={`/${locale}/profile/orders`} 
-          className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors mb-10"
-        >
-          <ChevronLeft size={16} />
-          {t("profile.orders.backToList")}
-        </Link>
+        {/* Navigation Breadcrumb & Back button */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-6 border-b border-outline-variant/40">
+          <Breadcrumbs 
+            items={[
+              { label: t("profile.title") || "Profile", href: "/profile" },
+              { label: t("profile.orders.title") || "Orders", href: "/profile/orders" },
+              { label: `#SP-${order.id}` }
+            ]} 
+          />
+          
+          <Link 
+            href={`/${locale}/profile/orders`} 
+            className="inline-flex items-center gap-1.5 text-[10px] font-lexend font-black uppercase tracking-widest text-primary hover:text-primary-container transition-colors"
+          >
+            <ChevronLeft size={14} />
+            {t("profile.orders.backToList")}
+          </Link>
+        </div>
 
         {/* Title Area */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b-2 border-outline-variant pb-8 mb-12">

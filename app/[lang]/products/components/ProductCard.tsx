@@ -30,8 +30,10 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       <div className="space-y-5">
         {/* Product Thumbnail Layout */}
-        <div className="aspect-[4/5] w-full rounded-2xl bg-surface-container flex items-center justify-center overflow-hidden relative p-4">
-          
+        <Link 
+          href={`/${locale}/product/${product.slug}`}
+          className="aspect-[4/5] w-full rounded-2xl bg-surface-container flex items-center justify-center overflow-hidden relative p-4 block cursor-pointer"
+        >
           {/* Shimmer transition overlay */}
           <div className="absolute inset-0 bg-primary/[0.01] group-hover:bg-primary/[0.03] transition-colors duration-500" />
           
@@ -50,7 +52,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               </span>
             )}
           </div>
-        </div>
+        </Link>
 
         {/* Details Content */}
         <div className="space-y-1.5 px-2">
