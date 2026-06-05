@@ -210,15 +210,7 @@ export default function ProductCustomizerPage() {
         title={locale === "vi" ? "Xác nhận thiết kế" : "Confirm Custom Design"}
         className="max-w-[440px] text-[#1a1c1f]"
       >
-        <div className="space-y-6 text-center">
-          {/* Decorative Icon */}
-          <div className="relative mx-auto mt-2">
-            <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl w-20 h-20 mx-auto" />
-            <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-[#fe9400] text-white flex items-center justify-center mx-auto shadow-lg shadow-primary/25 relative border border-white/20">
-              <Wrench size={22} className="animate-pulse" />
-            </div>
-          </div>
-
+        <div className="space-y-6 text-center pt-2">
           {/* Heading */}
           <div className="space-y-2">
             <h3 className="text-xl font-black italic tracking-tight uppercase leading-none text-[#1a1c1f]" style={{ fontFamily: 'var(--font-lexend)' }}>
