@@ -28,7 +28,7 @@ export default function CatalogToolbar({
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 bg-surface-container/20 p-4 rounded-2xl border border-outline-variant/60 shadow-sm backdrop-blur-md">
+    <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 bg-surface-container/20 p-3 sm:p-4 rounded-2xl border border-outline-variant/60 shadow-sm backdrop-blur-md">
       {/* Interactive debounced search */}
       <div className="relative flex-grow max-w-md group">
         <Search
@@ -51,28 +51,28 @@ export default function CatalogToolbar({
         )}
       </div>
 
-      <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+      <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 shrink-0">
         {/* Mobile Filter Button */}
         <Button
           onClick={() => setMobileFilterOpen(true)}
           variant="outline"
-          className="lg:hidden gap-2 h-11 rounded-xl border-outline-variant/60 hover:border-primary text-xs"
+          className="lg:hidden gap-1.5 h-10 px-3 sm:px-4 sm:h-11 rounded-xl border-outline-variant/60 hover:border-primary text-[10px] sm:text-xs"
         >
-          <Filter size={16} />
+          <Filter size={14} />
           {t("catalog.mobileFiltersTitle")}
-          {hasActiveFilters && <span className="w-2 h-2 rounded-full bg-primary" />}
+          {hasActiveFilters && <span className="w-1.5 h-1.5 rounded-full bg-primary" />}
         </Button>
 
         {/* Sorting Selection Dropdown */}
         <div className="relative flex items-center gap-2">
-          <ArrowUpDown size={14} className="text-on-surface-variant hidden xs:block" />
+          <ArrowUpDown size={14} className="text-on-surface-variant hidden sm:block" />
           <select
             value={sortBy}
             onChange={(e) => {
               setSortBy(e.target.value);
               setPage(0);
             }}
-            className="h-11 px-4 bg-surface-container-lowest border border-outline-variant/60 hover:border-primary rounded-xl text-xs font-bold uppercase tracking-wider outline-none cursor-pointer"
+            className="h-10 px-2 sm:px-4 sm:h-11 bg-surface-container-lowest border border-outline-variant/60 hover:border-primary rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider outline-none cursor-pointer"
           >
             <option value="newest">{t("catalog.sorting.newest")}</option>
             <option value="priceAsc">{t("catalog.sorting.priceAsc")}</option>

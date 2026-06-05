@@ -255,7 +255,7 @@ export default function ProductsCatalogPage() {
       <Navbar />
 
       {/* ─── MAIN CATALOG WORKSPACE ─────────────────────────────────────────── */}
-      <main className="flex-grow max-w-[1280px] mx-auto w-full px-8 pt-32 pb-12 flex lg:gap-20 gap-10">
+      <main className="flex-grow max-w-[1280px] mx-auto w-full px-4 sm:px-8 pt-24 sm:pt-32 pb-12 flex flex-col lg:flex-row lg:gap-20 gap-10">
         
         {/* ─── SIDEBAR FILTERS (DESKTOP) ────────────────────────────────────── */}
         <FilterSidebar

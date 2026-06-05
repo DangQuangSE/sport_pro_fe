@@ -224,7 +224,7 @@ export default function Navbar() {
           {/* User Profile / Login Link */}
           <div className="hidden sm:flex items-center gap-2">
             {isLoggedIn && user && (
-              <Link href={`/${locale}/profile`} className="hidden sm:inline-flex shrink-0">
+              <Link href={`/${locale}/profile`} className="hidden md:inline-flex shrink-0">
                 <MembershipBadge tier={user.tier} size="sm" showLabel={true} />
               </Link>
             )}
@@ -270,7 +270,7 @@ export default function Navbar() {
           </button>
 
           {/* Language Switcher */}
-          <div className="hidden sm:block ml-2 border-l border-outline-variant pl-4">
+          <div className="hidden md:block ml-2 border-l border-outline-variant pl-4">
             <LanguageToggle />
           </div>
         </div>
