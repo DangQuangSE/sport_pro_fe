@@ -519,14 +519,35 @@ export default function AdminOrderDetailPage() {
               {/* Mockup image */}
               <div className="space-y-2">
                 <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/70 block">
-                  {t("admin.orders.detail.mockupLayout")}
+                  {locale === "vi" ? "BẢN THIẾT KẾ (MẶT TRƯỚC & MẶT SAU)" : "DESIGN MOCKUPS (FRONT & BACK)"}
                 </span>
-                <div className="relative w-full h-72 bg-surface-container rounded-2xl flex items-center justify-center p-4 border border-outline-variant overflow-hidden bg-slate-100">
-                  <img
-                    src={selectedDesign.designImageUrl}
-                    alt="Custom Print Mockup"
-                    className="w-full h-full object-contain"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Front image */}
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-on-surface-variant/80 uppercase block text-center">
+                      {locale === "vi" ? "Mặt trước" : "Front View"}
+                    </span>
+                    <div className="relative w-full h-72 bg-surface-container rounded-2xl flex items-center justify-center p-4 border border-outline-variant overflow-hidden bg-slate-100">
+                      <img
+                        src={selectedDesign.designImageUrl}
+                        alt="Custom Print Front Mockup"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  </div>
+                  {/* Back image */}
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-on-surface-variant/80 uppercase block text-center">
+                      {locale === "vi" ? "Mặt sau" : "Back View"}
+                    </span>
+                    <div className="relative w-full h-72 bg-surface-container rounded-2xl flex items-center justify-center p-4 border border-outline-variant overflow-hidden bg-slate-100">
+                      <img
+                        src={selectedDesign.backDesignImageUrl || selectedDesign.designImageUrl}
+                        alt="Custom Print Back Mockup"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
  
@@ -675,7 +696,15 @@ export default function AdminOrderDetailPage() {
                   rel="noreferrer"
                   className="inline-flex items-center justify-center bg-primary text-surface rounded-xl px-5 py-2 font-black uppercase tracking-widest text-xs h-10 hover:bg-primary-dark transition-colors shadow-sm"
                 >
-                  {t("admin.orders.detail.openOriginal")}
+                  {locale === "vi" ? "MỞ ẢNH MẶT TRƯỚC" : "OPEN FRONT IMAGE"}
+                </a>
+                <a
+                  href={selectedDesign.backDesignImageUrl || selectedDesign.designImageUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center bg-primary text-surface rounded-xl px-5 py-2 font-black uppercase tracking-widest text-xs h-10 hover:bg-primary-dark transition-colors shadow-sm"
+                >
+                  {locale === "vi" ? "MỞ ẢNH MẶT SAU" : "OPEN BACK IMAGE"}
                 </a>
               </div>
             </div>

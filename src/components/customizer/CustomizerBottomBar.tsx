@@ -11,6 +11,7 @@ interface CustomizerBottomBarProps {
   readonly handleResetDesign: () => void;
   readonly handleConfirmAndReturn: () => void;
   readonly formatCurrency: (amt: number) => string;
+  readonly locale: string;
 }
 
 export default function CustomizerBottomBar({
@@ -19,7 +20,8 @@ export default function CustomizerBottomBar({
   selectedMaterialName,
   handleResetDesign,
   handleConfirmAndReturn,
-  formatCurrency
+  formatCurrency,
+  locale
 }: CustomizerBottomBarProps) {
   return (
     <div className="w-full bg-white border-t border-[#e2e2e7] p-5 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] sticky bottom-0 z-40">
@@ -47,14 +49,14 @@ export default function CustomizerBottomBar({
             onClick={handleResetDesign}
             className="flex-1 md:flex-none h-14 px-8 border-2 border-outline-variant font-lexend font-black uppercase tracking-widest text-xs"
           >
-            Đặt lại
+            {locale === "vi" ? "Đặt lại" : "Reset"}
           </Button>
           <Button 
             onClick={handleConfirmAndReturn}
             className="flex-1 md:flex-none h-14 px-8 bg-[#fe9400] hover:bg-[#e08200] text-white font-lexend font-black uppercase tracking-widest text-xs shadow-md gap-2"
           >
             <CheckCircle size={16} />
-            Xác nhận & Quay lại thanh toán
+            {locale === "vi" ? "Xác nhận" : "Confirm"}
           </Button>
         </div>
       </div>

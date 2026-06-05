@@ -134,7 +134,7 @@ export function CartItemsList({
                   className="text-base font-black italic text-[#1a1c1f] shrink-0"
                   style={{ fontFamily: "var(--font-lexend)" }}
                 >
-                  {(item.salePrice * 25000 * item.quantity).toLocaleString('vi-VN')} ₫
+                  {`${(item.salePrice * item.quantity).toLocaleString('vi-VN')} ₫`}
                 </span>
               </div>
 
@@ -143,7 +143,7 @@ export function CartItemsList({
                 <div className="ml-4 md:ml-[104px] bg-[#f9f9fe] border border-primary/10 rounded-2xl p-5 space-y-4 relative text-left">
                   {/* Decorative connector line linking product to printing details */}
                   <div className="absolute -left-6 top-8 w-6 h-px border-t border-dashed border-[#c1c6d7] hidden md:block" />
-                  
+
                   <div className="flex justify-between items-center pb-3 border-b border-[#e2e2e7]">
                     <div className="flex items-center gap-2">
                       <Wrench className="text-primary" size={14} />

@@ -41,7 +41,7 @@ export function useCheckout() {
     ? (selectedIds ? rawCart.items.filter(item => selectedIds.includes(item.id)) : rawCart.items)
     : [];
 
-  const estimatedCost = checkoutItems.reduce((acc, item) => acc + (item.salePrice * 25000 * item.quantity), 0);
+  const estimatedCost = checkoutItems.reduce((acc, item) => acc + (item.salePrice * item.quantity), 0);
 
   const checkoutCart = rawCart ? {
     ...rawCart,
@@ -231,8 +231,8 @@ export function useCheckout() {
 
   // Computed values
   const isCartEmpty = checkoutItems.length === 0;
-  const standardDelivery = 15 * 25000;
-  const expectedTax = 24 * 25000;
+  const standardDelivery = 15;
+  const expectedTax = 24;
   const customizedItem = checkoutItems.find(
     (item) => item.isCustomizable === true || item.customizable === true
   );

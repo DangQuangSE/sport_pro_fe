@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { productService } from "@/services/productService";
 import { motion, AnimatePresence } from "framer-motion";
 import MembershipBadge from "@/components/ui/MembershipBadge";
+import { BRAND_CONFIG } from "@/constants/brand";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function Navbar() {
@@ -63,13 +64,17 @@ export default function Navbar() {
         "shadow-[0_2px_15px_-3px_rgba(0,0,0,0.04),0_4px_20px_-2px_rgba(0,0,0,0.02)]"
       )}
     >
-      <div className="flex justify-between items-center px-8 h-20 w-full max-w-[1280px] mx-auto">
+      <div className="flex justify-between items-center px-4 sm:px-8 h-20 w-full max-w-[1280px] mx-auto">
         {/* Brand */}
         <Link
-          href="/"
-          className="text-2xl font-black italic tracking-tighter text-on-background flex items-center gap-0.5"
+          href={`/${locale}`}
+          className="flex items-center hover:opacity-90 transition-opacity"
         >
-          SPORT<span className="text-primary">PRO</span>
+          <img
+            src={BRAND_CONFIG.logo}
+            alt={BRAND_CONFIG.alt}
+            className="h-12 w-auto object-contain"
+          />
         </Link>
 
         {/* Desktop Nav Links */}
@@ -171,7 +176,7 @@ export default function Navbar() {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center space-x-5">
+        <div className="flex items-center gap-3 sm:gap-5">
           {/* Search Pill — Desktop */}
           <div
             className={cn(
@@ -208,23 +213,23 @@ export default function Navbar() {
             <button
               suppressHydrationWarning
               onClick={logout}
-              className="text-[12px] font-bold uppercase tracking-wider text-on-surface hover:text-primary transition-colors cursor-pointer"
+              className="hidden md:block text-[12px] font-bold uppercase tracking-wider text-on-surface hover:text-primary transition-colors cursor-pointer"
             >
               {t("auth.signOutButton")}
             </button>
           ) : (
             <Link
               href={`/${locale}/login`}
-              className="text-[12px] font-bold uppercase tracking-wider text-on-surface hover:text-primary transition-colors"
+              className="hidden md:block text-[12px] font-bold uppercase tracking-wider text-on-surface hover:text-primary transition-colors"
             >
               {t("auth.signInButton")}
             </Link>
           )}
 
           {/* User Profile / Login Link */}
-          <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2">
             {isLoggedIn && user && (
-              <Link href={`/${locale}/profile`} className="hidden sm:inline-flex shrink-0">
+              <Link href={`/${locale}/profile`} className="hidden md:inline-flex shrink-0">
                 <MembershipBadge tier={user.tier} size="sm" showLabel={true} />
               </Link>
             )}
@@ -270,7 +275,7 @@ export default function Navbar() {
           </button>
 
           {/* Language Switcher */}
-          <div className="hidden sm:block ml-2 border-l border-outline-variant pl-4">
+          <div className="hidden md:block ml-2 border-l border-outline-variant pl-4">
             <LanguageToggle />
           </div>
         </div>
@@ -278,7 +283,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-outline-variant px-8 py-6 flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-80px)]">
+        <div className="md:hidden bg-white border-t border-outline-variant px-4 sm:px-8 py-6 flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-80px)]">
           {/* Shop All Gear link */}
           <Link
             href={`/${locale}/products`}
@@ -362,6 +367,21 @@ export default function Navbar() {
                 <MembershipBadge tier={user.tier} size="sm" showLabel={true} />
               </div>
             )}
+            {isLoggedIn && (
+              <Link
+                href={`/${locale}/profile`}
+                onClick={() => setMobileOpen(false)}
+                className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary py-2 transition-colors block"
+              >
+                {t("home.nav.account")}
+              </Link>
+            )}
+            <div className="flex items-center justify-between px-1 py-2 border-t border-outline-variant/40">
+              <span className="text-sm font-bold uppercase tracking-widest text-on-surface">
+                {t("home.nav.language")}
+              </span>
+              <LanguageToggle />
+            </div>
             {isLoggedIn ? (
               <button
                 suppressHydrationWarning
@@ -369,7 +389,7 @@ export default function Navbar() {
                   logout();
                   setMobileOpen(false);
                 }}
-                className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary text-left transition-colors cursor-pointer"
+                className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary text-left transition-colors cursor-pointer border-t border-outline-variant/40 pt-4"
               >
                 {t("auth.signOutButton")}
               </button>
@@ -377,7 +397,7 @@ export default function Navbar() {
               <Link
                 href={`/${locale}/login`}
                 onClick={() => setMobileOpen(false)}
-                className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary transition-colors"
+                className="text-sm font-bold uppercase tracking-widest text-on-surface hover:text-primary transition-colors border-t border-outline-variant/40 pt-4"
               >
                 {t("auth.signInButton")}
               </Link>

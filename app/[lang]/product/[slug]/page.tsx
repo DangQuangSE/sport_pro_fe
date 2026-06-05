@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import ProductGallery from "@/components/product/ProductGallery";
@@ -9,15 +10,16 @@ import ProductInfo from "@/components/product/ProductInfo";
 import RelatedProducts from "@/components/product/RelatedProducts";
 import { productService, ProductDetailResponse } from "@/services/productService";
 import { reviewService, ReviewResponse } from "@/services/reviewService";
-import { Loader2, AlertCircle, Star, User, Calendar } from "lucide-react";
+import { Loader2, AlertCircle, Star, User, Calendar, ArrowLeft } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 export default function ProductDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   
   const [product, setProduct] = useState<ProductDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -113,7 +115,26 @@ export default function ProductDetailPage() {
     <div className="flex flex-col min-h-screen bg-surface">
       <Navbar />
 
-      <main className="flex-grow pt-32 pb-20 px-8 max-w-[1280px] mx-auto w-full animate-in fade-in duration-700">
+      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1280px] mx-auto w-full animate-in fade-in duration-700">
+        
+        {/* Breadcrumb Navigation & Back Button */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-outline-variant/40">
+          <Breadcrumbs 
+            items={[
+              { label: locale === "vi" ? "Sản phẩm" : "Products", href: "/products" },
+              { label: product.name }
+            ]} 
+          />
+          
+          <Link 
+            href={`/${locale}/products`}
+            className="inline-flex items-center gap-2 text-[10px] font-lexend font-black uppercase tracking-widest text-primary hover:text-primary-container transition-colors"
+          >
+            <ArrowLeft size={12} />
+            {locale === "vi" ? "Quay lại sản phẩm" : "Back to products"}
+          </Link>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-20">
           {/* Left: Product Media */}
           <div className="md:col-span-7">

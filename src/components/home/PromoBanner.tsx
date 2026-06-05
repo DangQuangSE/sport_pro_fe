@@ -10,11 +10,11 @@ export default function PromoBanner() {
   const { t } = useTranslation();
 
   return (
-    <section className="max-w-[1280px] mx-auto px-8 mb-24">
+    <section className="max-w-[1280px] mx-auto px-4 sm:px-8 mb-24">
       <div
         className={cn(
           "bg-on-surface rounded-2xl overflow-hidden relative min-h-[400px]",
-          "flex items-center p-8 md:p-16 border border-white/10",
+          "flex items-center p-6 sm:p-8 md:p-16 border border-white/10",
           "shadow-2xl"
         )}
       >
@@ -40,12 +40,12 @@ export default function PromoBanner() {
             {t("home.promo.overline")}
           </span>
           <h2
-            className="text-[36px] lg:text-[48px] font-bold leading-[1.1] text-white mb-6"
+            className="text-[32px] sm:text-[40px] lg:text-[48px] font-bold leading-[1.1] text-white mb-6"
             style={{ fontFamily: "var(--font-lexend)" }}
           >
             {t("home.promo.title")}
           </h2>
-          <p className="text-[18px] leading-[1.6] text-surface-container-low mb-8">
+          <p className="text-[15px] sm:text-[18px] leading-[1.6] text-surface-container-low mb-8">
             {t("home.promo.subtitle")}
           </p>
           <button

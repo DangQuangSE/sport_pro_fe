@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { HERO_SHOE_IMAGE, HERO_INLINE_IMAGE } from "@/data/homeData";
 import { Truck, BadgeCheck, RefreshCw } from "lucide-react";
@@ -25,12 +26,12 @@ function TrustItem({ icon, label }: Readonly<TrustItemProps>) {
 
 // ─── HeroSection ─────────────────────────────────────────────────────────────
 export default function HeroSection() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
 
   return (
     <section
       className={cn(
-        "max-w-[1280px] mx-auto px-8",
+        "max-w-[1280px] mx-auto px-4 sm:px-8",
         "pt-12 pb-6 lg:pt-16 lg:pb-8",
         "grid grid-cols-1 lg:grid-cols-12 gap-8",
         "items-center min-h-[auto] lg:min-h-[500px]"
@@ -56,15 +57,15 @@ export default function HeroSection() {
         <h1
           className={cn(
             "font-black italic tracking-tight text-on-background leading-[1.05]",
-            "text-[44px] lg:text-[64px]"
+            "text-[32px] sm:text-[44px] lg:text-[64px]"
           )}
           style={{ fontFamily: "var(--font-lexend)" }}
         >
           {t("home.hero.title")}
           <span
             className={cn(
-              "inline-block align-middle mx-3",
-              "w-[60px] h-[36px] lg:w-[80px] lg:h-[44px]",
+              "inline-block align-middle mx-2 sm:mx-3",
+              "w-[50px] h-[30px] sm:w-[60px] sm:h-[36px] lg:w-[80px] lg:h-[44px]",
               "rounded-full overflow-hidden",
               "border-2 border-outline-variant shadow-sm",
               "-rotate-6"
@@ -83,16 +84,16 @@ export default function HeroSection() {
         </h1>
 
         {/* Body Copy */}
-        <p className="text-[18px] leading-[1.6] text-on-surface-variant max-w-[540px]">
+        <p className="text-[15px] sm:text-[18px] leading-[1.6] text-on-surface-variant max-w-[540px]">
           {t("home.hero.subtitle")}
         </p>
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <button
-            suppressHydrationWarning
+          <Link
+            href={`/${locale}/products`}
             className={cn(
-              "bg-secondary-container text-white",
+              "bg-secondary-container text-white text-center",
               "font-semibold text-[12px] uppercase tracking-[0.05em]",
               "px-8 py-4 rounded-full",
               "transition-all duration-200 active:scale-[0.98]",
@@ -101,11 +102,11 @@ export default function HeroSection() {
             )}
           >
             {t("home.hero.ctaPrimary")}
-          </button>
-          <button
-            suppressHydrationWarning
+          </Link>
+          <Link
+            href={`/${locale}/products`}
             className={cn(
-              "bg-transparent text-primary border-2 border-primary",
+              "bg-transparent text-primary border-2 border-primary text-center",
               "font-semibold text-[12px] uppercase tracking-[0.05em]",
               "px-8 py-4 rounded-full",
               "transition-all duration-200 active:scale-[0.98]",
@@ -113,13 +114,13 @@ export default function HeroSection() {
             )}
           >
             {t("home.hero.ctaSecondary")}
-          </button>
+          </Link>
         </div>
 
         {/* Trust Indicators */}
         <div
           className={cn(
-            "flex flex-wrap items-center gap-6",
+            "flex flex-wrap items-center gap-4 sm:gap-6",
             "pt-6 border-t border-surface-variant w-full"
           )}
         >

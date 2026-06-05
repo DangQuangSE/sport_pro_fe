@@ -20,6 +20,7 @@ export interface CartItemResponse {
   itemTotal: number;
   customDesignId?: number;
   designImageUrl?: string;
+  backDesignImageUrl?: string;
   printingPrice?: number;
   isCustomizable?: boolean;
   customizable?: boolean;

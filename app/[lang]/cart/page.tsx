@@ -20,6 +20,7 @@ import { useCart } from "@/contexts/CartContext";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { apiClient, ApiResponse } from "@/lib/api-client";
 import { cartService } from "@/services/cartService";
 
@@ -112,7 +113,7 @@ export default function CartPage() {
   };
 
   const selectedItems = cart ? cart.items.filter(item => selectedIds.includes(item.id)) : [];
-  const baseSubtotal = selectedItems.reduce((sum, item) => sum + (item.salePrice * 25000 * item.quantity), 0);
+  const baseSubtotal = selectedItems.reduce((sum, item) => sum + (item.salePrice * item.quantity), 0);
   const printingCost = selectedItems.reduce((sum, item) => {
     if (item.customDesignId && item.printingPrice) {
       return sum + (item.printingPrice * item.quantity);
@@ -169,8 +170,9 @@ export default function CartPage() {
     <div className="flex flex-col min-h-screen bg-surface">
       <Navbar />
 
-      <main className="flex-grow pt-32 pb-20 px-8 max-w-[1280px] mx-auto w-full animate-in fade-in duration-700">
-        <div className="flex flex-col lg:flex-row gap-16">
+      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1280px] mx-auto w-full animate-in fade-in duration-700">
+        <Breadcrumbs items={[{ label: locale === "vi" ? "Giỏ hàng" : "Your Bag" }]} />
+        <div className="flex flex-col lg:flex-row gap-16 mt-8">
           {/* Left: Items List */}
           <div className="flex-grow space-y-10">
             <div className="space-y-2">
@@ -293,7 +295,9 @@ export default function CartPage() {
                                   </div>
                                 )}
                               </div>
-                              <p className="text-lg font-black italic tracking-tighter">{(item.salePrice * 25000).toLocaleString('vi-VN')} ₫</p>
+                              <p className="text-lg font-black italic tracking-tighter">
+                                {`${item.salePrice.toLocaleString('vi-VN')} ₫`}
+                              </p>
                             </div>
 
                             <div className="flex items-center justify-between mt-6">
@@ -433,7 +437,9 @@ export default function CartPage() {
                   <div className="space-y-4 pt-4 border-t border-outline-variant">
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-medium text-on-surface-variant">{t("checkout.subtotal") || "Subtotal"}</span>
-                      <span className="font-bold">{subtotal.toLocaleString('vi-VN')} ₫</span>
+                      <span className="font-bold">
+                        {`${subtotal.toLocaleString('vi-VN')} ₫`}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-medium text-on-surface-variant">{t("checkout.shipping") || "Estimated Shipping & Handling"}</span>
@@ -447,7 +453,9 @@ export default function CartPage() {
                     <div className="pt-4 border-t border-on-surface space-y-1">
                       <div className="flex justify-between items-center">
                         <span className="text-base font-black uppercase tracking-tight">{t("checkout.total") || "Total"}</span>
-                        <span className="text-2xl font-black italic tracking-tighter">{subtotal.toLocaleString('vi-VN')} ₫</span>
+                        <span className="text-2xl font-black italic tracking-tighter">
+                          {`${subtotal.toLocaleString('vi-VN')} ₫`}
+                        </span>
                       </div>
                     </div>
 

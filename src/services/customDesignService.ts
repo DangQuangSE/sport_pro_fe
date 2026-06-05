@@ -10,6 +10,7 @@ export interface CustomDesignRequest {
 export interface CustomDesignResponse {
   id: number;
   designImageUrl: string;
+  backDesignImageUrl?: string;
   designMetadata: string;
   printingMaterialId: number;
   printingMaterialName: string;
@@ -20,9 +21,12 @@ export interface CustomDesignResponse {
 }
 
 export const customDesignService = {
-  saveDesign: (file: File, data: CustomDesignRequest) => {
+  saveDesign: (file: File, backFile: File | null, data: CustomDesignRequest) => {
     const formData = new FormData();
     formData.append("file", file);
+    if (backFile) {
+      formData.append("backFile", backFile);
+    }
     
     // Gửi data dưới dạng Blob với content-type là application/json
     // Đây là cách chuẩn nhất để Spring Boot @RequestPart nhận diện được JSON object

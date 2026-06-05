@@ -26,6 +26,7 @@ export interface OrderItemResponse {
   itemTotal: number;
   customDesignId?: number;
   designImageUrl?: string;
+  backDesignImageUrl?: string;
   isReviewed?: boolean;
 }
 

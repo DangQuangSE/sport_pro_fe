@@ -24,6 +24,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 export default function OrderHistoryPage() {
   const { t, locale } = useTranslation();
@@ -117,8 +118,18 @@ export default function OrderHistoryPage() {
     <div className="flex flex-col min-h-screen bg-surface">
       <Navbar />
 
-      <main className="flex-grow pt-32 pb-20 px-8 max-w-[1000px] mx-auto w-full animate-in fade-in duration-700">
+      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1000px] mx-auto w-full animate-in fade-in duration-700">
         
+        {/* Navigation Breadcrumb */}
+        <div className="mb-6">
+          <Breadcrumbs 
+            items={[
+              { label: t("profile.title") || "Profile", href: "/profile" },
+              { label: t("profile.orders.title") || "Orders" }
+            ]} 
+          />
+        </div>
+
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-2 border-outline-variant pb-8 mb-12">
           <div className="space-y-2">
@@ -229,7 +240,7 @@ export default function OrderHistoryPage() {
                         </p>
                       </div>
                       <span className="text-xs font-black italic text-on-surface shrink-0">
-                        ${(item.price * item.quantity).toLocaleString()}
+                        {(item.price * item.quantity).toLocaleString('vi-VN')} ₫
                       </span>
                     </div>
                   ))}
@@ -243,7 +254,7 @@ export default function OrderHistoryPage() {
                   <div className="flex items-center gap-6">
                     <div className="text-right">
                       <p className="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-0.5">{t("profile.orders.total")}</p>
-                      <p className="text-lg font-black italic tracking-tighter text-on-surface">${order.totalAmount?.toLocaleString()}</p>
+                      <p className="text-lg font-black italic tracking-tighter text-on-surface">{order.totalAmount?.toLocaleString('vi-VN')} ₫</p>
                     </div>
                     
                     <Button asChild variant="outline" className="h-10 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest border-outline-variant hover:bg-surface-container/50">

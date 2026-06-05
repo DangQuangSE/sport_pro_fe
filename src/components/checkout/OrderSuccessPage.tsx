@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { CheckCircle2, Lock, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BRAND_CONFIG } from "@/constants/brand";
 
 interface OrderSuccessPageProps {
   successOrder: {
@@ -23,13 +24,16 @@ export function OrderSuccessPage({ successOrder, locale, t }: OrderSuccessPagePr
       {/* Simple Secure Header */}
       <header className="border-b border-[#e2e2e7] bg-white h-20 flex items-center justify-between px-8 md:px-16">
         <div className="flex items-center gap-10">
-          <span
-            className="text-xl font-black italic tracking-tighter uppercase leading-none"
-            style={{ fontFamily: "var(--font-lexend)" }}
+          <Link
+            href={`/${locale}`}
+            className="flex items-center hover:opacity-90 transition-opacity"
           >
-            SPORT<br />
-            <span className="text-primary">PRO</span>
-          </span>
+            <img
+              src={BRAND_CONFIG.logo}
+              alt={BRAND_CONFIG.alt}
+              className="h-12 w-auto object-contain"
+            />
+          </Link>
           <div className="hidden sm:flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#414755] border-l border-[#c1c6d7] pl-8">
             <Lock size={14} className="text-[#717786]" />
             <span>{t("checkout.security")}</span>
@@ -95,7 +99,7 @@ export function OrderSuccessPage({ successOrder, locale, t }: OrderSuccessPagePr
             <div className="flex justify-between border-t border-[#e2e2e7] pt-4 text-sm font-black uppercase text-[#1a1c1f]">
               <span>{t("checkout.total")}</span>
               <span className="text-lg text-primary italic font-black">
-                ${successOrder.totalAmount?.toLocaleString()}
+                {successOrder.totalAmount?.toLocaleString('vi-VN')} ₫
               </span>
             </div>
           </div>
@@ -121,12 +125,16 @@ export function OrderSuccessPage({ successOrder, locale, t }: OrderSuccessPagePr
       {/* Simple Footer */}
       <footer className="border-t border-[#e2e2e7] bg-white py-12 px-8 md:px-16 flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="flex items-center gap-10">
-          <span
-            className="text-sm font-black italic tracking-tighter uppercase leading-none"
-            style={{ fontFamily: "var(--font-lexend)" }}
+          <Link
+            href={`/${locale}`}
+            className="flex items-center hover:opacity-90 transition-opacity"
           >
-            SPORT<br />PRO
-          </span>
+            <img
+              src={BRAND_CONFIG.logo}
+              alt={BRAND_CONFIG.alt}
+              className="h-8 w-auto object-contain"
+            />
+          </Link>
         </div>
         <p className="text-[10px] font-black uppercase tracking-widest text-[#717786]">
           {t("checkout.copyright")}

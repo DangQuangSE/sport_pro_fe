@@ -28,7 +28,7 @@ export function AuthLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
       
-      <div className="w-full md:w-1/2 flex items-center justify-center p-6 lg:p-8 bg-surface-bright min-h-screen">
+      <div className="w-full md:w-1/2 flex items-center justify-center px-4 py-12 sm:p-6 lg:p-8 bg-surface-bright min-h-screen">
         {children}
       </div>
     </div>

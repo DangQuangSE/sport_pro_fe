@@ -72,7 +72,7 @@ export default function CustomizerCanvas({
   };
 
   return (
-    <section className="flex-grow flex flex-col py-6 relative bg-[#ededf2] rounded-2xl shadow-inner overflow-hidden my-6 border border-[#c1c6d7] items-center justify-center">
+    <section className="w-full lg:w-auto h-[260px] sm:h-[320px] lg:h-full flex-grow lg:flex-grow-[3] flex flex-col py-4 lg:py-6 relative bg-[#ededf2] rounded-2xl shadow-inner overflow-hidden border border-[#c1c6d7] items-center justify-center">
       
       {/* Zoom & Canvas controls */}
       <div className="absolute top-6 right-6 flex gap-2 z-10 bg-white p-1 rounded-xl shadow-sm border border-[#e2e2e7]">
@@ -113,9 +113,9 @@ export default function CustomizerCanvas({
         style={{ transform: `scale(${zoomLevel})`, transition: "transform 0.2s ease-out" }}
       >
         {/* Blank T-Shirt Box */}
-        <div className="relative w-full max-w-[420px] aspect-[4/5] bg-white shadow-xl rounded-[2rem] border border-[#c1c6d7] flex items-center justify-center overflow-hidden">
+        <div className="relative h-[90%] max-h-[380px] lg:max-h-[500px] aspect-[4/5] bg-white shadow-xl rounded-[2rem] border border-[#c1c6d7] flex items-center justify-center overflow-hidden">
           <img 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuApAvuc8kUmi1kPVuDAo-oq_0nc-mqUK1nIR6tvQU4KX8XdymhuHs97bAa6NJgjNGVSQF26WChfvU6FHg-CPujrbgM73RaLRQlm9g7zS-7rbEMOQnW9RvZm2qhr0qezf_hhBjbWpFYXFoA94FUXFPLeyW3DsoMnShdOYvg7a3PtHyxONtqYfrfAWD3q2RsymdRhymbCyMOPNm3J1Gaa9CkGA0Ng38rcaTndLazCZ0IQaT6psrpzA8kVMXjpK-xVhJ8qTy-_IhTMo3U" 
+            src={viewSide === "front" ? "/front_shirt_mockup.png" : "/back_shirt_mockup.png"} 
             alt="Blank sports t-shirt" 
             className="w-[82%] h-auto object-contain opacity-90 drop-shadow-xl"
           />

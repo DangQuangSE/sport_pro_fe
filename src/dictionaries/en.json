@@ -61,7 +61,8 @@
       "admin": "Admin",
       "searchPlaceholder": "Search ...",
       "account": "Account",
-      "cart": "Cart — {count} items"
+      "cart": "Cart — {count} items",
+      "language": "Language"
     },
     "hero": {
       "overline": "Spring / Summer 2026",

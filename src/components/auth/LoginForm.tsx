@@ -13,7 +13,7 @@ export function LoginForm() {
   const { loginForm, onLogin, isLoading } = useAuthForms()
 
   return (
-    <div className="w-full max-w-[440px] bg-surface-container-lowest rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-outline-variant p-8 lg:p-12 relative overflow-hidden">
+    <div className="w-full max-w-[440px] bg-surface-container-lowest rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-outline-variant p-6 sm:p-8 lg:p-12 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary-container"></div>
       <div className="text-center mb-8">
         <h1 className="font-display-lg text-display-lg font-black italic tracking-tighter text-on-surface mb-2">{t('auth.loginTitle')}</h1>

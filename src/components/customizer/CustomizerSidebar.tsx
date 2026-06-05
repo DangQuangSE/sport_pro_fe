@@ -84,7 +84,7 @@ export default function CustomizerSidebar({
   }, []);
 
   return (
-    <aside className="w-full lg:w-88 flex-shrink-0 flex flex-col gap-6 py-6 overflow-y-auto pr-2 border-r border-[#e2e2e7] h-full text-left">
+    <aside className="w-full lg:w-88 flex-shrink-0 flex flex-col gap-4 lg:gap-6 py-4 lg:py-6 px-1 lg:px-0 lg:pr-2 overflow-y-auto border-b lg:border-b-0 lg:border-r border-[#e2e2e7] flex-grow lg:flex-grow-0 h-0 lg:h-full text-left">
       <div className="space-y-1">
         <h1 className="font-lexend font-black text-2xl uppercase tracking-tight">Tùy Chỉnh Thiết Kế</h1>
         <p className="text-xs text-on-surface-variant font-medium leading-relaxed">
