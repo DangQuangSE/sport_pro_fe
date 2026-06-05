@@ -14,10 +14,20 @@ interface CardProps {
 
 // ─── LargeCard ───────────────────────────────────────────────────────────────
 function LargeCard({ product }: Readonly<CardProps>) {
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
   
   const hasDiscount = !!(product.salePrice && product.originalPrice && product.originalPrice > product.salePrice);
   const activePrice = hasDiscount && product.salePrice ? product.salePrice : product.originalPrice ?? product.basePrice;
+
+  const getProductDescription = () => {
+    const categoryLower = (product.categoryName || "").toLowerCase();
+    if (categoryLower.includes("tshirt") || categoryLower.includes("shirt") || categoryLower.includes("áo")) {
+      return t("home.featured.defaultApparelDesc");
+    } else if (categoryLower.includes("giày") || categoryLower.includes("footwear") || categoryLower.includes("shoes") || categoryLower.includes("shoe")) {
+      return t("home.featured.defaultFootwearDesc");
+    }
+    return t("home.featured.defaultDesc");
+  };
 
   return (
     <Link
@@ -33,7 +43,7 @@ function LargeCard({ product }: Readonly<CardProps>) {
       {/* Category label overlay */}
       <div className="absolute top-4 left-4 z-10 bg-surface-container-lowest/90 px-3 py-1 rounded border border-surface-variant backdrop-blur-sm">
         <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-on-surface">
-          {product.categoryName || "Running"}
+          {product.categoryName || "Custom"}
         </span>
       </div>
 
@@ -58,7 +68,7 @@ function LargeCard({ product }: Readonly<CardProps>) {
           {product.name}
         </h3>
         <p className="text-[14px] leading-[1.5] text-on-surface-variant mb-6 line-clamp-2">
-          {product.brandName || "Sport Pro"} professional elite footwear designed for peak performance, extreme comfort, and durability under athletic workloads.
+          {getProductDescription()}
         </p>
         <div className="mt-auto flex justify-between items-center">
           <span
