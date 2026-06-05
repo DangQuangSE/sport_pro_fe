@@ -224,7 +224,7 @@ export function useCustomizer() {
     setTexts(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
   };
 
-  const compileDesignToBlob = async (): Promise<Blob> => {
+  const compileDesignToBlob = async (side: "front" | "back" = "front"): Promise<Blob> => {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement("canvas");
       canvas.width = 800;
@@ -237,7 +237,7 @@ export function useCustomizer() {
 
       const bgImg = new Image();
       bgImg.crossOrigin = "anonymous";
-      bgImg.src = "https://lh3.googleusercontent.com/aida-public/AB6AXuApAvuc8kUmi1kPVuDAo-oq_0nc-mqUK1nIR6tvQU4KX8XdymhuHs97bAa6NJgjNGVSQF26WChfvU6FHg-CPujrbgM73RaLRQlm9g7zS-7rbEMOQnW9RvZm2qhr0qezf_hhBjbWpFYXFoA94FUXFPLeyW3DsoMnShdOYvg7a3PtHyxONtqYfrfAWD3q2RsymdRhymbCyMOPNm3J1Gaa9CkGA0Ng38rcaTndLazCZ0IQaT6psrpzA8kVMXjpK-xVhJ8qTy-_IhTMo3U";
+      bgImg.src = side === "front" ? "/front_shirt_mockup.png" : "/back_shirt_mockup.png";
       
       bgImg.onload = async () => {
         ctx.fillStyle = "#ffffff";
@@ -317,8 +317,10 @@ export function useCustomizer() {
       throw new Error("No printing material selected");
     }
 
-    const blob = await compileDesignToBlob();
-    const file = new File([blob], "custom_design.png", { type: "image/png" });
+    const frontBlob = await compileDesignToBlob("front");
+    const backBlob = await compileDesignToBlob("back");
+    const file = new File([frontBlob], "custom_design_front.png", { type: "image/png" });
+    const backFile = new File([backBlob], "custom_design_back.png", { type: "image/png" });
 
     const designMetadata = JSON.stringify({
       texts: texts,
@@ -332,7 +334,7 @@ export function useCustomizer() {
       metadata: designMetadata
     };
 
-    const saveRes = await customDesignService.saveDesign(file, requestData);
+    const saveRes = await customDesignService.saveDesign(file, backFile, requestData);
     const designId = saveRes.data.id;
     const designImageUrl = saveRes.data.designImageUrl;
 
@@ -402,17 +404,14 @@ export function useCustomizer() {
   };
 
   // Confirm design and redirect back to Checkout
-  const handleConfirmAndReturn = () => {
-    const customDesignData = {
-      printingPrice: printingPrice,
-      materialName: selectedMaterial?.name || "In chuyển nhiệt",
-      designImageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuApAvuc8kUmi1kPVuDAo-oq_0nc-mqUK1nIR6tvQU4KX8XdymhuHs97bAa6NJgjNGVSQF26WChfvU6FHg-CPujrbgM73RaLRQlm9g7zS-7rbEMOQnW9RvZm2qhr0qezf_hhBjbWpFYXFoA94FUXFPLeyW3DsoMnShdOYvg7a3PtHyxONtqYfrfAWD3q2RsymdRhymbCyMOPNm3J1Gaa9CkGA0Ng38rcaTndLazCZ0IQaT6psrpzA8kVMXjpK-xVhJ8qTy-_IhTMo3U",
-      textsCount: texts.length,
-      imagesCount: images.length
-    };
-
-    localStorage.setItem("sport_pro_custom_design", JSON.stringify(customDesignData));
-    router.push(`/${locale}/checkout`);
+  const handleConfirmAndReturn = async () => {
+    try {
+      await handleSaveDesignAndLinkToCart();
+      router.push(`/${locale}/checkout`);
+    } catch (err) {
+      console.error("Failed to save design on confirm", err);
+      router.push(`/${locale}/checkout`);
+    }
   };
 
   const handleDragText = (id: string, deltaX: number, deltaY: number) => {
