@@ -3,63 +3,114 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { 
-  Users, 
-  Loader2,
-  Mail,
-  User as UserIcon,
-  ShieldAlert
+import {
+  Users, Loader2, Mail, User as UserIcon,
+  ShieldAlert, ShieldCheck, ShieldOff, Trash2, UserX, UserCheck
 } from "lucide-react";
+import { toast } from "sonner";
 import { adminService } from "@/services/adminService";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import MembershipBadge from "@/components/ui/MembershipBadge";
+
+type AdminUser = {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  avatar?: string;
+  role: "USER" | "ADMIN";
+  tier: string;
+  totalSpending: number;
+  isActive: boolean;
+};
+
+type ConfirmState = {
+  isOpen: boolean;
+  title: string;
+  message: string;
+  onConfirm: () => void;
+};
 
 export default function AdminUsersPage() {
   const params = useParams();
-  const locale = params?.lang as string || "en";
+  const locale = (params?.lang as string) || "en";
 
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState<number | null>(null);
+  const [confirmState, setConfirmState] = useState<ConfirmState>({
+    isOpen: false, title: "", message: "", onConfirm: () => {},
+  });
 
   useEffect(() => {
-    async function loadUsers() {
-      try {
-        setIsLoading(true);
-        const res = await adminService.getUsers();
-        setUsers(res.data || []);
-      } catch (err) {
-        console.error("Failed to load admin users list", err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
     loadUsers();
   }, []);
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat(locale === "vi" ? "vi-VN" : "en-US", {
-      style: "currency",
-      currency: "VND",
-      maximumFractionDigits: 0
-    }).format(value);
-  };
-
-  const getRoleBadge = (role: string) => {
-    if (role?.toUpperCase() === "ADMIN") {
-      return (
-        <Badge className="bg-rose-500/10 text-rose-500 border border-rose-500/20 shadow-none uppercase font-bold text-[9px] tracking-wider px-2 py-0.5 flex items-center gap-1 w-fit">
-          <ShieldAlert className="w-3 h-3" />
-          Admin
-        </Badge>
-      );
+  async function loadUsers() {
+    try {
+      setIsLoading(true);
+      const res = await adminService.getUsers();
+      setUsers(res.data || []);
+    } catch (err) {
+      console.error("Failed to load users", err);
+      toast.error("Failed to load users");
+    } finally {
+      setIsLoading(false);
     }
-    return (
-      <Badge className="bg-slate-500/10 text-slate-500 border border-slate-500/20 shadow-none uppercase font-bold text-[9px] tracking-wider px-2 py-0.5 w-fit">
-        User
-      </Badge>
+  }
+
+  const confirm = (title: string, message: string, onConfirm: () => void) => {
+    setConfirmState({ isOpen: true, title, message, onConfirm });
+  };
+  const closeConfirm = () => setConfirmState(prev => ({ ...prev, isOpen: false }));
+
+  const handleToggleRole = async (user: AdminUser) => {
+    const newRole = user.role === "ADMIN" ? "USER" : "ADMIN";
+    const label = newRole === "ADMIN" ? "promote to Admin" : "demote to User";
+    confirm(
+      `Change role for ${user.email}`,
+      `Are you sure you want to ${label}?`,
+      async () => {
+        closeConfirm();
+        setActionLoading(user.id);
+        try {
+          const res = await adminService.updateUserRole(user.id, newRole);
+          setUsers(prev => prev.map(u => u.id === user.id ? { ...u, role: res.data.role } : u));
+          toast.success(`Role updated to ${newRole}`);
+        } catch {
+          toast.error("Failed to update role");
+        } finally {
+          setActionLoading(null);
+        }
+      }
     );
   };
+
+  const handleDelete = async (user: AdminUser) => {
+    confirm(
+      `Delete ${user.email}`,
+      "This user will be marked as deleted and can no longer log in.",
+      async () => {
+        closeConfirm();
+        setActionLoading(user.id);
+        try {
+          await adminService.deleteUser(user.id);
+          setUsers(prev => prev.map(u => u.id === user.id ? { ...u, isActive: false } : u));
+          toast.success("User deleted");
+        } catch {
+          toast.error("Failed to delete user");
+        } finally {
+          setActionLoading(null);
+        }
+      }
+    );
+  };
+
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 }).format(value);
 
   if (isLoading) {
     return (
@@ -73,7 +124,7 @@ export default function AdminUsersPage() {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 mb-2 font-bold text-[10px] text-on-surface-variant uppercase tracking-[0.15em]">
+      <div className="flex items-center gap-2 font-bold text-[10px] text-on-surface-variant uppercase tracking-[0.15em]">
         <Link href={`/${locale}/admin`} className="hover:text-primary transition-colors flex items-center gap-1">
           <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
           ADMIN
@@ -82,20 +133,22 @@ export default function AdminUsersPage() {
         <span className="text-on-surface">USERS</span>
       </div>
 
-      <h2 className="text-5xl font-black italic tracking-tighter text-on-surface uppercase leading-none mb-8 font-lexend" style={{ fontFamily: "var(--font-lexend)" }}>
-        Users <span className="text-primary">System</span>
-      </h2>
+      <div className="flex items-end justify-between">
+        <h2 className="text-5xl font-black italic tracking-tighter text-on-surface uppercase leading-none font-lexend">
+          Users <span className="text-primary">System</span>
+        </h2>
+        <p className="text-xs text-on-surface-variant font-bold uppercase tracking-widest pb-1">
+          {users.length} accounts
+        </p>
+      </div>
 
-      {/* Content Table */}
       <div className="bg-surface rounded-3xl border-2 border-outline-variant overflow-hidden shadow-sm">
         {users.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-center space-y-4 py-16">
             <div className="w-12 h-12 bg-surface-container rounded-full flex items-center justify-center text-outline">
               <Users size={24} />
             </div>
-            <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-              No users found on this database segment.
-            </p>
+            <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">No users found.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -107,50 +160,131 @@ export default function AdminUsersPage() {
                   <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">Full Name</TableHead>
                   <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">Email</TableHead>
                   <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">Role</TableHead>
+                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">Status</TableHead>
                   <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">Membership</TableHead>
-                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 pr-6 text-right text-on-surface">Total Spending</TableHead>
+                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface text-right">Spending</TableHead>
+                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 pr-6 text-on-surface text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users.map((user) => (
-                  <TableRow key={user.id} className="border-b border-outline-variant/40 hover:bg-surface-container/10 transition-colors">
-                    <TableCell className="font-bold font-mono text-xs pl-6 py-4">#{user.id}</TableCell>
-                    <TableCell className="py-4">
-                      <div className="w-9 h-9 rounded-full border border-outline-variant overflow-hidden bg-surface-container-low flex items-center justify-center">
-                        {user.avatar ? (
-                          <img src={user.avatar} alt="User avatar" className="w-full h-full object-cover" />
+                {users.map(user => {
+                  const isLoading = actionLoading === user.id;
+                  return (
+                    <TableRow
+                      key={user.id}
+                      className={`border-b border-outline-variant/40 transition-colors ${!user.isActive ? "opacity-50 bg-error/5" : "hover:bg-surface-container/10"}`}
+                    >
+                      <TableCell className="font-bold font-mono text-xs pl-6 py-4">#{user.id}</TableCell>
+
+                      <TableCell className="py-4">
+                        <div className="w-9 h-9 rounded-full border border-outline-variant overflow-hidden bg-surface-container-low flex items-center justify-center">
+                          {user.avatar
+                            ? <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+                            : <UserIcon className="w-4 h-4 text-outline" />}
+                        </div>
+                      </TableCell>
+
+                      <TableCell className="font-bold text-sm text-on-surface py-4">
+                        {user.lastName} {user.firstName}
+                      </TableCell>
+
+                      <TableCell className="py-4">
+                        <div className="flex items-center gap-1.5 text-xs text-on-surface-variant font-medium">
+                          <Mail className="w-3.5 h-3.5 text-outline shrink-0" />
+                          {user.email}
+                        </div>
+                      </TableCell>
+
+                      <TableCell className="py-4">
+                        {user.role === "ADMIN" ? (
+                          <Badge className="bg-rose-500/10 text-rose-500 border border-rose-500/20 shadow-none uppercase font-bold text-[9px] tracking-wider px-2 py-0.5 flex items-center gap-1 w-fit">
+                            <ShieldAlert className="w-3 h-3" /> Admin
+                          </Badge>
                         ) : (
-                          <UserIcon className="w-4 h-4 text-outline" />
+                          <Badge className="bg-slate-500/10 text-slate-500 border border-slate-500/20 shadow-none uppercase font-bold text-[9px] tracking-wider px-2 py-0.5 w-fit">
+                            User
+                          </Badge>
                         )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-bold text-sm text-on-surface py-4">
-                      {user.lastName} {user.firstName}
-                    </TableCell>
-                    <TableCell className="py-4">
-                      <div className="flex items-center gap-1.5 text-xs text-on-surface-variant font-medium">
-                        <Mail className="w-3.5 h-3.5 text-outline shrink-0" />
-                        {user.email}
-                      </div>
-                    </TableCell>
-                    <TableCell className="py-4">{getStatusBadgeWrapper(user.role)}</TableCell>
-                    <TableCell className="py-4">
-                      <MembershipBadge tier={user.tier} size="sm" showLabel={true} />
-                    </TableCell>
-                    <TableCell className="font-bold font-mono text-xs pr-6 text-right py-4">
-                      {formatCurrency(user.totalSpending ?? 0)}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+
+                      <TableCell className="py-4">
+                        {user.isActive ? (
+                          <Badge className="bg-success/10 text-success border border-success/20 shadow-none uppercase font-bold text-[9px] tracking-wider px-2 py-0.5 flex items-center gap-1 w-fit">
+                            <UserCheck className="w-3 h-3" /> Active
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-error/10 text-error border border-error/20 shadow-none uppercase font-bold text-[9px] tracking-wider px-2 py-0.5 flex items-center gap-1 w-fit">
+                            <UserX className="w-3 h-3" /> Deleted
+                          </Badge>
+                        )}
+                      </TableCell>
+
+                      <TableCell className="py-4">
+                        <MembershipBadge tier={user.tier} size="sm" showLabel={true} />
+                      </TableCell>
+
+                      <TableCell className="font-bold font-mono text-xs text-right py-4">
+                        {formatCurrency(user.totalSpending ?? 0)}
+                      </TableCell>
+
+                      <TableCell className="py-4 pr-6">
+                        <div className="flex items-center justify-end gap-1.5">
+                          {isLoading ? (
+                            <Loader2 size={16} className="animate-spin text-primary" />
+                          ) : (
+                            <>
+                              {/* Toggle Role */}
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-8 w-8 rounded-xl hover:border-primary hover:text-primary transition-all"
+                                title={user.role === "ADMIN" ? "Demote to User" : "Promote to Admin"}
+                                onClick={() => handleToggleRole(user)}
+                              >
+                                {user.role === "ADMIN" ? <ShieldOff size={14} /> : <ShieldCheck size={14} />}
+                              </Button>
+
+                              {/* Delete */}
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-8 w-8 rounded-xl hover:border-error hover:text-error transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                                title={user.isActive ? "Delete user" : "Already deleted"}
+                                disabled={!user.isActive}
+                                onClick={() => handleDelete(user)}
+                              >
+                                <Trash2 size={14} />
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
         )}
       </div>
+
+      <Modal
+        isOpen={confirmState.isOpen}
+        onClose={closeConfirm}
+        title={confirmState.title}
+        footer={
+          <>
+            <Button variant="outline" onClick={closeConfirm} className="rounded-xl font-bold h-10">
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmState.onConfirm} className="rounded-xl font-bold h-10 shadow-md">
+              Confirm
+            </Button>
+          </>
+        }
+      >
+        <p className="text-on-surface-variant font-medium text-sm leading-relaxed">{confirmState.message}</p>
+      </Modal>
     </div>
   );
-
-  function getStatusBadgeWrapper(role: string) {
-    return getRoleBadge(role);
-  }
 }
