@@ -73,7 +73,7 @@ export default function EditProductPage() {
         )}
         {h.activeStep === "variants" && (
           <EditVariantsStep
-            variants={h.variants} colors={h.colors}
+            variants={h.variants} colors={h.colors} buildSku={h.buildSku}
             editingVariantId={h.editingVariantId} editingVariantData={h.editingVariantData} onEditingDataChange={h.setEditingVariantData}
             isAddingVariant={h.isAddingVariant} newVariant={h.newVariant} onNewVariantChange={h.setNewVariant}
             onStartEdit={h.handleStartEditVariant} onSaveEdit={h.handleSaveVariantUpdate}

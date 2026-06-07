@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { adminService, Category, Brand, Color } from "@/services/adminService";
 import { Step, BasicInfo } from "@/types/product";
 import { useTranslation } from "@/hooks/useTranslation";
+import { generateSku } from "@/lib/sku";
 
 type ConfirmState = {
   isOpen: boolean;
@@ -81,6 +82,14 @@ export function useEditProduct() {
 
   const setBasicInfo = (patch: Partial<BasicInfo>) =>
     setBasicInfoState(prev => ({ ...prev, ...patch }));
+
+  const buildSku = (colorId: string | number, size: string) => {
+    const brand = brands.find(b => String(b.id) === String(basicInfo.brandId));
+    const category = categories.find(c => String(c.id) === String(basicInfo.categoryId));
+    const color = colors.find(c => String(c.id) === String(colorId));
+    if (!brand || !category) return "";
+    return generateSku(brand.slug, category.slug, color?.name ?? "", size);
+  };
 
   const handleUpdateBasic = async (e: FormEvent) => {
     e.preventDefault();
@@ -209,6 +218,7 @@ export function useEditProduct() {
     isLoading, isSubmitting,
     categories, brands, colors,
     basicInfo, setBasicInfo,
+    buildSku,
     variants, images,
     confirmState, closeConfirm,
     editingVariantId, setEditingVariantId, editingVariantData, setEditingVariantData,
