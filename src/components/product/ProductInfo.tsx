@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ChevronDown, Heart, ShoppingBag, Loader2, CheckCircle2, Star } from "lucide-react";
+import { ChevronDown, Heart, ShoppingBag, Loader2, CheckCircle2, Star, Minus, Plus } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -250,22 +250,40 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
       <div className="flex flex-col gap-4 mb-8">
         <div className="flex gap-4">
           {/* Quantity */}
-          <div className="relative w-24 shrink-0">
-            <select
-              id="qty"
-              value={quantity}
-              onChange={(e) => setQuantity(parseInt(e.target.value))}
-              className="w-full h-14 appearance-none border border-outline-variant bg-surface text-on-surface text-[16px] px-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow rounded-xl font-bold"
+          <div className="flex items-center h-14 border border-outline-variant bg-surface rounded-xl overflow-hidden shrink-0 w-32">
+            <button
+              type="button"
+              onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+              className="h-full w-10 flex items-center justify-center text-on-surface hover:bg-surface-variant/40 active:scale-90 transition-all cursor-pointer"
             >
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                <option key={num} value={num}>
-                  {num}
-                </option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant">
-              <ChevronDown className="w-5 h-5" />
-            </div>
+              <Minus size={16} />
+            </button>
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={quantity}
+              onChange={(e) => {
+                const val = parseInt(e.target.value.replace(/[^0-9]/g, ""));
+                const maxStock = selectedVariant ? selectedVariant.stockQuantity : 999;
+                if (isNaN(val) || val < 1) {
+                  setQuantity(1);
+                } else {
+                  setQuantity(Math.min(val, maxStock));
+                }
+              }}
+              className="w-12 h-full bg-transparent text-center font-bold text-base text-on-surface border-none outline-none focus:ring-0 focus:border-none p-0"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const maxStock = selectedVariant ? selectedVariant.stockQuantity : 999;
+                setQuantity(prev => Math.min(prev + 1, maxStock));
+              }}
+              className="h-full w-10 flex items-center justify-center text-on-surface hover:bg-surface-variant/40 active:scale-90 transition-all cursor-pointer"
+            >
+              <Plus size={16} />
+            </button>
           </div>
 
           {/* Primary CTA */}
