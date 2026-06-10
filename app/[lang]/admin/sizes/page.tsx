@@ -25,9 +25,8 @@ import { SizeGroup, SizeOption } from "@/services/adminService";
 import { toast } from "sonner";
 
 export default function AdminSizesPage() {
-  const params = useParams();
   const router = useRouter();
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
   
   const { 
     sizeGroups, 
@@ -97,7 +96,7 @@ export default function AdminSizesPage() {
   const handleSaveChanges = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!groupName.trim()) {
-      toast.error(locale === "vi" ? "Tên nhóm size không được để trống" : "Size group name cannot be empty");
+      toast.error(t("admin.sizes.nameRequired"));
       return;
     }
 
@@ -107,7 +106,7 @@ export default function AdminSizesPage() {
       .map(o => ({ ...o, name: o.name.trim() }));
 
     if (finalOptions.length === 0) {
-      toast.error(locale === "vi" ? "Nhóm size phải chứa ít nhất 1 kích thước" : "Size group must have at least 1 size");
+      toast.error(t("admin.sizes.minOneSize"));
       return;
     }
 
@@ -127,8 +126,8 @@ export default function AdminSizesPage() {
     if (result.success) {
       toast.success(
         selectedGroup && selectedGroup.id !== 0 
-          ? (locale === "vi" ? "Cập nhật nhóm size thành công!" : "Size group updated successfully!") 
-          : (locale === "vi" ? "Tạo nhóm size thành công!" : "Size group created successfully!")
+          ? t("admin.sizes.updateSuccess")
+          : t("admin.sizes.createSuccess")
       );
       setSelectedGroup(null);
     } else {
@@ -151,7 +150,7 @@ export default function AdminSizesPage() {
       if (selectedGroup && selectedGroup.id === groupToDelete.id) {
         setSelectedGroup(null);
       }
-      toast.success(locale === "vi" ? "Xóa nhóm size thành công!" : "Size group deleted successfully!");
+      toast.success(t("admin.sizes.deleteSuccess"));
     } else {
       toast.error(result.error || "Delete failed");
     }
@@ -165,7 +164,7 @@ export default function AdminSizesPage() {
           <div className="absolute w-12 h-12 rounded-full border-4 border-primary/20 animate-ping" />
         </div>
         <p className="text-on-surface-variant font-mono font-medium text-sm tracking-wider uppercase">
-          {locale === "vi" ? "Đang tải cấu hình size..." : "Loading size configurations..."}
+          {t("admin.sizes.loading")}
         </p>
       </div>
     );
@@ -188,12 +187,10 @@ export default function AdminSizesPage() {
           <div>
             <h2 className="text-3xl sm:text-4xl font-black italic tracking-tighter text-on-surface uppercase leading-none flex items-center gap-3">
               <Ruler className="text-primary h-8 w-8" />
-              {locale === "vi" ? "Quản lý Kích Thước" : "Manage Sizes"}
+              {t("admin.sizes.title")}
             </h2>
             <p className="text-on-surface-variant font-medium text-sm mt-1.5 leading-relaxed">
-              {locale === "vi" 
-                ? "Cấu hình các nhóm size mẫu (áo, quần, giày) để tạo biến thể nhanh chóng." 
-                : "Configure preset size groups (shirts, pants, shoes) to enable rapid variant injection."}
+              {t("admin.sizes.subtitle")}
             </p>
           </div>
         </div>
@@ -203,7 +200,7 @@ export default function AdminSizesPage() {
           className="h-12 px-6 rounded-xl font-black uppercase tracking-widest text-[10px] bg-primary text-on-primary hover:bg-primary/95 transition-all duration-300 shadow-lg shadow-primary/20 gap-2"
         >
           <Plus size={16} />
-          {locale === "vi" ? "Thêm Nhóm Size" : "Create Size Group"}
+          {t("admin.sizes.create")}
         </Button>
       </div>
 
@@ -213,14 +210,14 @@ export default function AdminSizesPage() {
         {/* Left Column: Size Group List (Master) */}
         <div className="md:col-span-5 space-y-4">
           <h3 className="text-xs font-black uppercase tracking-widest text-on-surface-variant opacity-60">
-            {locale === "vi" ? "Danh sách nhóm size" : "Size Groups Presets"}
+            {t("admin.sizes.list")}
           </h3>
           
           <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
             {sizeGroups.length === 0 ? (
               <div className="text-center py-12 bg-surface rounded-[2rem] border-2 border-dashed border-outline-variant text-on-surface-variant font-medium italic">
                 <HelpCircle size={36} className="mx-auto text-outline-variant mb-2 animate-bounce" />
-                {locale === "vi" ? "Chưa có nhóm size nào" : "No size groups configured."}
+                {t("admin.sizes.empty")}
               </div>
             ) : (
               sizeGroups.map((group) => {
@@ -244,7 +241,7 @@ export default function AdminSizesPage() {
                         {group.name}
                       </h4>
                       <p className="text-xs text-on-surface-variant font-medium line-clamp-1">
-                        {group.description || (locale === "vi" ? "Không có mô tả" : "No description")}
+                        {group.description || t("admin.sizes.noDescription")}
                       </p>
                       
                       {/* Swatches preview */}
@@ -266,7 +263,7 @@ export default function AdminSizesPage() {
                         size="icon"
                         className="h-9 w-9 rounded-xl hover:border-error hover:text-error transition-all duration-200 opacity-0 group-hover:opacity-100"
                         onClick={(e) => handleDeleteTrigger(group, e)}
-                        title={locale === "vi" ? "Xóa nhóm này" : "Delete group"}
+                        title={t("admin.sizes.delete")}
                       >
                         <Trash2 size={14} />
                       </Button>
@@ -292,12 +289,10 @@ export default function AdminSizesPage() {
               >
                 <Settings size={48} className="text-outline-variant mb-4 animate-spin-slow" />
                 <h4 className="font-lexend font-bold text-lg text-on-surface mb-1">
-                  {locale === "vi" ? "Trình chỉnh sửa nhóm size" : "Size Group Configurator"}
+                  {t("admin.sizes.configurator")}
                 </h4>
                 <p className="text-sm font-medium max-w-sm">
-                  {locale === "vi" 
-                    ? "Chọn một nhóm size ở danh sách bên trái hoặc bấm thêm mới để thiết lập cấu hình." 
-                    : "Select a group from the list or click 'Create Size Group' to start editing options."}
+                  {t("admin.sizes.configuratorHint")}
                 </p>
               </motion.div>
             ) : (
@@ -312,8 +307,8 @@ export default function AdminSizesPage() {
                   <div>
                     <h3 className="font-lexend font-black uppercase text-base text-primary tracking-wide">
                       {selectedGroup.id === 0 
-                        ? (locale === "vi" ? "Tạo nhóm size mới" : "New Size Group") 
-                        : (locale === "vi" ? "Chi tiết nhóm size" : "Edit Size Group")}
+                        ? t("admin.sizes.newGroup")
+                        : t("admin.sizes.editGroup")}
                     </h3>
                     {selectedGroup.id !== 0 && (
                       <p className="text-xs font-mono font-bold text-on-surface-variant opacity-50 mt-0.5">
@@ -326,7 +321,7 @@ export default function AdminSizesPage() {
                     className="font-bold text-xs" 
                     onClick={() => setSelectedGroup(null)}
                   >
-                    {locale === "vi" ? "Đóng" : "Close"}
+                    {t("admin.sizes.close")}
                   </Button>
                 </div>
 
@@ -335,13 +330,13 @@ export default function AdminSizesPage() {
                   {/* Name Input */}
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
-                      {locale === "vi" ? "Tên nhóm size" : "Size Group Name"} <span className="text-error">*</span>
+                      {t("admin.sizes.nameLabel")} <span className="text-error">*</span>
                     </Label>
                     <Input 
                       value={groupName}
                       onChange={(e) => setGroupName(e.target.value)}
                       className="h-12 rounded-xl border-outline-variant/60 focus:border-primary font-bold text-base"
-                      placeholder={locale === "vi" ? "Ví dụ: Áo thun nam, Size Giày..." : "e.g. Shirts, Pants, Kids Shoes"}
+                      placeholder={t("admin.sizes.namePlaceholder")}
                       required
                     />
                   </div>
@@ -349,13 +344,13 @@ export default function AdminSizesPage() {
                   {/* Description Input */}
                   <div className="space-y-2">
                     <Label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
-                      {locale === "vi" ? "Mô tả ngắn" : "Description"}
+                      {t("admin.sizes.descriptionLabel")}
                     </Label>
                     <Input 
                       value={groupDescription}
                       onChange={(e) => setGroupDescription(e.target.value)}
                       className="h-12 rounded-xl border-outline-variant/60 focus:border-primary font-medium"
-                      placeholder={locale === "vi" ? "Mô tả nhóm sản phẩm áp dụng size này" : "Describe product types using this size preset"}
+                      placeholder={t("admin.sizes.descriptionPlaceholder")}
                     />
                   </div>
 
@@ -364,7 +359,7 @@ export default function AdminSizesPage() {
                     <div className="flex justify-between items-center">
                       <Label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant flex items-center gap-1">
                         <ListOrdered size={12} />
-                        {locale === "vi" ? "Các kích thước (Size Options)" : "Sizes and display orders"}
+                        {t("admin.sizes.optionsLabel")}
                       </Label>
                       <Button 
                         type="button" 
@@ -374,14 +369,14 @@ export default function AdminSizesPage() {
                         onClick={handleAddSizeOption}
                       >
                         <Plus size={12} />
-                        {locale === "vi" ? "Thêm Size" : "Add Size"}
+                        {t("admin.sizes.addSize")}
                       </Button>
                     </div>
 
                     <div className="border border-outline-variant/50 rounded-2xl overflow-hidden bg-surface-variant/5">
                       {sizeOptions.length === 0 ? (
                         <p className="text-center py-8 text-xs font-semibold text-on-surface-variant italic">
-                          {locale === "vi" ? "Chưa cấu hình size nào. Hãy nhấn Thêm Size." : "No sizes configured. Click Add Size to inject options."}
+                          {t("admin.sizes.noSizes")}
                         </p>
                       ) : (
                         <div className="divide-y divide-outline-variant/60 max-h-[300px] overflow-y-auto p-4 space-y-2">
@@ -393,7 +388,7 @@ export default function AdminSizesPage() {
                                   value={option.name}
                                   onChange={(e) => handleUpdateOption(index, "name", e.target.value)}
                                   className="h-10 rounded-xl border-outline-variant/60 focus:border-primary font-bold font-mono uppercase text-center"
-                                  placeholder={locale === "vi" ? "Size (e.g. S, XL, 39)" : "Size name"}
+                                  placeholder={t("admin.sizes.sizePlaceholder")}
                                   required
                                 />
                               </div>
@@ -406,7 +401,7 @@ export default function AdminSizesPage() {
                                   onChange={(e) => handleUpdateOption(index, "displayOrder", Number(e.target.value))}
                                   className="h-10 rounded-xl border-outline-variant/60 focus:border-primary text-center font-bold"
                                   placeholder="Order"
-                                  title={locale === "vi" ? "Thứ tự hiển thị" : "Display sorting order"}
+                                  title="Display sorting order"
                                 />
                               </div>
 
@@ -436,7 +431,7 @@ export default function AdminSizesPage() {
                       onClick={() => setSelectedGroup(null)}
                       disabled={isSubmitting}
                     >
-                      {locale === "vi" ? "Hủy" : "Cancel"}
+                      {t("admin.sizes.cancel")}
                     </Button>
                     <Button
                       type="submit"
@@ -444,7 +439,7 @@ export default function AdminSizesPage() {
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                      {locale === "vi" ? "Lưu cấu hình" : "Save Changes"}
+                      {t("admin.sizes.save")}
                     </Button>
                   </div>
                 </form>
@@ -458,7 +453,7 @@ export default function AdminSizesPage() {
       <Modal
         isOpen={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
-        title={locale === "vi" ? "Xác nhận xóa nhóm size" : "Confirm Delete Size Group"}
+        title={t("admin.sizes.deleteConfirmTitle")}
         footer={
           <>
             <Button 
@@ -467,7 +462,7 @@ export default function AdminSizesPage() {
               className="rounded-xl font-bold h-11 border-outline-variant"
               disabled={isSubmitting}
             >
-              {locale === "vi" ? "Hủy" : "Cancel"}
+              {t("admin.sizes.cancel")}
             </Button>
             <Button 
               variant="destructive"
@@ -476,15 +471,13 @@ export default function AdminSizesPage() {
               disabled={isSubmitting}
             >
               {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
-              {locale === "vi" ? "Xác nhận xóa" : "Confirm"}
+              {t("admin.sizes.deleteConfirm")}
             </Button>
           </>
         }
       >
         <p className="text-on-surface-variant font-medium text-sm leading-relaxed">
-          {locale === "vi" 
-            ? `Bạn có chắc chắn muốn xóa nhóm size "${groupToDelete?.name}" này không? Lưu ý: Không thể xóa nếu có sản phẩm đang được liên kết với nhóm size này.`
-            : `Are you sure you want to delete the size group "${groupToDelete?.name}"? Note: This action is prohibited if any products are currently linked to this group.`}
+          {t("admin.sizes.deleteConfirmMessage").replace("{name}", groupToDelete?.name ?? "")}
         </p>
       </Modal>
     </div>

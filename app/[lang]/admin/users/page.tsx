@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import {
   Users, Loader2, Mail, User as UserIcon,
   ShieldAlert, ShieldCheck, ShieldOff, Trash2, UserX, UserCheck
@@ -14,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import MembershipBadge from "@/components/ui/MembershipBadge";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type AdminUser = {
   id: number;
@@ -35,8 +35,7 @@ type ConfirmState = {
 };
 
 export default function AdminUsersPage() {
-  const params = useParams();
-  const locale = (params?.lang as string) || "en";
+  const { t, locale } = useTranslation();
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,7 +55,7 @@ export default function AdminUsersPage() {
       setUsers(res.data || []);
     } catch (err) {
       console.error("Failed to load users", err);
-      toast.error("Failed to load users");
+      toast.error(t("admin.users.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -69,19 +68,19 @@ export default function AdminUsersPage() {
 
   const handleToggleRole = async (user: AdminUser) => {
     const newRole = user.role === "ADMIN" ? "USER" : "ADMIN";
-    const label = newRole === "ADMIN" ? "promote to Admin" : "demote to User";
+    const message = newRole === "ADMIN" ? t("admin.users.confirmPromote") : t("admin.users.confirmDemote");
     confirm(
-      `Change role for ${user.email}`,
-      `Are you sure you want to ${label}?`,
+      t("admin.users.changeRole").replace("{email}", user.email),
+      message,
       async () => {
         closeConfirm();
         setActionLoading(user.id);
         try {
           const res = await adminService.updateUserRole(user.id, newRole);
           setUsers(prev => prev.map(u => u.id === user.id ? { ...u, role: res.data.role } : u));
-          toast.success(`Role updated to ${newRole}`);
+          toast.success(t("admin.users.roleUpdated").replace("{role}", newRole));
         } catch {
-          toast.error("Failed to update role");
+          toast.error(t("admin.users.roleUpdateError"));
         } finally {
           setActionLoading(null);
         }
@@ -91,17 +90,17 @@ export default function AdminUsersPage() {
 
   const handleDelete = async (user: AdminUser) => {
     confirm(
-      `Delete ${user.email}`,
-      "This user will be marked as deleted and can no longer log in.",
+      t("admin.users.deleteTitle").replace("{email}", user.email),
+      t("admin.users.deleteMessage"),
       async () => {
         closeConfirm();
         setActionLoading(user.id);
         try {
           await adminService.deleteUser(user.id);
           setUsers(prev => prev.map(u => u.id === user.id ? { ...u, isActive: false } : u));
-          toast.success("User deleted");
+          toast.success(t("admin.users.deleteSuccess"));
         } catch {
-          toast.error("Failed to delete user");
+          toast.error(t("admin.users.deleteError"));
         } finally {
           setActionLoading(null);
         }
@@ -116,7 +115,7 @@ export default function AdminUsersPage() {
     return (
       <div className="min-h-[400px] flex flex-col items-center justify-center gap-4 text-on-surface-variant">
         <Loader2 size={40} className="animate-spin text-primary" />
-        <p className="text-xs font-bold uppercase tracking-widest italic animate-pulse">Syncing User Files...</p>
+        <p className="text-xs font-bold uppercase tracking-widest italic animate-pulse">{t("admin.users.loading")}</p>
       </div>
     );
   }
@@ -127,18 +126,22 @@ export default function AdminUsersPage() {
       <div className="flex items-center gap-2 font-bold text-[10px] text-on-surface-variant uppercase tracking-[0.15em]">
         <Link href={`/${locale}/admin`} className="hover:text-primary transition-colors flex items-center gap-1">
           <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
-          ADMIN
+          {t("admin.users.breadcrumbs.admin")}
         </Link>
         <span className="text-[12px] leading-none">›</span>
-        <span className="text-on-surface">USERS</span>
+        <span className="text-on-surface">{t("admin.users.breadcrumbs.users")}</span>
       </div>
 
       <div className="flex items-end justify-between">
         <h2 className="text-5xl font-black italic tracking-tighter text-on-surface uppercase leading-none font-lexend">
-          Users <span className="text-primary">System</span>
+          {t("admin.users.title").split(" ").map((word: string, i: number, arr: string[]) => (
+            i === arr.length - 1
+              ? <span key={i} className="text-primary"> {word}</span>
+              : <span key={i}>{word} </span>
+          ))}
         </h2>
         <p className="text-xs text-on-surface-variant font-bold uppercase tracking-widest pb-1">
-          {users.length} accounts
+          {t("admin.users.count").replace("{count}", String(users.length))}
         </p>
       </div>
 
@@ -148,27 +151,27 @@ export default function AdminUsersPage() {
             <div className="w-12 h-12 bg-surface-container rounded-full flex items-center justify-center text-outline">
               <Users size={24} />
             </div>
-            <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">No users found.</p>
+            <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{t("admin.users.noUsers")}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader className="bg-surface-container/30">
                 <TableRow className="border-b border-outline-variant/60">
-                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 pl-6 text-on-surface">ID</TableHead>
-                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">Avatar</TableHead>
-                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">Full Name</TableHead>
-                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">Email</TableHead>
-                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">Role</TableHead>
-                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">Status</TableHead>
-                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">Membership</TableHead>
-                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface text-right">Spending</TableHead>
-                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 pr-6 text-on-surface text-right">Actions</TableHead>
+                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 pl-6 text-on-surface">{t("admin.users.columns.id")}</TableHead>
+                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">{t("admin.users.columns.avatar")}</TableHead>
+                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">{t("admin.users.columns.fullName")}</TableHead>
+                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">{t("admin.users.columns.email")}</TableHead>
+                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">{t("admin.users.columns.role")}</TableHead>
+                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">{t("admin.users.columns.status")}</TableHead>
+                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface">{t("admin.users.columns.membership")}</TableHead>
+                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 text-on-surface text-right">{t("admin.users.columns.spending")}</TableHead>
+                  <TableHead className="font-bold text-[10px] uppercase tracking-widest py-4 pr-6 text-on-surface text-right">{t("admin.users.columns.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {users.map(user => {
-                  const isLoading = actionLoading === user.id;
+                  const isRowLoading = actionLoading === user.id;
                   return (
                     <TableRow
                       key={user.id}
@@ -210,11 +213,11 @@ export default function AdminUsersPage() {
                       <TableCell className="py-4">
                         {user.isActive ? (
                           <Badge className="bg-success/10 text-success border border-success/20 shadow-none uppercase font-bold text-[9px] tracking-wider px-2 py-0.5 flex items-center gap-1 w-fit">
-                            <UserCheck className="w-3 h-3" /> Active
+                            <UserCheck className="w-3 h-3" /> {t("admin.users.status.active")}
                           </Badge>
                         ) : (
                           <Badge className="bg-error/10 text-error border border-error/20 shadow-none uppercase font-bold text-[9px] tracking-wider px-2 py-0.5 flex items-center gap-1 w-fit">
-                            <UserX className="w-3 h-3" /> Deleted
+                            <UserX className="w-3 h-3" /> {t("admin.users.status.deleted")}
                           </Badge>
                         )}
                       </TableCell>
@@ -229,7 +232,7 @@ export default function AdminUsersPage() {
 
                       <TableCell className="py-4 pr-6">
                         <div className="flex items-center justify-end gap-1.5">
-                          {isLoading ? (
+                          {isRowLoading ? (
                             <Loader2 size={16} className="animate-spin text-primary" />
                           ) : (
                             <>
@@ -238,7 +241,7 @@ export default function AdminUsersPage() {
                                 variant="outline"
                                 size="icon"
                                 className="h-8 w-8 rounded-xl hover:border-primary hover:text-primary transition-all"
-                                title={user.role === "ADMIN" ? "Demote to User" : "Promote to Admin"}
+                                title={user.role === "ADMIN" ? t("admin.users.demoteToUser") : t("admin.users.promoteToAdmin")}
                                 onClick={() => handleToggleRole(user)}
                               >
                                 {user.role === "ADMIN" ? <ShieldOff size={14} /> : <ShieldCheck size={14} />}
@@ -249,7 +252,7 @@ export default function AdminUsersPage() {
                                 variant="outline"
                                 size="icon"
                                 className="h-8 w-8 rounded-xl hover:border-error hover:text-error transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                                title={user.isActive ? "Delete user" : "Already deleted"}
+                                title={user.isActive ? t("admin.users.deleteTitle").replace("{email}", user.email) : t("admin.users.alreadyDeleted")}
                                 disabled={!user.isActive}
                                 onClick={() => handleDelete(user)}
                               >
@@ -275,10 +278,10 @@ export default function AdminUsersPage() {
         footer={
           <>
             <Button variant="outline" onClick={closeConfirm} className="rounded-xl font-bold h-10">
-              Cancel
+              {t("admin.users.cancelBtn")}
             </Button>
             <Button variant="destructive" onClick={confirmState.onConfirm} className="rounded-xl font-bold h-10 shadow-md">
-              Confirm
+              {t("admin.users.confirmBtn")}
             </Button>
           </>
         }
