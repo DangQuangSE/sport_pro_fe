@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Save, X, Edit2, Trash2 } from "lucide-react";
+import { Plus, Save, X, Edit2, Trash2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 type Props = {
   variants: any[];
   colors: Color[];
+  buildSku: (colorId: string | number, size: string) => string;
   editingVariantId: number | null;
   editingVariantData: any;
   onEditingDataChange: (data: any) => void;
@@ -28,7 +29,7 @@ type Props = {
   onNext: () => void;
 };
 
-export function EditVariantsStep({ variants, colors, editingVariantId, editingVariantData, onEditingDataChange, isAddingVariant, newVariant, onNewVariantChange, onStartEdit, onSaveEdit, onCancelEdit, onDelete, onOpenAdd, onCloseAdd, onConfirmAdd, onBack, onNext }: Props) {
+export function EditVariantsStep({ variants, colors, buildSku, editingVariantId, editingVariantData, onEditingDataChange, isAddingVariant, newVariant, onNewVariantChange, onStartEdit, onSaveEdit, onCancelEdit, onDelete, onOpenAdd, onCloseAdd, onConfirmAdd, onBack, onNext }: Props) {
   const { t } = useTranslation();
 
   const colorSelectCls = "flex h-11 flex-grow rounded-xl border-2 border-outline-variant bg-surface px-3 font-bold text-sm outline-none focus:border-primary transition-all";
@@ -45,6 +46,64 @@ export function EditVariantsStep({ variants, colors, editingVariantId, editingVa
         </Button>
       </div>
 
+      {isAddingVariant && (
+        <div className="p-8 bg-surface-container-highest/20 rounded-[2rem] border-2 border-dashed border-primary/30 animate-in slide-in-from-top-4 duration-300">
+          <div className="flex justify-between items-center mb-6">
+            <h4 className="font-black uppercase tracking-widest text-xs text-primary italic">{t("admin.productForm.newVariantConfig")}</h4>
+            <Button variant="ghost" size="icon" onClick={onCloseAdd}><X size={20} /></Button>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4 items-end">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase opacity-60">SKU</Label>
+              <div className="flex items-center gap-1.5">
+                <Input value={newVariant.sku} onChange={e => onNewVariantChange({ ...newVariant, sku: e.target.value })} className="rounded-xl" />
+                <button
+                  type="button"
+                  title={t("admin.productForm.regenSku")}
+                  className="flex-shrink-0 text-primary hover:text-primary/70 transition-colors"
+                  onClick={() => onNewVariantChange({ ...newVariant, sku: buildSku(newVariant.colorId, newVariant.size) })}
+                >
+                  <RefreshCw size={15} />
+                </button>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase opacity-60">{t("admin.productForm.size")}</Label>
+              <Input value={newVariant.size} onChange={e => onNewVariantChange({ ...newVariant, size: e.target.value })} className="rounded-xl" />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase opacity-60">{t("admin.productForm.color")}</Label>
+              <div className="flex items-center gap-2">
+                <select aria-label={t("admin.productForm.color")} value={newVariant.colorId} onChange={e => onNewVariantChange({ ...newVariant, colorId: e.target.value })} className={colorSelectCls}>
+                  <option value="">{t("admin.productForm.selectColor")}</option>
+                  {colors.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+                {newVariant.colorId && (
+                  <div className="w-8 h-8 rounded-full border border-outline-variant flex-shrink-0" style={{ backgroundColor: colors.find(c => String(c.id) === String(newVariant.colorId))?.hexCode || "#000000" }} />
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase opacity-60">Orig. Price</Label>
+              <Input type="number" value={newVariant.originalPrice} onChange={e => onNewVariantChange({ ...newVariant, originalPrice: Number(e.target.value) })} className="rounded-xl" />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase opacity-60">Sale Price</Label>
+              <Input type="number" placeholder="No discount" value={newVariant.salePrice ?? ""} onChange={e => onNewVariantChange({ ...newVariant, salePrice: e.target.value === "" ? null : Number(e.target.value) })} className="rounded-xl" />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase opacity-60">Stock</Label>
+              <Input type="number" value={newVariant.stockQuantity} onChange={e => onNewVariantChange({ ...newVariant, stockQuantity: Number(e.target.value) })} className="rounded-xl" />
+            </div>
+          </div>
+          <div className="flex justify-end mt-6">
+            <Button onClick={onConfirmAdd} className="bg-primary hover:bg-primary/90 rounded-xl font-bold uppercase tracking-widest text-[10px] h-11 px-8">
+              {t("admin.productForm.confirmSaveVariant")}
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 gap-4">
         {variants.map(v => (
           <div key={v.id} className="group p-6 bg-surface-container/30 rounded-3xl border border-outline-variant hover:bg-surface-container/50 hover:border-primary/30 transition-all">
@@ -52,7 +111,17 @@ export function EditVariantsStep({ variants, colors, editingVariantId, editingVa
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                 <div className="space-y-2 md:col-span-2">
                   <Label className="text-[10px] font-black uppercase opacity-60">{t("admin.productForm.sku")}</Label>
-                  <Input value={editingVariantData.sku} onChange={e => onEditingDataChange({ ...editingVariantData, sku: e.target.value })} className="rounded-xl h-11 font-mono font-bold" />
+                  <div className="flex items-center gap-1.5">
+                    <Input value={editingVariantData.sku} onChange={e => onEditingDataChange({ ...editingVariantData, sku: e.target.value })} className="rounded-xl h-11 font-mono font-bold" />
+                    <button
+                      type="button"
+                      title={t("admin.productForm.regenSku")}
+                      className="flex-shrink-0 text-primary hover:text-primary/70 transition-colors"
+                      onClick={() => onEditingDataChange({ ...editingVariantData, sku: buildSku(editingVariantData.colorId, editingVariantData.size) })}
+                    >
+                      <RefreshCw size={15} />
+                    </button>
+                  </div>
                 </div>
                 <div className="space-y-2 md:col-span-1">
                   <Label className="text-[10px] font-black uppercase opacity-60">{t("admin.productForm.size")}</Label>
@@ -61,7 +130,7 @@ export function EditVariantsStep({ variants, colors, editingVariantId, editingVa
                 <div className="space-y-2 md:col-span-2">
                   <Label className="text-[10px] font-black uppercase opacity-60">{t("admin.productForm.color")}</Label>
                   <div className="flex items-center gap-2">
-                    <select value={editingVariantData.colorId} onChange={e => onEditingDataChange({ ...editingVariantData, colorId: e.target.value })} className={colorSelectCls}>
+                    <select aria-label={t("admin.productForm.color")} value={editingVariantData.colorId} onChange={e => onEditingDataChange({ ...editingVariantData, colorId: e.target.value })} className={colorSelectCls}>
                       <option value="">{t("admin.productForm.selectColor")}</option>
                       {colors.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
@@ -128,54 +197,6 @@ export function EditVariantsStep({ variants, colors, editingVariantId, editingVa
           </div>
         ))}
       </div>
-
-      {isAddingVariant && (
-        <div className="p-8 bg-surface-container-highest/20 rounded-[2rem] border-2 border-dashed border-primary/30 animate-in slide-in-from-top-4 duration-300">
-          <div className="flex justify-between items-center mb-6">
-            <h4 className="font-black uppercase tracking-widest text-xs text-primary italic">{t("admin.productForm.newVariantConfig")}</h4>
-            <Button variant="ghost" size="icon" onClick={onCloseAdd}><X size={20} /></Button>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-4 items-end">
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase opacity-60">SKU</Label>
-              <Input value={newVariant.sku} onChange={e => onNewVariantChange({ ...newVariant, sku: e.target.value })} className="rounded-xl" />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase opacity-60">{t("admin.productForm.size")}</Label>
-              <Input value={newVariant.size} onChange={e => onNewVariantChange({ ...newVariant, size: e.target.value })} className="rounded-xl" />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase opacity-60">{t("admin.productForm.color")}</Label>
-              <div className="flex items-center gap-2">
-                <select value={newVariant.colorId} onChange={e => onNewVariantChange({ ...newVariant, colorId: e.target.value })} className={colorSelectCls}>
-                  <option value="">{t("admin.productForm.selectColor")}</option>
-                  {colors.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-                {newVariant.colorId && (
-                  <div className="w-8 h-8 rounded-full border border-outline-variant flex-shrink-0" style={{ backgroundColor: colors.find(c => String(c.id) === String(newVariant.colorId))?.hexCode || "#000000" }} />
-                )}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase opacity-60">Orig. Price</Label>
-              <Input type="number" value={newVariant.originalPrice} onChange={e => onNewVariantChange({ ...newVariant, originalPrice: Number(e.target.value) })} className="rounded-xl" />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase opacity-60">Sale Price</Label>
-              <Input type="number" placeholder="No discount" value={newVariant.salePrice ?? ""} onChange={e => onNewVariantChange({ ...newVariant, salePrice: e.target.value === "" ? null : Number(e.target.value) })} className="rounded-xl" />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase opacity-60">Stock</Label>
-              <Input type="number" value={newVariant.stockQuantity} onChange={e => onNewVariantChange({ ...newVariant, stockQuantity: Number(e.target.value) })} className="rounded-xl" />
-            </div>
-          </div>
-          <div className="flex justify-end mt-6">
-            <Button onClick={onConfirmAdd} className="bg-primary hover:bg-primary/90 rounded-xl font-bold uppercase tracking-widest text-[10px] h-11 px-8">
-              {t("admin.productForm.confirmSaveVariant")}
-            </Button>
-          </div>
-        </div>
-      )}
 
       <div className="flex justify-between pt-8 border-t border-outline-variant">
         <Button variant="outline" onClick={onBack} className="rounded-xl font-bold">{t("admin.productForm.back")}</Button>

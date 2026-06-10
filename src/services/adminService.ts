@@ -246,6 +246,15 @@ export const adminService = {
   getUsers: () => {
     return apiClient.get<ApiResponse<any[]>>("/admin/users");
   },
+  updateUserRole: (userId: number, role: "USER" | "ADMIN") => {
+    return apiClient.put<ApiResponse<any>>(`/admin/users/${userId}/role`, { role });
+  },
+  setUserActive: (userId: number, active: boolean) => {
+    return apiClient.put<ApiResponse<any>>(`/admin/users/${userId}/active`, { active });
+  },
+  deleteUser: (userId: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/users/${userId}`);
+  },
 
   // Analytics
   getDailyRevenue: (start: string, end: string) => {
