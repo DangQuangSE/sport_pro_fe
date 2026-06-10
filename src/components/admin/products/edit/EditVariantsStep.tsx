@@ -292,7 +292,7 @@ export function EditVariantsStep({
                 setBulkConfig({
                   ...bulkConfig,
                   sizeGroupId: sgId,
-                  selectedSizes: sg ? sg.sizes.map(s => s.name) : []
+                  selectedSizes: sg ? sg.sizes.map((s: any) => s.name) : []
                 });
               }}
             >
@@ -308,7 +308,7 @@ export function EditVariantsStep({
                 {locale === "vi" ? "2. Tùy Chọn Kích Thước (Sizes)" : "2. Fine-tune Selected Sizes"}
               </Label>
               <div className="flex flex-wrap gap-2.5 p-4 bg-surface-variant/15 rounded-2xl border border-outline-variant/60">
-                {sizeGroups.find(g => String(g.id) === String(bulkConfig.sizeGroupId))?.sizes.map(s => {
+                {sizeGroups.find(g => String(g.id) === String(bulkConfig.sizeGroupId))?.sizes.map((s: any) => {
                   const isChecked = bulkConfig.selectedSizes.includes(s.name);
                   return (
                     <label 
@@ -326,7 +326,7 @@ export function EditVariantsStep({
                         onChange={e => {
                           const nextSizes = e.target.checked
                             ? [...bulkConfig.selectedSizes, s.name]
-                            : bulkConfig.selectedSizes.filter(sz => sz !== s.name);
+                            : bulkConfig.selectedSizes.filter((sz: any) => sz !== s.name);
                           setBulkConfig({ ...bulkConfig, selectedSizes: nextSizes });
                         }}
                       />
@@ -362,7 +362,7 @@ export function EditVariantsStep({
                       onChange={e => {
                         const nextColors = e.target.checked
                           ? [...bulkConfig.selectedColors, c.id]
-                          : bulkConfig.selectedColors.filter(cid => cid !== c.id);
+                          : bulkConfig.selectedColors.filter((cid: any) => cid !== c.id);
                         setBulkConfig({ ...bulkConfig, selectedColors: nextColors });
                       }}
                     />
