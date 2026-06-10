@@ -69,7 +69,7 @@ export default function EditProductPage() {
         )}
 
         {h.activeStep === "basic" && (
-          <EditBasicInfoStep basicInfo={h.basicInfo} onChange={h.setBasicInfo} categories={h.categories} brands={h.brands} isSubmitting={h.isSubmitting} onSubmit={h.handleUpdateBasic} />
+          <EditBasicInfoStep basicInfo={h.basicInfo} onChange={h.setBasicInfo} categories={h.categories} brands={h.brands} sizeGroups={h.sizeGroups} isSubmitting={h.isSubmitting} onSubmit={h.handleUpdateBasic} />
         )}
         {h.activeStep === "variants" && (
           <EditVariantsStep
@@ -80,6 +80,11 @@ export default function EditProductPage() {
             onCancelEdit={() => h.setEditingVariantId(null)}
             onDelete={h.handleDeleteVariant}
             onOpenAdd={() => h.setIsAddingVariant(true)} onCloseAdd={() => h.setIsAddingVariant(false)} onConfirmAdd={h.handleAddVariant}
+            sizeGroups={h.sizeGroups}
+            isBulkAdding={h.isBulkAdding} setIsBulkAdding={h.setIsBulkAdding}
+            bulkConfig={h.bulkConfig} setBulkConfig={h.setBulkConfig}
+            bulkPreviewVariants={h.bulkPreviewVariants} setBulkPreviewVariants={h.setBulkPreviewVariants}
+            onGenerateBulkPreview={h.handleGenerateBulkPreview} onConfirmBulkAdd={h.handleConfirmBulkAdd}
             onBack={() => h.setActiveStep("basic")} onNext={() => h.setActiveStep("images")}
           />
         )}

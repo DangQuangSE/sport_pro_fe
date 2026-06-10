@@ -8,6 +8,25 @@ export interface Color {
   hexCode: string;
 }
 
+export interface SizeOption {
+  id?: number;
+  name: string;
+  displayOrder: number;
+}
+
+export interface SizeGroup {
+  id: number;
+  name: string;
+  description?: string;
+  sizes: SizeOption[];
+}
+
+export interface SizeGroupRequest {
+  name: string;
+  description?: string;
+  sizes: SizeOption[];
+}
+
 export interface ColorRequest {
   name: string;
   hexCode: string;
@@ -201,6 +220,28 @@ export const adminService = {
   },
   deleteColor: (id: number) => {
     return apiClient.delete<ApiResponse<void>>(`/admin/colors/${id}`);
+  },
+
+  // Size Groups
+  getSizeGroups: () => {
+    return apiClient.get<ApiResponse<SizeGroup[]>>("/admin/size-groups");
+  },
+  getSizeGroupsPublic: () => {
+    return apiClient.get<ApiResponse<SizeGroup[]>>("/size-groups");
+  },
+  createSizeGroup: (data: SizeGroupRequest) => {
+    return apiClient.post<ApiResponse<SizeGroup>>("/admin/size-groups", data);
+  },
+  updateSizeGroup: (id: number, data: SizeGroupRequest) => {
+    return apiClient.put<ApiResponse<SizeGroup>>(`/admin/size-groups/${id}`, data);
+  },
+  deleteSizeGroup: (id: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/size-groups/${id}`);
+  },
+
+  // Batch Variants
+  createVariantsBatch: (productId: number, data: any[]) => {
+    return apiClient.post<ApiResponse<any[]>>(`/admin/products/${productId}/variants/batch`, data);
   },
 
   // --- Printing ---

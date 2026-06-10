@@ -5,7 +5,7 @@ import { Save, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Category, Brand } from "@/services/adminService";
+import { Category, Brand, SizeGroup } from "@/services/adminService";
 import { BasicInfo } from "@/types/product";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -14,13 +14,14 @@ type Props = {
   onChange: (patch: Partial<BasicInfo>) => void;
   categories: Category[];
   brands: Brand[];
+  sizeGroups: SizeGroup[];
   isSubmitting: boolean;
   onSubmit: (e: FormEvent) => void;
 };
 
 const selectCls = "flex h-14 w-full rounded-2xl border-2 border-outline-variant bg-surface px-4 font-bold text-sm outline-none focus:border-primary transition-all";
 
-export function EditBasicInfoStep({ basicInfo, onChange, categories, brands, isSubmitting, onSubmit }: Props) {
+export function EditBasicInfoStep({ basicInfo, onChange, categories, brands, sizeGroups, isSubmitting, onSubmit }: Props) {
   const { locale, t } = useTranslation();
 
   return (
@@ -46,6 +47,13 @@ export function EditBasicInfoStep({ basicInfo, onChange, categories, brands, isS
           <select className={selectCls} value={basicInfo.brandId} onChange={e => onChange({ brandId: e.target.value })} required>
             <option value="">{t("admin.productForm.selectBrand")}</option>
             {brands.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+          </select>
+        </div>
+        <div className="space-y-3">
+          <Label className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Size Group ({locale === "vi" ? "Nhóm Size" : "Size Preset Group"})</Label>
+          <select className={selectCls} value={basicInfo.sizeGroupId || ""} onChange={e => onChange({ sizeGroupId: e.target.value })}>
+            <option value="">{locale === "vi" ? "Không dùng nhóm size (Nhập tay)" : "No size group (Manual entry)"}</option>
+            {sizeGroups.map(sg => <option key={sg.id} value={sg.id}>{sg.name}</option>)}
           </select>
         </div>
         <div className="space-y-3">
