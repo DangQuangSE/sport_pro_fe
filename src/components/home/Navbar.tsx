@@ -121,7 +121,7 @@ export default function Navbar() {
                 >
                   {categories.length === 0 ? (
                     <div className="text-center py-6 px-4 text-on-surface-variant text-sm">
-                      Đang tải danh mục...
+                      {t("home.nav.loadingCategories")}
                     </div>
                   ) : (
                     categories.map((category, idx) => (
@@ -308,7 +308,7 @@ export default function Navbar() {
             {mobileAccordionOpen && (
               <div className="pl-4 border-l border-outline-variant space-y-4 py-2">
                 {categories.length === 0 ? (
-                  <div className="text-xs text-on-surface-variant">Đang tải danh mục...</div>
+                  <div className="text-xs text-on-surface-variant">{t("home.nav.loadingCategories")}</div>
                 ) : (
                   categories.map((category) => (
                     <div key={category.id} className="space-y-2">
