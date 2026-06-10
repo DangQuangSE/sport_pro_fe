@@ -3,7 +3,7 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from "sonner";
-import { adminService, Category, Brand, Color } from "@/services/adminService";
+import { adminService, Category, Brand, Color, SizeGroup } from "@/services/adminService";
 import { Step, BasicInfo } from "@/types/product";
 import { useTranslation } from "@/hooks/useTranslation";
 import { generateSku } from "@/lib/sku";
@@ -42,14 +42,28 @@ export function useEditProduct() {
   const [isAddingVariant, setIsAddingVariant] = useState(false);
   const [newVariant, setNewVariant] = useState<any>({ sku: "", size: "", colorId: "", originalPrice: 0, salePrice: null, stockQuantity: 0 });
 
+  // Bulk Variant States
+  const [sizeGroups, setSizeGroups] = useState<SizeGroup[]>([]);
+  const [isBulkAdding, setIsBulkAdding] = useState(false);
+  const [bulkConfig, setBulkConfig] = useState({
+    selectedColors: [] as number[],
+    sizeGroupId: "",
+    selectedSizes: [] as string[],
+    originalPrice: 0,
+    salePrice: null as number | null,
+    stockQuantity: 0
+  });
+  const [bulkPreviewVariants, setBulkPreviewVariants] = useState<any[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const [catsRes, brandsRes, colorsRes, productRes] = await Promise.all([
+        const [catsRes, brandsRes, colorsRes, sizeGroupsRes, productRes] = await Promise.all([
           adminService.getCategories({ size: 1000 }),
           adminService.getBrands({ size: 100 }),
           adminService.getColors(),
+          adminService.getSizeGroups(),
           adminService.getProduct(id),
         ]);
         const catsData = catsRes.data;
@@ -58,6 +72,7 @@ export function useEditProduct() {
         setCategories(resolvedCats);
         setBrands(resolvedBrands);
         setColors(colorsRes.data ?? []);
+        setSizeGroups(sizeGroupsRes.data ?? []);
 
         const p = productRes.data;
         setBasicInfoState({
@@ -68,6 +83,7 @@ export function useEditProduct() {
           gender: p.gender,
           status: p.status || "ACTIVE",
           isFeatured: !!p.isFeatured,
+          sizeGroupId: String(p.sizeGroupId || ""),
         });
         setVariants(p.variants);
         setImages(p.images);
@@ -174,6 +190,74 @@ export function useEditProduct() {
     }
   };
 
+  const handleGenerateBulkPreview = () => {
+    const { selectedColors, selectedSizes, originalPrice, salePrice, stockQuantity } = bulkConfig;
+    if (selectedColors.length === 0 || selectedSizes.length === 0) {
+      toast.error("Vui lòng chọn ít nhất 1 màu sắc và 1 kích thước!");
+      return;
+    }
+
+    const previewItems: any[] = [];
+    selectedColors.forEach(colorId => {
+      const colorObj = colors.find(c => c.id === colorId);
+      selectedSizes.forEach(size => {
+        const sku = buildSku(colorId, size);
+        previewItems.push({
+          sku,
+          size,
+          colorId,
+          colorName: colorObj?.name || "",
+          colorHex: colorObj?.hexCode || "#000000",
+          originalPrice,
+          salePrice,
+          stockQuantity,
+          status: "ACTIVE"
+        });
+      });
+    });
+
+    setBulkPreviewVariants(previewItems);
+  };
+
+  const handleConfirmBulkAdd = async () => {
+    if (bulkPreviewVariants.length === 0) {
+      toast.error("Không có biến thể nào để tạo!");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const payload = bulkPreviewVariants.map(v => ({
+        sku: v.sku,
+        size: v.size,
+        colorId: Number(v.colorId),
+        originalPrice: v.originalPrice,
+        salePrice: v.salePrice,
+        stockQuantity: v.stockQuantity,
+        status: v.status
+      }));
+
+      const res = await adminService.createVariantsBatch(id, payload);
+      setVariants(prev => [...prev, ...res.data]);
+      setIsBulkAdding(false);
+      setBulkPreviewVariants([]);
+      // Reset config
+      setBulkConfig({
+        selectedColors: [],
+        sizeGroupId: basicInfo.sizeGroupId || "",
+        selectedSizes: [],
+        originalPrice: 0,
+        salePrice: null,
+        stockQuantity: 0
+      });
+      toast.success("Tạo hàng loạt biến thể thành công!");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to batch create variants");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     setIsSubmitting(true);
@@ -224,6 +308,13 @@ export function useEditProduct() {
     editingVariantId, setEditingVariantId, editingVariantData, setEditingVariantData,
     isAddingVariant, setIsAddingVariant,
     newVariant, setNewVariant,
+    // Bulk Variant Props
+    sizeGroups,
+    isBulkAdding, setIsBulkAdding,
+    bulkConfig, setBulkConfig,
+    bulkPreviewVariants, setBulkPreviewVariants,
+    handleGenerateBulkPreview,
+    handleConfirmBulkAdd,
     handleUpdateBasic,
     handleCompleteSync,
     handleStartEditVariant,

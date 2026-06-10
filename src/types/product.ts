@@ -8,6 +8,7 @@ export type BasicInfo = {
   gender: string;
   status: string;
   isFeatured: boolean;
+  sizeGroupId?: string;
 };
 
 export type ProductVariantDraft = {
