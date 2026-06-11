@@ -166,6 +166,9 @@ export const adminService = {
   deleteProduct: (id: number) => {
     return apiClient.delete<ApiResponse<void>>(`/admin/products/${id}`);
   },
+  restoreProduct: (id: number) => {
+    return apiClient.patch<ApiResponse<void>>(`/admin/products/${id}/restore`);
+  },
   
   // Variants
   createVariant: (productId: number, data: any) => {

@@ -33,11 +33,21 @@ export function useProducts() {
     }
   };
 
+  const restoreProduct = async (id: number) => {
+    try {
+      await adminService.restoreProduct(id);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error };
+    }
+  };
+
   return {
     products,
     isLoading,
     totalElements,
     fetchProducts,
-    deleteProduct
+    deleteProduct,
+    restoreProduct
   };
 }
