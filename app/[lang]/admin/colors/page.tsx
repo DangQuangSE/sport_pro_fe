@@ -10,7 +10,8 @@ import {
   Save,
   LayoutGrid,
   List,
-  Activity
+  Activity,
+  Trash2
 } from "lucide-react";
 import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
 import { motion, AnimatePresence } from "framer-motion";
