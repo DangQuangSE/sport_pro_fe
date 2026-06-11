@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { DollarSign, Type, ImageIcon, Edit2, Trash2 } from "lucide-react";
+import { DollarSign, Type, ImageIcon } from "lucide-react";
+import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { PrintingPriceConfig } from "@/services/adminService";
@@ -85,24 +86,10 @@ export default function PricesTab({
                   {formatCurrency(cfg.unitPrice)}
                 </p>
               </div>
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  size="icon" 
-                  className="h-10 w-10 rounded-xl hover:border-primary hover:text-primary transition-all duration-200"
-                  onClick={() => onEdit(cfg)}
-                >
-                  <Edit2 size={15} />
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="icon" 
-                  className="h-10 w-10 rounded-xl hover:border-error hover:text-error transition-all duration-200"
-                  onClick={() => onDelete(cfg.id)}
-                >
-                  <Trash2 size={15} />
-                </Button>
-              </div>
+              <AdminActionButtons
+                onEdit={() => onEdit(cfg)}
+                onDelete={() => onDelete(cfg.id)}
+              />
             </div>
           </motion.div>
         ))}
@@ -138,24 +125,11 @@ export default function PricesTab({
                 <td className="px-8 py-5 text-on-surface-variant text-xs">{cfg.description || "N/A"}</td>
                 <td className="px-8 py-5 font-mono font-bold text-primary tracking-wide">{formatCurrency(cfg.unitPrice)}</td>
                 <td className="px-8 py-5 text-right">
-                  <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-10 w-10 rounded-xl hover:border-primary hover:text-primary transition-all"
-                      onClick={() => onEdit(cfg)}
-                    >
-                      <Edit2 size={15} />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-10 w-10 rounded-xl hover:border-error hover:text-error transition-all"
-                      onClick={() => onDelete(cfg.id)}
-                    >
-                      <Trash2 size={15} />
-                    </Button>
-                  </div>
+                  <AdminActionButtons
+                    onEdit={() => onEdit(cfg)}
+                    onDelete={() => onDelete(cfg.id)}
+                    className="justify-end"
+                  />
                 </td>
               </tr>
             ))}

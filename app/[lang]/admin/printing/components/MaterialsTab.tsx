@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Layers, CheckCircle, XCircle, Edit2, Trash2 } from "lucide-react";
+import { Layers, CheckCircle, XCircle } from "lucide-react";
+import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { PrintingMaterial } from "@/services/adminService";
@@ -85,24 +86,10 @@ export default function MaterialsTab({
                     {formatCurrency(mat.basePrice)}
                   </p>
                 </div>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-10 w-10 rounded-xl hover:border-primary hover:text-primary transition-all duration-200"
-                    onClick={() => onEdit(mat)}
-                  >
-                    <Edit2 size={15} />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-10 w-10 rounded-xl hover:border-error hover:text-error transition-all duration-200"
-                    onClick={() => onDelete(mat.id)}
-                  >
-                    <Trash2 size={15} />
-                  </Button>
-                </div>
+                <AdminActionButtons
+                  onEdit={() => onEdit(mat)}
+                  onDelete={() => onDelete(mat.id)}
+                />
               </div>
             </motion.div>
           );
@@ -142,24 +129,11 @@ export default function MaterialsTab({
                     </span>
                   </td>
                   <td className="px-8 py-5 text-right">
-                    <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        className="h-10 w-10 rounded-xl hover:border-primary hover:text-primary transition-all"
-                        onClick={() => onEdit(mat)}
-                      >
-                        <Edit2 size={15} />
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        className="h-10 w-10 rounded-xl hover:border-error hover:text-error transition-all"
-                        onClick={() => onDelete(mat.id)}
-                      >
-                        <Trash2 size={15} />
-                      </Button>
-                    </div>
+                    <AdminActionButtons
+                      onEdit={() => onEdit(mat)}
+                      onDelete={() => onDelete(mat.id)}
+                      className="justify-end"
+                    />
                   </td>
                 </tr>
               );

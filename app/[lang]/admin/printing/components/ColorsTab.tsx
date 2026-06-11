@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Printer, Edit2, Trash2 } from "lucide-react";
+import { Printer } from "lucide-react";
+import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Color } from "@/services/adminService";
@@ -69,24 +70,11 @@ export default function ColorsTab({
               </p>
             </div>
 
-            <div className="flex gap-2 mt-4 opacity-0 group-hover:opacity-100 transition-all duration-200">
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="h-8 w-8 rounded-lg hover:border-primary hover:text-primary"
-                onClick={() => onEdit(color)}
-              >
-                <Edit2 size={13} />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="h-8 w-8 rounded-lg hover:border-error hover:text-error"
-                onClick={() => onDelete(color.id)}
-              >
-                <Trash2 size={13} />
-              </Button>
-            </div>
+            <AdminActionButtons
+              onEdit={() => onEdit(color)}
+              onDelete={() => onDelete(color.id)}
+              className="mt-4 z-10"
+            />
           </motion.div>
         ))}
       </motion.div>
@@ -119,24 +107,11 @@ export default function ColorsTab({
                   />
                 </td>
                 <td className="px-8 py-5 text-right">
-                  <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-10 w-10 rounded-xl hover:border-primary"
-                      onClick={() => onEdit(color)}
-                    >
-                      <Edit2 size={15} />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-10 w-10 rounded-xl hover:border-error"
-                      onClick={() => onDelete(color.id)}
-                    >
-                      <Trash2 size={15} />
-                    </Button>
-                  </div>
+                  <AdminActionButtons
+                    onEdit={() => onEdit(color)}
+                    onDelete={() => onDelete(color.id)}
+                    className="justify-end"
+                  />
                 </td>
               </tr>
             ))}

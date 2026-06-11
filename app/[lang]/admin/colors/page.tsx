@@ -2,18 +2,18 @@
 
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { 
-  Plus, 
-  Trash2, 
-  Edit2, 
-  Loader2, 
+import {
+  Plus,
+  Loader2,
   Palette,
   ArrowLeft,
   Save,
   LayoutGrid,
   List,
-  Activity
+  Activity,
+  Trash2
 } from "lucide-react";
+import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -272,26 +272,11 @@ export default function AdminColorsPage() {
                 </div>
 
                 {/* Overlay Action Buttons */}
-                <div className="flex items-center gap-3 mt-6 z-10 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-300">
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-10 w-10 rounded-xl hover:border-primary hover:text-primary transition-all duration-200"
-                    onClick={() => handleOpenEdit(color)}
-                    title={t("admin.productForm.editColor") || "Edit"}
-                  >
-                    <Edit2 size={15} />
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="h-10 w-10 rounded-xl hover:border-error hover:text-error transition-all duration-200"
-                    onClick={() => handleDeleteTrigger(color.id)}
-                    title={t("admin.colors.confirm") || "Delete"}
-                  >
-                    <Trash2 size={15} />
-                  </Button>
-                </div>
+                <AdminActionButtons
+                  onEdit={() => handleOpenEdit(color)}
+                  onDelete={() => handleDeleteTrigger(color.id)}
+                  className="mt-6 z-10"
+                />
               </motion.div>
             ))}
           </motion.div>
@@ -338,24 +323,11 @@ export default function AdminColorsPage() {
                         </div>
                       </td>
                       <td className="px-8 py-5 text-right">
-                        <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            className="h-10 w-10 rounded-xl hover:border-primary hover:text-primary transition-all"
-                            onClick={() => handleOpenEdit(color)}
-                          >
-                            <Edit2 size={15} />
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            className="h-10 w-10 rounded-xl hover:border-error hover:text-error transition-all"
-                            onClick={() => handleDeleteTrigger(color.id)}
-                          >
-                            <Trash2 size={15} />
-                          </Button>
-                        </div>
+                        <AdminActionButtons
+                          onEdit={() => handleOpenEdit(color)}
+                          onDelete={() => handleDeleteTrigger(color.id)}
+                          className="justify-end"
+                        />
                       </td>
                     </tr>
                   ))}

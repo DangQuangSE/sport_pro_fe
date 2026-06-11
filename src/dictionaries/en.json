@@ -319,8 +319,16 @@
         "noProducts": "No products found in the catalog.",
         "active": "Active",
         "inactive": "Inactive",
-        "outOfStock": "Out of Stock"
-      }
+        "outOfStock": "Out of Stock",
+        "deleted": "Deleted"
+      },
+      "restore": "Restore Product",
+      "restoreSuccess": "Product restored successfully!",
+      "restoreError": "Failed to restore product.",
+      "confirmRestore": "Restore this product? It will be set back to Active and visible to customers.",
+      "deleteBtn": "Delete",
+      "restoreBtn": "Restore",
+      "cancelBtn": "Cancel"
     },
     "categories": {
       "title": "Categories",

@@ -13,12 +13,22 @@ import { useProducts } from "@/hooks/admin/useProducts";
 import { ProductTable } from "@/components/admin/products/ProductTable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Modal } from "@/components/ui/modal";
 import { useTranslation } from "@/hooks/useTranslation";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
+
+type ConfirmState = {
+  isOpen: boolean;
+  title: string;
+  message: string;
+  onConfirm: () => void;
+  variant: "destructive" | "default";
+  confirmLabel: string;
+};
 
 export default function AdminProductsPage() {
   const { t, locale } = useTranslation();
@@ -29,11 +39,15 @@ export default function AdminProductsPage() {
     isLoading,
     totalElements,
     fetchProducts,
-    deleteProduct
+    deleteProduct,
+    restoreProduct
   } = useProducts();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
+  const [confirmState, setConfirmState] = useState<ConfirmState>({
+    isOpen: false, title: "", message: "", onConfirm: () => {}, variant: "destructive", confirmLabel: "",
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -46,16 +60,46 @@ export default function AdminProductsPage() {
     return () => clearTimeout(timer);
   }, [searchQuery, page, fetchProducts]);
 
-  const handleDelete = async (id: number) => {
-    if (window.confirm(t("admin.products.confirmDelete") || "Are you sure you want to delete this product?")) {
-      const result = await deleteProduct(id);
-      if (result.success) {
-        fetchProducts({ page, keyword: searchQuery, size: 10 });
-        toast.success(t("admin.products.deleteSuccess") || "Product deleted successfully!");
-      } else {
-        toast.error(t("admin.products.deleteError") || "Failed to delete product");
-      }
-    }
+  const closeConfirm = () => setConfirmState(prev => ({ ...prev, isOpen: false }));
+
+  const handleDelete = (id: number) => {
+    setConfirmState({
+      isOpen: true,
+      title: t("admin.products.delete") || "Delete Product",
+      message: t("admin.products.confirmDelete") || "Are you sure you want to delete this product?",
+      variant: "destructive",
+      confirmLabel: t("admin.products.deleteBtn") || "Delete",
+      onConfirm: async () => {
+        closeConfirm();
+        const result = await deleteProduct(id);
+        if (result.success) {
+          fetchProducts({ page, keyword: searchQuery, size: 10 });
+          toast.success(t("admin.products.deleteSuccess") || "Product deleted successfully!");
+        } else {
+          toast.error(t("admin.products.deleteError") || "Failed to delete product");
+        }
+      },
+    });
+  };
+
+  const handleRestore = (id: number) => {
+    setConfirmState({
+      isOpen: true,
+      title: t("admin.products.restore") || "Restore Product",
+      message: t("admin.products.confirmRestore") || "Restore this product? It will be set back to Active.",
+      variant: "default",
+      confirmLabel: t("admin.products.restoreBtn") || "Restore",
+      onConfirm: async () => {
+        closeConfirm();
+        const result = await restoreProduct(id);
+        if (result.success) {
+          fetchProducts({ page, keyword: searchQuery, size: 10 });
+          toast.success(t("admin.products.restoreSuccess") || "Product restored successfully!");
+        } else {
+          toast.error(t("admin.products.restoreError") || "Failed to restore product");
+        }
+      },
+    });
   };
 
   const handleEdit = (id: number) => {
@@ -122,6 +166,7 @@ export default function AdminProductsPage() {
           isLoading={isLoading}
           onDelete={handleDelete}
           onEdit={handleEdit}
+          onRestore={handleRestore}
         />
 
         {/* Pagination */}
@@ -172,6 +217,24 @@ export default function AdminProductsPage() {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={confirmState.isOpen}
+        onClose={closeConfirm}
+        title={confirmState.title}
+        footer={
+          <>
+            <Button variant="outline" onClick={closeConfirm} className="rounded-xl font-bold h-10">
+              {t("admin.products.cancelBtn") || "Cancel"}
+            </Button>
+            <Button variant={confirmState.variant} onClick={confirmState.onConfirm} className="rounded-xl font-bold h-10 shadow-md">
+              {confirmState.confirmLabel}
+            </Button>
+          </>
+        }
+      >
+        <p className="text-on-surface-variant font-medium text-sm leading-relaxed">{confirmState.message}</p>
+      </Modal>
     </div>
   );
 }

@@ -319,8 +319,16 @@
         "noProducts": "Không tìm thấy sản phẩm nào trong danh mục.",
         "active": "Hoạt động",
         "inactive": "Không hoạt động",
-        "outOfStock": "Hết hàng"
-      }
+        "outOfStock": "Hết hàng",
+        "deleted": "Đã xóa"
+      },
+      "restore": "Khôi phục sản phẩm",
+      "restoreSuccess": "Khôi phục sản phẩm thành công!",
+      "restoreError": "Khôi phục sản phẩm thất bại.",
+      "confirmRestore": "Khôi phục sản phẩm này? Sản phẩm sẽ được chuyển về trạng thái Hoạt động và hiển thị với khách hàng.",
+      "deleteBtn": "Xóa",
+      "restoreBtn": "Khôi phục",
+      "cancelBtn": "Hủy"
     },
     "categories": {
       "title": "Danh mục",
