@@ -1,11 +1,8 @@
 "use client";
 
 import React from "react";
-import { 
-  Edit2, 
-  Trash2, 
-  FolderTree
-} from "lucide-react";
+import { FolderTree } from "lucide-react";
+import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
 import { Category } from "@/services/adminService";
 import { 
   Table, 
@@ -117,24 +114,11 @@ export function CategoryTable({
                   })()}
                 </TableCell>
                 <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-8 w-8 text-on-surface-variant hover:text-primary hover:border-primary/50 transition-all"
-                      onClick={() => onEdit(category)}
-                    >
-                      <Edit2 size={14} />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-8 w-8 text-on-surface-variant hover:text-error hover:border-error/50 transition-all"
-                      onClick={() => onDelete(category.id)}
-                    >
-                      <Trash2 size={14} />
-                    </Button>
-                  </div>
+                  <AdminActionButtons
+                    onEdit={() => onEdit(category)}
+                    onDelete={() => onDelete(category.id)}
+                    className="justify-end"
+                  />
                 </TableCell>
               </TableRow>
             ))

@@ -2,18 +2,19 @@
 
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { 
-  Plus, 
-  Trash2, 
-  ArrowLeft, 
-  Save, 
-  Loader2, 
-  Ruler, 
-  Settings, 
+import {
+  Plus,
+  Trash2,
+  ArrowLeft,
+  Save,
+  Loader2,
+  Ruler,
+  Settings,
   HelpCircle,
   ChevronRight,
   ListOrdered
 } from "lucide-react";
+import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -258,15 +259,11 @@ export default function AdminSizesPage() {
                     </div>
 
                     <div className="flex items-center gap-1.5">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-9 w-9 rounded-xl hover:border-error hover:text-error transition-all duration-200 opacity-0 group-hover:opacity-100"
-                        onClick={(e) => handleDeleteTrigger(group, e)}
-                        title={t("admin.sizes.delete")}
-                      >
-                        <Trash2 size={14} />
-                      </Button>
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <AdminActionButtons
+                          onDelete={() => { setGroupToDelete(group); setDeleteConfirmOpen(true); }}
+                        />
+                      </div>
                       <ChevronRight size={18} className="text-on-surface-variant opacity-60 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>

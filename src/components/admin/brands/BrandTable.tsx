@@ -1,11 +1,8 @@
 "use client";
 
 import React from "react";
-import { 
-  Edit2, 
-  Trash2, 
-  Briefcase
-} from "lucide-react";
+import { Briefcase } from "lucide-react";
+import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
 import { Brand } from "@/services/adminService";
 import { 
   Table, 
@@ -97,24 +94,11 @@ export function BrandTable({
                   })()}
                 </TableCell>
                 <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-8 w-8 text-on-surface-variant hover:text-primary hover:border-primary/50 transition-all"
-                      onClick={() => onEdit(brand)}
-                    >
-                      <Edit2 size={14} />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-8 w-8 text-on-surface-variant hover:text-error hover:border-error/50 transition-all"
-                      onClick={() => onDelete(brand.id)}
-                    >
-                      <Trash2 size={14} />
-                    </Button>
-                  </div>
+                  <AdminActionButtons
+                    onEdit={() => onEdit(brand)}
+                    onDelete={() => onDelete(brand.id)}
+                    className="justify-end"
+                  />
                 </TableCell>
               </TableRow>
             ))

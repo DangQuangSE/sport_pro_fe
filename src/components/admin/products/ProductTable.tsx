@@ -1,13 +1,8 @@
 "use client";
 
 import React from "react";
-import { 
-  Edit2, 
-  Trash2, 
-  Package,
-  Star,
-  MoreVertical
-} from "lucide-react";
+import { Package, Star, MoreVertical } from "lucide-react";
+import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
 import { ProductListResponse } from "@/services/adminService";
 import { 
   Table, 
@@ -160,23 +155,11 @@ export function ProductTable({
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-8 w-8 rounded-lg border-outline-variant hover:border-primary hover:text-primary transition-all"
-                      onClick={() => onEdit(product.id)}
-                    >
-                      <Edit2 size={14} />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-8 w-8 rounded-lg border-outline-variant hover:border-error hover:text-error transition-all"
-                      onClick={() => onDelete(product.id)}
-                    >
-                      <Trash2 size={14} />
-                    </Button>
+                  <div className="flex justify-end gap-1">
+                    <AdminActionButtons
+                      onEdit={() => onEdit(product.id)}
+                      onDelete={() => onDelete(product.id)}
+                    />
                     <Button variant="outline" size="icon" className="h-8 w-8 rounded-lg border-outline-variant">
                       <MoreVertical size={14} />
                     </Button>

@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Type, Edit2, Trash2 } from "lucide-react";
+import { Type } from "lucide-react";
+import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
@@ -75,23 +76,12 @@ export default function FontsTab({
               </div>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-outline-variant/60 flex items-center justify-end gap-2 relative z-10 opacity-0 group-hover:opacity-100 transition-all duration-200">
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="h-8 w-8 rounded-lg hover:border-primary"
-                onClick={() => onEdit(f)}
-              >
-                <Edit2 size={13} />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="h-8 w-8 rounded-lg hover:border-error"
-                onClick={() => onDelete(f.id)}
-              >
-                <Trash2 size={13} />
-              </Button>
+            <div className="mt-4 pt-3 border-t border-outline-variant/60 relative z-10">
+              <AdminActionButtons
+                onEdit={() => onEdit(f)}
+                onDelete={() => onDelete(f.id)}
+                className="justify-end"
+              />
             </div>
           </motion.div>
         ))}
@@ -122,24 +112,11 @@ export default function FontsTab({
                   <span style={{ fontFamily: f.name }} className="text-base font-bold">SPORT PRO 10</span>
                 </td>
                 <td className="px-8 py-5 text-right">
-                  <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-10 w-10 rounded-xl hover:border-primary"
-                      onClick={() => onEdit(f)}
-                    >
-                      <Edit2 size={15} />
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="h-10 w-10 rounded-xl hover:border-error"
-                      onClick={() => onDelete(f.id)}
-                    >
-                      <Trash2 size={15} />
-                    </Button>
-                  </div>
+                  <AdminActionButtons
+                    onEdit={() => onEdit(f)}
+                    onDelete={() => onDelete(f.id)}
+                    className="justify-end"
+                  />
                 </td>
               </tr>
             ))}
