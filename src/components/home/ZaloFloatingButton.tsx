@@ -37,7 +37,7 @@ export function ZaloFloatingButton() {
       href={zaloLink}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 flex items-center justify-center group"
+      className="fixed bottom-[44px] right-6 md:bottom-[52px] md:right-8 z-50 flex items-center justify-center group"
       aria-label="Contact via Zalo"
     >
       {/* Dynamic pulsing/flashing outer rings */}
