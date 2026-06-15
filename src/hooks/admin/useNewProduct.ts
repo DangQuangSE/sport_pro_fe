@@ -3,7 +3,7 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from "sonner";
-import { adminService, Category, Brand, Color } from "@/services/adminService";
+import { adminService, Category, Brand, Color, SizeGroup } from "@/services/adminService";
 import { generateSku } from "@/lib/sku";
 import { Step, BasicInfo, ProductVariantDraft } from "@/types/product";
 
@@ -19,6 +19,7 @@ export function useNewProduct() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [colors, setColors] = useState<Color[]>([]);
+  const [sizeGroups, setSizeGroups] = useState<SizeGroup[]>([]);
 
   const [basicInfo, setBasicInfoState] = useState<BasicInfo>({
     name: "",
@@ -28,6 +29,7 @@ export function useNewProduct() {
     gender: "UNISEX",
     status: "ACTIVE",
     isFeatured: false,
+    sizeGroupId: "",
   });
 
   const [variants, setVariants] = useState<ProductVariantDraft[]>([]);
@@ -36,15 +38,17 @@ export function useNewProduct() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [catsRes, brandsRes, colorsRes] = await Promise.all([
+        const [catsRes, brandsRes, colorsRes, sizeGroupsRes] = await Promise.all([
           adminService.getCategories({ size: 1000 }),
           adminService.getBrands({ size: 100 }),
           adminService.getColors(),
+          adminService.getSizeGroups(),
         ]);
         const catsData = catsRes.data;
         setCategories(Array.isArray(catsData) ? catsData : (catsData?.content ?? []));
         setBrands(brandsRes.data.content ?? []);
         setColors(colorsRes.data ?? []);
+        setSizeGroups(sizeGroupsRes.data ?? []);
       } catch (error) {
         console.error("Failed to fetch form data", error);
       }
@@ -71,6 +75,7 @@ export function useNewProduct() {
         ...basicInfo,
         categoryId: Number(basicInfo.categoryId),
         brandId: Number(basicInfo.brandId),
+        sizeGroupId: basicInfo.sizeGroupId ? Number(basicInfo.sizeGroupId) : null,
       });
       setCreatedProductId(response.data.id);
       setActiveStep("variants");
@@ -162,7 +167,7 @@ export function useNewProduct() {
     basicInfo, setBasicInfo,
     variants,
     images,
-    colors, categories, brands,
+    colors, categories, brands, sizeGroups,
     buildSku,
     existingSkus,
     handleCreateBasic,

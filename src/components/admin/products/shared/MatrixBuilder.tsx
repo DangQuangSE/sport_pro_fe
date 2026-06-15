@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Wand2, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
-import { Color } from "@/services/adminService";
+import { Color, SizeGroup } from "@/services/adminService";
 import { ProductVariantDraft } from "@/types/product";
 
 type Props = {
@@ -16,10 +16,12 @@ type Props = {
   buildSku: (colorId: string | number, size: string) => string;
   existingSkus: Set<string>;
   onGenerate: (variants: ProductVariantDraft[]) => void;
+  sizeGroupId?: string;
+  sizeGroups?: SizeGroup[];
 };
 
-export function MatrixBuilder({ colors, buildSku, existingSkus, onGenerate }: Props) {
-  const { t } = useTranslation();
+export function MatrixBuilder({ colors, buildSku, existingSkus, onGenerate, sizeGroupId, sizeGroups }: Props) {
+  const { t, locale } = useTranslation();
   const pf = (key: string) => t(`admin.productForm.${key}`);
 
   const [selectedColors, setSelectedColors] = useState<number[]>([]);
@@ -28,6 +30,17 @@ export function MatrixBuilder({ colors, buildSku, existingSkus, onGenerate }: Pr
   const [bulkOriginalPrice, setBulkOriginalPrice] = useState(0);
   const [bulkSalePrice, setBulkSalePrice] = useState<number | null>(null);
   const [bulkStock, setBulkStock] = useState(20);
+  const [currentSizeGroupId, setCurrentSizeGroupId] = useState("");
+
+  useEffect(() => {
+    const targetGroupId = currentSizeGroupId || sizeGroupId;
+    if (targetGroupId && sizeGroups) {
+      const group = sizeGroups.find(g => String(g.id) === String(targetGroupId));
+      if (group) {
+        setSelectedSizes(group.sizes.map(s => s.name.toUpperCase()));
+      }
+    }
+  }, [currentSizeGroupId, sizeGroupId, sizeGroups]);
 
   const toggleColor = (id: number) =>
     setSelectedColors(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
@@ -91,7 +104,25 @@ export function MatrixBuilder({ colors, buildSku, existingSkus, onGenerate }: Pr
       </div>
 
       <div className="space-y-2">
-        <Label className="text-[10px] uppercase font-bold">{pf("matrixSizes")}</Label>
+        <div className="flex items-center justify-between">
+          <Label className="text-[10px] uppercase font-bold">{pf("matrixSizes")}</Label>
+          {sizeGroups && sizeGroups.length > 0 && (
+            <select
+              aria-label="Nhóm size"
+              className="h-8 rounded-md border border-outline-variant bg-surface px-2 text-xs font-bold outline-none focus:border-primary transition-all"
+              value={currentSizeGroupId || sizeGroupId || ""}
+              onChange={e => {
+                const sgId = e.target.value;
+                setCurrentSizeGroupId(sgId);
+              }}
+            >
+              <option value="">{locale === "vi" ? "-- Áp dụng nhóm size --" : "-- Apply size preset --"}</option>
+              {sizeGroups.map(sg => (
+                <option key={sg.id} value={sg.id}>{sg.name}</option>
+              ))}
+            </select>
+          )}
+        </div>
         <div className="flex flex-wrap items-center gap-2">
           {selectedSizes.map(s => (
             <span key={s} className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-secondary text-on-secondary text-xs font-bold">

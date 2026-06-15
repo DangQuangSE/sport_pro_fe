@@ -37,10 +37,10 @@ export default function NewProductPage() {
 
       <div className="bg-surface rounded-3xl border border-outline-variant shadow-sm overflow-hidden min-h-[400px]">
         {hook.activeStep === "basic" && (
-          <BasicInfoStep basicInfo={hook.basicInfo} onChange={hook.setBasicInfo} categories={hook.categories} brands={hook.brands} isSubmitting={hook.isSubmitting} onSubmit={hook.handleCreateBasic} />
+          <BasicInfoStep basicInfo={hook.basicInfo} onChange={hook.setBasicInfo} categories={hook.categories} brands={hook.brands} sizeGroups={hook.sizeGroups} isSubmitting={hook.isSubmitting} onSubmit={hook.handleCreateBasic} />
         )}
         {hook.activeStep === "variants" && (
-          <VariantsStep variants={hook.variants} colors={hook.colors} existingSkus={hook.existingSkus} buildSku={hook.buildSku} isSubmitting={hook.isSubmitting} onAppend={hook.handleAppendVariants} onUpdate={hook.handleUpdateVariant} onDelete={hook.handleDeleteVariant} onBulkApply={hook.handleBulkApply} onAddManual={hook.handleAddVariant} onBack={() => hook.setActiveStep("basic")} onSave={hook.handleSaveVariants} />
+          <VariantsStep variants={hook.variants} colors={hook.colors} existingSkus={hook.existingSkus} buildSku={hook.buildSku} isSubmitting={hook.isSubmitting} onAppend={hook.handleAppendVariants} onUpdate={hook.handleUpdateVariant} onDelete={hook.handleDeleteVariant} onBulkApply={hook.handleBulkApply} onAddManual={hook.handleAddVariant} onBack={() => hook.setActiveStep("basic")} onSave={hook.handleSaveVariants} sizeGroupId={hook.basicInfo.sizeGroupId} sizeGroups={hook.sizeGroups} />
         )}
         {hook.activeStep === "images" && (
           <ImagesStep images={hook.images} isSubmitting={hook.isSubmitting} onUpload={hook.handleImageUpload} onDelete={hook.handleDeleteImage} onBack={() => hook.setActiveStep("variants")} onFinish={hook.handleFinish} />
