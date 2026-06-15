@@ -7,6 +7,7 @@ import { adminService, Category, Brand, Color, SizeGroup } from "@/services/admi
 import { Step, BasicInfo } from "@/types/product";
 import { useTranslation } from "@/hooks/useTranslation";
 import { generateSku } from "@/lib/sku";
+import { getFriendlyErrorMessage } from "@/lib/error-utils";
 
 type ConfirmState = {
   isOpen: boolean;
@@ -149,8 +150,8 @@ export function useEditProduct() {
       setEditingVariantId(null);
       setEditingVariantData(null);
       toast.success("Variant updated successfully!");
-    } catch {
-      toast.error(t("admin.productForm.failedVariant") || "Failed to update variant");
+    } catch (err: any) {
+      toast.error(getFriendlyErrorMessage(err.message || "Failed to update variant", t));
     } finally {
       setIsSubmitting(false);
     }
@@ -183,8 +184,8 @@ export function useEditProduct() {
       setIsAddingVariant(false);
       setNewVariant({ sku: "", size: "", colorId: "", originalPrice: 0, salePrice: null, stockQuantity: 0 });
       toast.success("Variant added successfully!");
-    } catch {
-      toast.error("Failed to add variant");
+    } catch (err: any) {
+      toast.error(getFriendlyErrorMessage(err.message || "Failed to add variant", t));
     } finally {
       setIsSubmitting(false);
     }
@@ -252,7 +253,7 @@ export function useEditProduct() {
       });
       toast.success("Tạo hàng loạt biến thể thành công!");
     } catch (err: any) {
-      toast.error(err.message || "Failed to batch create variants");
+      toast.error(getFriendlyErrorMessage(err.message || "Failed to batch create variants", t));
     } finally {
       setIsSubmitting(false);
     }

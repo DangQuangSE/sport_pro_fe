@@ -582,7 +582,19 @@
       "deleteSizeTitle": "Xóa size {size}",
       "removeColorTitle": "Bỏ chọn {color}",
       "colorsCount": "{count} màu",
-      "sizesCount": "{count} size"
+      "sizesCount": "{count} size",
+      "errors": {
+        "unknown": "Đã xảy ra lỗi không xác định. Vui lòng thử lại sau.",
+        "skuExists": "Mã SKU đã tồn tại trên hệ thống. Vui lòng kiểm tra lại.",
+        "skuExistsWithSku": "Mã SKU \"{sku}\" đã tồn tại trên hệ thống. Vui lòng kiểm tra lại hoặc đổi mã SKU.",
+        "duplicateSkuInRequest": "Có mã SKU bị trùng lặp trong danh sách yêu cầu. Vui lòng kiểm tra lại.",
+        "duplicateSkuInRequestWithSku": "Mã SKU \"{sku}\" bị trùng lặp trong danh sách yêu cầu tạo.",
+        "failedToSave": "Không thể lưu thông tin. Vui lòng kiểm tra lại các trường dữ liệu.",
+        "sessionExpired": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+        "networkError": "Lỗi kết nối mạng. Vui lòng kiểm tra đường truyền internet.",
+        "databaseError": "Lỗi cơ sở dữ liệu hoặc xung đột dữ liệu. Vui lòng liên hệ quản trị viên.",
+        "serverError": "Lỗi kết nối máy chủ. Vui lòng thử lại sau."
+      }
     }
   },
   "checkout": {
