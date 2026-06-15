@@ -239,6 +239,7 @@
       "users": "Users",
       "analytics": "Analytics",
       "reviews": "Reviews",
+      "publicConfigs": "System Configs",
       "logout": "Logout"
     },
     "reviews": {
@@ -594,6 +595,58 @@
         "networkError": "Network error. Please check your internet connection.",
         "databaseError": "Database or data integrity error. Please contact the administrator.",
         "serverError": "Server error. Please try again later."
+      }
+    },
+    "publicConfigs": {
+      "title": "System Configs",
+      "subtitle": "System",
+      "addConfig": "Add Config",
+      "searchPlaceholder": "Search by key, value, description...",
+      "table": {
+        "id": "ID",
+        "key": "Config Key",
+        "type": "Type",
+        "value": "Value",
+        "description": "Description",
+        "actions": "Actions",
+        "empty": "No configurations found.",
+        "noDescription": "No description",
+        "noImage": "(No image)",
+        "emptyValue": "(Empty)",
+        "notConfigured": "(Not configured)"
+      },
+      "form": {
+        "addTitle": "Add System Config",
+        "editTitle": "Edit Config: {key}",
+        "keyLabel": "Config Key",
+        "keyPlaceholder": "e.g. zalo_link, hotline_phone",
+        "keyHint": "* Only lowercase letters, numbers, underscores (_), dashes (-), and periods (.) are allowed.",
+        "typeLabel": "Config Type",
+        "valueLabel": "Config Value",
+        "descLabel": "Description",
+        "descPlaceholder": "e.g. Zalo link shown on home page",
+        "types": {
+          "text": "Text (TEXT)",
+          "image": "Image (IMAGE)",
+          "color": "Color Code (COLOR)",
+          "number": "Number (NUMBER)",
+          "boolean": "True/False (BOOLEAN)"
+        },
+        "booleanOptions": {
+          "true": "True (On / Yes)",
+          "false": "False (Off / No)"
+        },
+        "imagePreview": "Active image path: {url}",
+        "cancel": "Cancel",
+        "create": "Create Config",
+        "save": "Save Changes"
+      },
+      "messages": {
+        "createSuccess": "System config created successfully!",
+        "updateSuccess": "Config updated successfully!",
+        "deleteSuccess": "Config deleted successfully!",
+        "deleteConfirm": "Are you sure you want to delete config \"{key}\"?",
+        "error": "An error occurred. Please try again."
       }
     }
   },

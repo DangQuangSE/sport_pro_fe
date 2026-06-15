@@ -239,6 +239,7 @@
       "users": "Người dùng",
       "analytics": "Thống kê",
       "reviews": "Đánh giá",
+      "publicConfigs": "Cấu hình hệ thống",
       "logout": "Đăng xuất"
     },
     "reviews": {
@@ -594,6 +595,58 @@
         "networkError": "Lỗi kết nối mạng. Vui lòng kiểm tra đường truyền internet.",
         "databaseError": "Lỗi cơ sở dữ liệu hoặc xung đột dữ liệu. Vui lòng liên hệ quản trị viên.",
         "serverError": "Lỗi kết nối máy chủ. Vui lòng thử lại sau."
+      }
+    },
+    "publicConfigs": {
+      "title": "Cấu hình hệ thống",
+      "subtitle": "Hệ thống",
+      "addConfig": "Thêm Cấu hình",
+      "searchPlaceholder": "Tìm theo mã, giá trị, mô tả...",
+      "table": {
+        "id": "ID",
+        "key": "Mã cấu hình",
+        "type": "Loại",
+        "value": "Giá trị",
+        "description": "Mô tả",
+        "actions": "Thao tác",
+        "empty": "Không tìm thấy cấu hình nào.",
+        "noDescription": "Không có mô tả",
+        "noImage": "(Không có ảnh)",
+        "emptyValue": "(Trống)",
+        "notConfigured": "(Chưa cấu hình)"
+      },
+      "form": {
+        "addTitle": "Thêm Cấu hình Hệ thống",
+        "editTitle": "Chỉnh sửa Cấu hình: {key}",
+        "keyLabel": "Mã cấu hình (Config Key)",
+        "keyPlaceholder": "Ví dụ: zalo_link, hotline_phone",
+        "keyHint": "* Chỉ cho phép chữ thường, số, dấu gạch dưới (_), gạch ngang (-) và dấu chấm (.).",
+        "typeLabel": "Loại cấu hình (Config Type)",
+        "valueLabel": "Giá trị cấu hình (Config Value)",
+        "descLabel": "Mô tả mục đích cấu hình (Description)",
+        "descPlaceholder": "Ví dụ: Link Zalo liên hệ của Admin hiển thị ở trang chủ",
+        "types": {
+          "text": "Văn bản (TEXT)",
+          "image": "Hình ảnh (IMAGE)",
+          "color": "Mã màu (COLOR)",
+          "number": "Số (NUMBER)",
+          "boolean": "Đúng/Sai (BOOLEAN)"
+        },
+        "booleanOptions": {
+          "true": "True (Bật / Đúng)",
+          "false": "False (Tắt / Sai)"
+        },
+        "imagePreview": "Đường dẫn ảnh đang dùng: {url}",
+        "cancel": "Hủy bỏ",
+        "create": "Tạo cấu hình",
+        "save": "Lưu thay đổi"
+      },
+      "messages": {
+        "createSuccess": "Tạo cấu hình hệ thống thành công!",
+        "updateSuccess": "Cập nhật cấu hình thành công!",
+        "deleteSuccess": "Xóa cấu hình thành công!",
+        "deleteConfirm": "Bạn có chắc chắn muốn xóa cấu hình \"{key}\" này không?",
+        "error": "Đã có lỗi xảy ra. Vui lòng thử lại."
       }
     }
   },

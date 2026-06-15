@@ -313,6 +313,19 @@ export const adminService = {
   getOrderStatistics: (start: string, end: string) => {
     return apiClient.get<ApiResponse<OrderStatsResponse>>(`/v1/admin/analytics/order-stats?start=${start}&end=${end}`);
   },
+  // Public Configs
+  getPublicConfigs: () => {
+    return apiClient.get<ApiResponse<PublicConfig[]>>("/public-configs");
+  },
+  createPublicConfig: (data: PublicConfigRequest) => {
+    return apiClient.post<ApiResponse<PublicConfig>>("/admin/public-configs", data);
+  },
+  updatePublicConfig: (key: string, data: PublicConfigUpdateRequest) => {
+    return apiClient.put<ApiResponse<PublicConfig>>(`/admin/public-configs/${key}`, data);
+  },
+  deletePublicConfig: (key: string) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/public-configs/${key}`);
+  },
 };
 
 // --- Printing Interfaces ---
@@ -369,5 +382,27 @@ export interface TrendingDesignResponse {
 export interface OrderStatsResponse {
   totalOrders: number;
   statusCounts: Record<string, number>;
+}
+
+export interface PublicConfig {
+  id: number;
+  configKey: string;
+  configValue: string;
+  configType: "TEXT" | "IMAGE" | "COLOR" | "NUMBER" | "BOOLEAN";
+  description?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface PublicConfigRequest {
+  configKey: string;
+  configValue: string;
+  configType: "TEXT" | "IMAGE" | "COLOR" | "NUMBER" | "BOOLEAN";
+  description?: string;
+}
+
+export interface PublicConfigUpdateRequest {
+  configValue: string;
+  description?: string;
 }
 
