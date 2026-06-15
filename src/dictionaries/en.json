@@ -240,7 +240,12 @@
       "analytics": "Analytics",
       "reviews": "Reviews",
       "publicConfigs": "System Configs",
-      "logout": "Logout"
+      "logout": "Logout",
+      "groups": {
+        "catalog": "Catalog & Inventory",
+        "operations": "Sales & Operations",
+        "settings": "Settings & Control"
+      }
     },
     "reviews": {
       "title": "Customer Reviews",

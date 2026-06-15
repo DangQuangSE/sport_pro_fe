@@ -240,7 +240,12 @@
       "analytics": "Thống kê",
       "reviews": "Đánh giá",
       "publicConfigs": "Cấu hình hệ thống",
-      "logout": "Đăng xuất"
+      "logout": "Đăng xuất",
+      "groups": {
+        "catalog": "Sản phẩm & Kho",
+        "operations": "Đơn hàng & Khách",
+        "settings": "Cấu hình & Hệ thống"
+      }
     },
     "reviews": {
       "title": "Quản lý Đánh giá",
