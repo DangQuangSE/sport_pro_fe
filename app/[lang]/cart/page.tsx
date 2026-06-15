@@ -30,6 +30,31 @@ export default function CartPage() {
   const [selectedIds, setSelectedIds] = React.useState<number[]>([]);
   const [customDesign, setCustomDesign] = React.useState<any | null>(null);
 
+  const isItemUnavailable = React.useCallback((item: any) => {
+    return (
+      item.isDeleted === true ||
+      item.isActive === false ||
+      (item.stockQuantity !== undefined && item.stockQuantity === 0) ||
+      (item.stockQuantity !== undefined && item.quantity > item.stockQuantity)
+    );
+  }, []);
+
+  const getItemStatusNote = React.useCallback((item: any) => {
+    if (item.isDeleted) {
+      return t("checkout.errors.productDeleted");
+    }
+    if (item.isActive === false) {
+      return t("checkout.errors.productInactive");
+    }
+    if (item.stockQuantity === 0) {
+      return t("checkout.errors.outOfStock");
+    }
+    if (item.stockQuantity !== undefined && item.quantity > item.stockQuantity) {
+      return t("checkout.errors.insufficientStock").replace("{stock}", String(item.stockQuantity));
+    }
+    return null;
+  }, [t]);
+
   React.useEffect(() => {
     if (!cart) return;
 
@@ -122,13 +147,13 @@ export default function CartPage() {
   }, 0);
   const subtotal = baseSubtotal + printingCost;
 
-  // Sync selectedIds with cart items to remove any deleted items
+  // Sync selectedIds with cart items to remove any deleted or unavailable items
   React.useEffect(() => {
     if (cart && cart.items) {
-      const currentIds = cart.items.map(item => item.id);
-      setSelectedIds(prev => prev.filter(id => currentIds.includes(id)));
+      const availableIds = cart.items.filter(item => !isItemUnavailable(item)).map(item => item.id);
+      setSelectedIds(prev => prev.filter(id => availableIds.includes(id)));
     }
-  }, [cart]);
+  }, [cart, isItemUnavailable]);
 
   const handleUpdateQuantity = async (variantId: number, newQty: number) => {
     try {
@@ -205,18 +230,22 @@ export default function CartPage() {
               <div className="space-y-6">
                 {/* Select All Bar */}
                 <div className="flex items-center justify-between p-4 bg-surface-container-highest/20 border border-outline-variant/60 rounded-2xl">
-                  <label className="flex items-center gap-3 cursor-pointer select-none font-bold text-xs uppercase tracking-wider text-on-surface-variant">
+                  <label className={cn(
+                    "flex items-center gap-3 select-none font-bold text-xs uppercase tracking-wider text-on-surface-variant",
+                    cart.items.filter(item => !isItemUnavailable(item)).length === 0 ? "opacity-40 cursor-not-allowed" : "cursor-pointer"
+                  )}>
                     <input 
                       type="checkbox"
-                      checked={cart.items.length > 0 && selectedIds.length === cart.items.length}
+                      disabled={cart.items.filter(item => !isItemUnavailable(item)).length === 0}
+                      checked={cart.items.filter(item => !isItemUnavailable(item)).length > 0 && selectedIds.length === cart.items.filter(item => !isItemUnavailable(item)).length}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setSelectedIds(cart.items.map(item => item.id));
+                          setSelectedIds(cart.items.filter(item => !isItemUnavailable(item)).map(item => item.id));
                         } else {
                           setSelectedIds([]);
                         }
                       }}
-                      className="w-5 h-5 rounded-lg border-2 border-outline-variant text-primary focus:ring-primary accent-primary cursor-pointer transition-all"
+                      className="w-5 h-5 rounded-lg border-2 border-outline-variant text-primary focus:ring-primary accent-primary cursor-pointer transition-all disabled:cursor-not-allowed disabled:opacity-30"
                     />
                     {locale === "vi" ? "Chọn tất cả" : "Select All"} ({selectedIds.length}/{cart.items.length})
                   </label>
@@ -236,7 +265,10 @@ export default function CartPage() {
                     return (
                       <div 
                         key={item.id} 
-                        className="flex flex-col gap-4 py-6 border-b border-outline-variant last:border-0 relative text-left animate-in fade-in duration-500"
+                        className={cn(
+                          "flex flex-col gap-4 py-6 border-b border-outline-variant last:border-0 relative text-left animate-in fade-in duration-500",
+                          isItemUnavailable(item) && "opacity-60 grayscale-[40%] contrast-[90%]"
+                        )}
                       >
                         {/* Product Row */}
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
@@ -244,6 +276,7 @@ export default function CartPage() {
                           <div className="flex items-center self-stretch md:self-auto py-2">
                             <input 
                               type="checkbox"
+                              disabled={isItemUnavailable(item)}
                               checked={selectedIds.includes(item.id)}
                               onChange={(e) => {
                                 if (e.target.checked) {
@@ -252,7 +285,7 @@ export default function CartPage() {
                                   setSelectedIds(selectedIds.filter(id => id !== item.id));
                                 }
                               }}
-                              className="w-5 h-5 rounded-lg border-2 border-outline-variant text-primary focus:ring-primary accent-primary cursor-pointer transition-all"
+                              className="w-5 h-5 rounded-lg border-2 border-outline-variant text-primary focus:ring-primary accent-primary cursor-pointer transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                             />
                           </div>
 
@@ -286,6 +319,11 @@ export default function CartPage() {
                                     {locale === "vi" ? "Kích cỡ" : "Size"}: <span className="text-on-surface font-bold">{item.size}</span>
                                   </p>
                                 </div>
+                                {getItemStatusNote(item) && (
+                                  <div className="mt-2 text-[10px] font-bold text-error bg-error/10 border border-error/20 px-2.5 py-1.5 rounded-lg inline-block uppercase tracking-wider">
+                                    {getItemStatusNote(item)}
+                                  </div>
+                                )}
                                 {item.customDesignId && item.printingPrice && (
                                   <div className="inline-flex items-center gap-1.5 bg-primary/5 text-primary text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded border border-primary/20 mt-1">
                                     <Wrench size={10} />
@@ -302,18 +340,22 @@ export default function CartPage() {
 
                             <div className="flex items-center justify-between mt-6">
                               {/* Quantity Control */}
-                              <div className="flex items-center gap-4 border border-outline-variant rounded-xl px-2 h-10 bg-white">
+                              <div className={cn(
+                                "flex items-center gap-4 border border-outline-variant rounded-xl px-2 h-10 bg-white",
+                                (item.isDeleted || item.isActive === false || item.stockQuantity === 0) && "opacity-40 pointer-events-none"
+                              )}>
                                 <button 
                                   className="p-1 hover:text-primary disabled:opacity-30"
                                   onClick={() => handleUpdateQuantity(item.variantId, Math.max(0, item.quantity - 1))}
-                                  disabled={item.quantity <= 1}
+                                  disabled={item.quantity <= 1 || item.isDeleted || item.isActive === false || item.stockQuantity === 0}
                                 >
                                   <Minus size={14} />
                                 </button>
                                 <span className="w-4 text-center text-xs font-black">{item.quantity}</span>
                                 <button 
-                                  className="p-1 hover:text-primary"
+                                  className="p-1 hover:text-primary disabled:opacity-30"
                                   onClick={() => handleUpdateQuantity(item.variantId, item.quantity + 1)}
+                                  disabled={item.isDeleted || item.isActive === false || item.stockQuantity === 0 || item.quantity >= (item.stockQuantity ?? 0)}
                                 >
                                   <Plus size={14} />
                                 </button>
