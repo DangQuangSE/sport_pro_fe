@@ -712,7 +712,13 @@
     "clause": "ĐIỀU KHOẢN",
     "returnsExchanges": "ĐỔI TRẢ VÀ HOÀN TIỀN",
     "contact": "LIÊN HỆ",
-    "footerDesign": "THIẾT KẾ CHO HIỆU NĂNG. BẢO LƯU MỌI QUYỀN."
+    "footerDesign": "THIẾT KẾ CHO HIỆU NĂNG. BẢO LƯU MỌI QUYỀN.",
+    "errors": {
+      "productDeleted": "Sản phẩm đã bị xóa hoặc ngừng bán",
+      "productInactive": "Sản phẩm tạm thời ngừng kinh doanh",
+      "outOfStock": "Sản phẩm đã hết hàng",
+      "insufficientStock": "Số lượng vượt quá tồn kho (Còn lại: {stock})"
+    }
   },
   "profile": {
     "title": "Hồ Sơ Cá Nhân",

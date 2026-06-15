@@ -25,6 +25,9 @@ export interface CartItemResponse {
   isCustomizable?: boolean;
   customizable?: boolean;
   productImageUrl?: string;
+  isDeleted?: boolean;
+  isActive?: boolean;
+  stockQuantity?: number;
 }
 
 export interface CartItemRequest {

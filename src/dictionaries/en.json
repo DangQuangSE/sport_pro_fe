@@ -712,7 +712,13 @@
     "clause": "CLAUSE",
     "returnsExchanges": "RETURNS AND EXCHANGES",
     "contact": "CONTACT",
-    "footerDesign": "DESIGNED FOR PERFORMANCE. ALL RIGHTS RESERVED."
+    "footerDesign": "DESIGNED FOR PERFORMANCE. ALL RIGHTS RESERVED.",
+    "errors": {
+      "productDeleted": "Product is deleted or no longer available",
+      "productInactive": "Product is temporarily unavailable",
+      "outOfStock": "Product is out of stock",
+      "insufficientStock": "Quantity exceeds available stock (Remaining: {stock})"
+    }
   },
   "profile": {
     "title": "User Profile",
