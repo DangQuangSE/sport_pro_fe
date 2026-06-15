@@ -37,26 +37,26 @@ export function ZaloFloatingButton() {
       href={zaloLink}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-8 right-8 z-50 flex items-center justify-center group"
+      className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 flex items-center justify-center group"
       aria-label="Contact via Zalo"
     >
       {/* Dynamic pulsing/flashing outer rings */}
-      <span className="absolute inline-flex h-16 w-16 animate-ping rounded-full bg-blue-500 opacity-60"></span>
-      <span className="absolute inline-flex h-14 w-14 animate-pulse rounded-full bg-blue-400 opacity-40"></span>
+      <span className="absolute inline-flex h-16 w-16 md:h-20 md:w-20 animate-ping rounded-full bg-blue-500 opacity-60"></span>
+      <span className="absolute inline-flex h-14 w-14 md:h-18 md:w-18 animate-pulse rounded-full bg-blue-400 opacity-40"></span>
 
       {/* Main button element with premium shadows and hover animations */}
-      <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-2xl border border-blue-100 hover:scale-110 hover:rotate-6 transition-all duration-300 ease-out active:scale-95">
+      <div className="relative flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-full bg-white shadow-2xl border border-blue-100 hover:scale-110 hover:rotate-6 transition-all duration-300 ease-out active:scale-95">
         <Image
           src="/zalo-icon.png"
           alt="Zalo Contact"
-          width={36}
-          height={36}
-          className="object-contain transition-transform group-hover:scale-105"
+          width={44}
+          height={44}
+          className="w-9 h-9 md:w-11 md:h-11 object-contain transition-transform group-hover:scale-105"
         />
       </div>
 
-      {/* Premium tooltip popup on hover */}
-      <span className="absolute right-16 scale-0 group-hover:scale-100 opacity-0 group-hover:opacity-100 transition-all duration-300 origin-right bg-slate-900/90 backdrop-blur-md text-white text-[11px] font-bold px-3 py-2 rounded-xl whitespace-nowrap shadow-lg border border-white/10 pointer-events-none">
+      {/* Premium tooltip popup on hover (only visible on desktop md+) */}
+      <span className="absolute right-16 md:right-18 hidden md:block scale-0 group-hover:scale-100 opacity-0 group-hover:opacity-100 transition-all duration-300 origin-right bg-slate-900/90 backdrop-blur-md text-white text-[11px] font-bold px-3 py-2 rounded-xl whitespace-nowrap shadow-lg border border-white/10 pointer-events-none">
         Chat Zalo với chúng tôi
       </span>
     </a>
