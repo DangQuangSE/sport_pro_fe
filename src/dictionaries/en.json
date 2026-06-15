@@ -582,7 +582,19 @@
       "deleteSizeTitle": "Remove size {size}",
       "removeColorTitle": "Deselect {color}",
       "colorsCount": "{count} colors",
-      "sizesCount": "{count} sizes"
+      "sizesCount": "{count} sizes",
+      "errors": {
+        "unknown": "An unknown error occurred. Please try again later.",
+        "skuExists": "SKU already exists. Please check and try a different SKU.",
+        "skuExistsWithSku": "SKU code \"{sku}\" already exists. Please choose a different SKU.",
+        "duplicateSkuInRequest": "There are duplicate SKUs in the request list. Please check.",
+        "duplicateSkuInRequestWithSku": "SKU code \"{sku}\" is duplicated in your creation list.",
+        "failedToSave": "Failed to save information. Please verify the fields.",
+        "sessionExpired": "Session expired. Please log in again.",
+        "networkError": "Network error. Please check your internet connection.",
+        "databaseError": "Database or data integrity error. Please contact the administrator.",
+        "serverError": "Server error. Please try again later."
+      }
     }
   },
   "checkout": {

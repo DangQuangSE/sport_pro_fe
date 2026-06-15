@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { adminService, Category, Brand, Color, SizeGroup } from "@/services/adminService";
 import { generateSku } from "@/lib/sku";
 import { Step, BasicInfo, ProductVariantDraft } from "@/types/product";
+import { useTranslation } from "@/hooks/useTranslation";
+import { getFriendlyErrorMessage } from "@/lib/error-utils";
 
 export function useNewProduct() {
   const router = useRouter();
@@ -15,6 +17,7 @@ export function useNewProduct() {
   const [activeStep, setActiveStep] = useState<Step>("basic");
   const [createdProductId, setCreatedProductId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t, locale } = useTranslation();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -114,8 +117,8 @@ export function useNewProduct() {
       await Promise.all(variants.map(v => adminService.createVariant(createdProductId, { ...v, colorId: Number(v.colorId) })));
       setActiveStep("images");
       toast.success("Variants saved successfully!");
-    } catch {
-      toast.error("Failed to save variants");
+    } catch (err: any) {
+      toast.error(getFriendlyErrorMessage(err.message || "Failed to save variants", t));
     } finally {
       setIsSubmitting(false);
     }
