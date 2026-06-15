@@ -4,6 +4,7 @@ import "../globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { Toaster } from "sonner";
+import { ZaloFloatingButton } from "@/components/home/ZaloFloatingButton";
 
 import { use } from "react";
 
@@ -82,6 +83,7 @@ export default function RootLayout({
         <AuthProvider>
           <CartProvider>
             {children}
+            <ZaloFloatingButton />
             <Toaster richColors position="top-right" closeButton />
           </CartProvider>
         </AuthProvider>

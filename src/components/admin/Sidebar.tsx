@@ -37,6 +37,7 @@ const sidebarItems = [
   { icon: MessageSquare, labelKey: "admin.sidebar.reviews", defaultLabel: "Reviews", href: "/admin/reviews" },
   { icon: Users, labelKey: "admin.sidebar.users", defaultLabel: "Users", href: "/admin/users" },
   { icon: BarChart3, labelKey: "admin.sidebar.analytics", defaultLabel: "Analytics", href: "/admin/analytics" },
+  { icon: Settings, labelKey: "admin.sidebar.publicConfigs", defaultLabel: "System Configs", href: "/admin/public-configs" },
 ];
 
 export default function Sidebar() {
