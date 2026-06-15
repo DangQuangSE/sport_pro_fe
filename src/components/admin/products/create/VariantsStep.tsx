@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
-import { Color } from "@/services/adminService";
+import { Color, SizeGroup } from "@/services/adminService";
 import { ProductVariantDraft } from "@/types/product";
 import { MatrixBuilder } from "../shared/MatrixBuilder";
 import { BulkApplyBar } from "../shared/BulkApplyBar";
@@ -23,15 +23,17 @@ type Props = {
   onAddManual: () => void;
   onBack: () => void;
   onSave: () => void;
+  sizeGroupId?: string;
+  sizeGroups?: SizeGroup[];
 };
 
-export function VariantsStep({ variants, colors, existingSkus, buildSku, isSubmitting, onAppend, onUpdate, onDelete, onBulkApply, onAddManual, onBack, onSave }: Props) {
+export function VariantsStep({ variants, colors, existingSkus, buildSku, isSubmitting, onAppend, onUpdate, onDelete, onBulkApply, onAddManual, onBack, onSave, sizeGroupId, sizeGroups }: Props) {
   const { t } = useTranslation();
   const pf = (key: string) => t(`admin.productForm.${key}`);
 
   return (
     <div className="p-8 space-y-6">
-      <MatrixBuilder colors={colors} buildSku={buildSku} existingSkus={existingSkus} onGenerate={onAppend} />
+      <MatrixBuilder colors={colors} buildSku={buildSku} existingSkus={existingSkus} onGenerate={onAppend} sizeGroupId={sizeGroupId} sizeGroups={sizeGroups} />
 
       {variants.length > 0 && <BulkApplyBar onApply={onBulkApply} />}
 
