@@ -1,9 +1,4 @@
 {
-  "permissions": {
-    "additionalDirectories": [
-      "D:\\GitHub\\eco-backend"
-    ]
-  },
   "hooks": {
     "SessionStart": [
       {
@@ -11,11 +6,16 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"d:\\DOCUMENTFPT\\SEMESTER_8\\EXE2\\flow-flora-godot\\.claude\\hooks\\session_init.py\""
+            "command": "node .claude/hooks/run.js .claude/hooks/session_init.py"
           },
           {
             "type": "command",
-            "command": "python \"d:\\DOCUMENTFPT\\SEMESTER_8\\EXE2\\flow-flora-godot\\.claude\\hooks\\subagent_init.py\""
+            "command": "node .claude/hooks/run.js .claude/hooks/subagent_init.py"
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/run.js .claude/hooks/session_start_context.py",
+            "timeout": 15
           }
         ]
       }
@@ -26,13 +26,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"d:\\DOCUMENTFPT\\SEMESTER_8\\EXE2\\flow-flora-godot\\.claude\\hooks\\dev_rules_reminder.py\"",
+            "command": "node .claude/hooks/run.js .claude/hooks/dev_rules_reminder.py",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "python \"d:\\DOCUMENTFPT\\SEMESTER_8\\EXE2\\flow-flora-godot\\.claude\\hooks\\caveman_watch.py\"",
+            "command": "node .claude/hooks/run.js .claude/hooks/caveman_watch.py",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/run.js .claude/hooks/pre_srs.py",
+            "timeout": 20
           }
         ]
       }
@@ -43,7 +48,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"d:\\DOCUMENTFPT\\SEMESTER_8\\EXE2\\flow-flora-godot\\.claude\\hooks\\privacy_block.py\"",
+            "command": "node .claude/hooks/run.js .claude/hooks/privacy_block.py",
             "timeout": 5
           }
         ]
@@ -53,8 +58,38 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"d:\\DOCUMENTFPT\\SEMESTER_8\\EXE2\\flow-flora-godot\\.claude\\hooks\\suggest_compact.py\"",
+            "command": "node .claude/hooks/run.js .claude/hooks/suggest_compact.py",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/run.js .claude/hooks/level_gate.py",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/run.js .claude/hooks/pre_write_validator.py",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/run.js .claude/hooks/plan_validator.py",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/run.js .claude/hooks/quality_receipt_gate.py",
+            "timeout": 10
           }
         ]
       }
@@ -65,12 +100,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"d:\\DOCUMENTFPT\\SEMESTER_8\\EXE2\\flow-flora-godot\\.claude\\hooks\\build_check.py\"",
+            "command": "node .claude/hooks/run.js .claude/hooks/build_check.py",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "python \"d:\\DOCUMENTFPT\\SEMESTER_8\\EXE2\\flow-flora-godot\\.claude\\hooks\\simplify_gate.py\"",
+            "command": "node .claude/hooks/run.js .claude/hooks/simplify_gate.py",
             "timeout": 5
           }
         ]
@@ -80,8 +115,23 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"d:\\DOCUMENTFPT\\SEMESTER_8\\EXE2\\flow-flora-godot\\.claude\\hooks\\artifact_fold.py\"",
+            "command": "node .claude/hooks/run.js .claude/hooks/artifact_fold.py",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/run.js .claude/hooks/post_srs.py",
+            "timeout": 25
+          },
+          {
+            "type": "command",
+            "command": "node .claude/hooks/run.js .claude/hooks/flag_aggregator.py",
+            "timeout": 30
           }
         ]
       }
@@ -92,7 +142,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"d:\\DOCUMENTFPT\\SEMESTER_8\\EXE2\\flow-flora-godot\\.claude\\hooks\\pre_compact.py\"",
+            "command": "node .claude/hooks/compact_90_guard.js",
             "timeout": 5
           }
         ]
@@ -104,7 +154,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"d:\\DOCUMENTFPT\\SEMESTER_8\\EXE2\\flow-flora-godot\\.claude\\hooks\\session_end.py\"",
+            "command": "node .claude/hooks/run.js .claude/hooks/session_end.py",
             "async": true,
             "timeout": 10
           }
@@ -117,13 +167,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"d:\\DOCUMENTFPT\\SEMESTER_8\\EXE2\\flow-flora-godot\\.claude\\hooks\\session_end.py\"",
+            "command": "node .claude/hooks/run.js .claude/hooks/session_end.py",
             "async": true,
             "timeout": 10
           }
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node .claude/hooks/compact_90_guard.js --track",
+    "padding": 0,
+    "refreshInterval": 5
   },
   "ignorePatterns": [
     "**/bin/**",
@@ -140,6 +196,6 @@
     "**/node_modules/**"
   ],
   "env": {
-    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "true"
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "90"
   }
 }

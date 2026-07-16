@@ -77,7 +77,7 @@ Use the conflict answer directly in Step 5 execution — Merge skips existing fi
 "Which dev workflow bundles do you want?"
 Options:
 
-- `brainstorm / plan / cook / fix` — Full guided dev workflow
+- `brainstorm / plan / cook / quality / test / fix` — Full guided dev workflow
 - `code-review` — Standalone /ck:code-review command
 - `learn` — Extract session patterns → skill files
 - `docs-fe` — Frontend endpoint handoff doc
@@ -99,7 +99,7 @@ Bundle label → files mapping used in Step 5:
 
 | Label             | Commands                 | Agents                                                                                                                      |
 | ----------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| plan / cook / fix | plan.md, cook.md, fix.md | scout, debugger, tester, code-reviewer, planner, researcher, plan-reviewer, project-manager, docs-manager, git-manager |
+| plan / cook / quality / test / fix | plan.md, cook.md, quality.md, test.md, fix.md | scout, debugger, tester, quality-reviewer, code-reviewer, planner, researcher, plan-reviewer, project-manager, docs-manager, git-manager |
 | code-review       | code-review.md           | code-reviewer (skip if already copied)                                                                                      |
 | learn             | learn.md                 | —                                                                                                                           |
 | show-off          | show-off.md              | playwright-capture                                                                                                          |
@@ -116,6 +116,8 @@ Bundle label → files mapping used in Step 5:
 Options:
 
 - `code-review` — Code review guidance (Recommended; auto-included with code-review bundle)
+- `ck-quality` — Shared senior-engineering contract and quality receipt tooling (auto-included with the guided dev workflow)
+- `ck-test` — Standalone verification and TDD orchestration (auto-included with the guided dev workflow)
 - `backend-mindset` — Architecture, API design, security principles (Recommended)
 - `strategic-compact` — Context compaction timing guidance (Recommended)
 - `problem-solving` — Creative problem-solving techniques
@@ -200,6 +202,7 @@ From `$CLAUDE_PROJECT_DIR/.claude/` → `<target>/.claude/`:
 
 - `hooks/session_init.py`, `hooks/session_end.py`, `hooks/session_state.py`, `hooks/pre_compact.py`, `hooks/suggest_compact.py`
 - `hooks/subagent_init.py`, `hooks/dev_rules_reminder.py`, `hooks/caveman_watch.py`, `hooks/privacy_block.py`, `hooks/artifact_fold.py`
+- `hooks/quality_receipt_gate.py` when the guided dev workflow is selected
 - `hooks/lib/` (copy entire directory recursively)
 - `contexts/dev.md`, `contexts/research.md`, `contexts/review.md`
 - All files in `coding-levels/` (enumerate with Glob — do not hardcode names)
@@ -210,6 +213,8 @@ From `$CLAUDE_PROJECT_DIR/.claude/` → `<target>/.claude/`:
 
 Use the bundle table from Step 1. In Merge mode: skip any destination file that already exists.
 
+When the guided dev workflow is selected, also copy its runtime skill directories: `ck-brainstorm`, `ck-plan`, `ck-plan-json`, `ck-cook`, `ck-quality`, `ck-test`, and `ck-fix`.
+
 **5d. Copy optional hooks**
 
 - `build-check` selected → copy `hooks/build_check.py`
@@ -217,7 +222,7 @@ Use the bundle table from Step 1. In Merge mode: skip any destination file that 
 
 **5e. Copy skills**
 
-For each skill selected in Step 2, copy `$CLAUDE_PROJECT_DIR/.claude/skills/<name>/` → `<target>/.claude/skills/<name>/` recursively, skipping any `node_modules/` subtrees. In Merge mode, skip skill directories that already exist at the destination.
+For each skill selected in Step 2, plus every skill auto-included by a selected bundle, copy `$CLAUDE_PROJECT_DIR/.claude/skills/<name>/` → `<target>/.claude/skills/<name>/` recursively, skipping any `node_modules/` subtrees. In Merge mode, skip skill directories that already exist at the destination.
 
 **5f. Generate `settings.json`**
 
@@ -232,6 +237,7 @@ Build the hooks object using only selected features:
 | PreToolUse `Read\|Write\|Edit\|Bash`  | `privacy_block.py` (timeout 5)       | always        |
 | PreCompact                            | `pre_compact.py` (timeout 5)         | always        |
 | PreToolUse `Write\|Edit\|Bash\|Agent` | `suggest_compact.py` (timeout 5)     | always        |
+| PreToolUse `Write\|Edit`               | `quality_receipt_gate.py` (timeout 10) | guided dev workflow |
 | PostToolUse `Write\|Edit`             | `build_check.py` (timeout 30)        | build-check   |
 | PostToolUse `Write\|Edit`             | `simplify_gate.py` (timeout 5)       | simplify-gate |
 | PostToolUse `Read\|Grep\|Bash`        | `artifact_fold.py` (timeout 5)       | always        |

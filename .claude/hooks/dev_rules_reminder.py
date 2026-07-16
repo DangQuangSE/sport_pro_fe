@@ -6,9 +6,9 @@ Detects the active /ck: command from the user message and picks the matching
 context file. Falls back to .ck.json `context` field, then "dev".
 
 Command → context mapping:
-  /ck:cook, /ck:fix, /ck:docs-fe          → dev
+  /ck:cook, /ck:fix, /ck:test, /ck:docs-fe → dev
   /ck:brainstorm, /ck:plan, /ck:learn     → research
-  /ck:code-review                         → review
+  /ck:quality, /ck:code-review             → review
 """
 
 import json
@@ -31,11 +31,13 @@ FALLBACK_RULES = "YAGNI · KISS · DRY · Brutal honesty · Challenge assumption
 COMMAND_CONTEXT_MAP: dict[str, str] = {
     "/ck:cook": "dev",
     "/ck:fix": "dev",
+    "/ck:test": "dev",
     "/ck:docs-fe": "dev",
     "/ck:brainstorm": "research",
     "/ck:plan": "research",
     "/ck:learn": "research",
     "/ck:code-review": "review",
+    "/ck:quality": "review",
 }
 
 

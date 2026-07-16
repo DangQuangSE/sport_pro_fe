@@ -66,6 +66,9 @@ Mode: {Fast | Hard | Parallel | Two}
 ## Requirements
 {What this phase delivers — user-visible or observable system outcome. 1–2 sentences max.}
 
+## Design Constraints
+{What this phase must never do — derived from the plan's own architecture decisions and risks, not invented per phase. e.g. "Fast mode may reduce ceremony but never skips the quality gate." Omit only if the plan genuinely has no phase-specific constraint beyond the shared engineering contract.}
+
 ## Steps
 1. {High-level action — what to do, not how. 1–2 lines max.}
 2. {High-level action}
@@ -74,9 +77,15 @@ Mode: {Fast | Hard | Parallel | Two}
 ## Success Criteria
 - {Verifiable outcome — can be checked by running a command or reading output}
 
+## Quality and Testing State
+- Quality gate: not evaluated (Cook runs `/ck:quality --gate` after implementing this phase)
+- Testing: not started
+
 ## Risks
 - {Risk}: {Mitigation}
 ```
+
+`Design Constraints` and `Quality and Testing State` are read by `ck:cook`'s preflight step and by `ck:quality --gate`; do not skip them even for a one-phase Fast-mode plan.
 
 Rules for Steps:
 - **What, not how.** Describe the goal of each step, never the implementation.

@@ -51,6 +51,10 @@ Flag complexity that exceeds what's actually required:
 - Phases that can be deferred to v2 without blocking the core feature
 - *(Only activate scope review for plans with 6+ phases)*
 
+### MEDIUM — Missing Quality Gate State
+
+- Every `phase-XX-*.md` must carry a `## Design Constraints` section (or an explicit note that none apply beyond the shared engineering contract) and a `## Quality and Testing State` section. A phase missing both is a MEDIUM finding — Cook's preflight and `ck:quality --gate` have nothing phase-specific to load.
+
 ---
 
 ## Output Format
@@ -59,7 +63,7 @@ For each finding:
 
 ```
 ## [CRITICAL | HIGH | MEDIUM]: [Short title]
-Category: Security | Assumption | Failure | Scope
+Category: Security | Assumption | Failure | Scope | Quality Gate
 Location: [phase name or plan section]
 Issue: [What the problem is — be specific]
 Fix: [Concrete recommendation — one sentence]
@@ -81,6 +85,7 @@ End with a summary:
 | Assumption | N        | N        | N     |
 | Failure    | N        | N        | N     |
 | Scope      | N        | N        | N     |
+| Quality Gate | N      | N        | N     |
 
 Verdict: APPROVED | WARN | BLOCK
 ```

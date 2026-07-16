@@ -28,6 +28,8 @@ If no changed files, stop: "Nothing to review."
 Read `CLAUDE.md` (if present) for project conventions.
 Read each changed file **in full**.
 
+For planned work, locate the phase's `ck:quality` receipt and latest `ck:test` report. Verify the receipt before reviewing. A missing/stale quality receipt or missing required test report is a readiness finding, not something this command silently recreates.
+
 ### Phase 2 — REVIEW
 
 Spawn the `code-reviewer` agent with:
@@ -35,9 +37,9 @@ Spawn the `code-reviewer` agent with:
 - CLAUDE.md contents (if present)
 - Recent context: `git log --oneline -5`
 
-### Phase 3 — VALIDATE
+### Phase 3 — VALIDATE ARTIFACTS
 
-Detect the project stack and run the appropriate build + test commands:
+If current `ck:test` and build artifacts exist, validate their commands, timestamps, scope, and verdicts. Do not rewrite tests or duplicate `ck:test`. For a standalone repository with no ck artifacts, detect the stack and run the project's documented build/test commands as fallback:
 
 ```bash
 # .NET

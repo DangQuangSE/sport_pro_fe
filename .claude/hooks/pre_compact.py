@@ -76,3 +76,4 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         HookLogger("pre-compact").error(str(e))
+        sys.exit(1)

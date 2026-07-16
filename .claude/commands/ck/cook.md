@@ -1,5 +1,5 @@
 ---
-description: Guided feature development with codebase understanding and architecture focus. Modes: --fast (skip test/review), --hard (mandatory reviewers, no auto-approve). Flags: --no-test (skip tester), --tdd (tests-first). Accepts an optional plan file path: /ck:cook plans/260418-auth/plan.md
+description: Implement a plan phase by phase. Cook never writes or runs tests; every phase requires an APPROVED ck:quality gate before completion. Modes: --fast or --hard. Flag: --tdd. --json <path> selects the phased master plan.json; --plan <path> selects a Markdown plan.md.
 ---
 
 Load the `ck:cook` skill and run it with `$ARGUMENTS`.
