@@ -2,7 +2,7 @@ export const SEO_BRAND = "Đồng Phục Quang Vinh";
 export const SUPPORTED_LOCALES = ["vi", "en"] as const;
 export const DEFAULT_INDEX_LOCALE = "vi" as const;
 
-const PRODUCTION_ORIGIN = "https://dongphucquangvinh.com";
+const PRODUCTION_ORIGIN = "https://www.dongphucquangvinh.com";
 
 function isAllowedOrigin(origin: URL): boolean {
   const isOriginOnly =
