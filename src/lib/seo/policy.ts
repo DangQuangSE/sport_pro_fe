@@ -2,12 +2,7 @@ export const SEO_BRAND = "Đồng Phục Quang Vinh";
 export const SUPPORTED_LOCALES = ["vi", "en"] as const;
 export const DEFAULT_INDEX_LOCALE = "vi" as const;
 
-type SiteEnvironment = {
-  NODE_ENV?: string;
-  SITE_URL?: string;
-};
-
-const PRODUCTION_ORIGIN = "https://www.dongphucquangvinh.com";
+const PRODUCTION_ORIGIN = "https://dongphucquangvinh.com";
 
 function isAllowedOrigin(origin: URL): boolean {
   const isOriginOnly =
@@ -23,35 +18,8 @@ function isAllowedOrigin(origin: URL): boolean {
   return isOriginOnly && (isProduction || isLocal);
 }
 
-export function resolveSiteOrigin(environment: SiteEnvironment = process.env): URL {
-  const rawSiteUrl = environment.SITE_URL?.trim();
-  if (!rawSiteUrl) {
-    throw new Error("SITE_URL is required");
-  }
-
-  let origin: URL;
-  try {
-    origin = new URL(rawSiteUrl);
-  } catch {
-    throw new Error("SITE_URL must be an absolute URL");
-  }
-
-  if (origin.pathname !== "/" || origin.search || origin.hash || origin.username || origin.password) {
-    throw new Error("SITE_URL must contain only an origin");
-  }
-
-  if (environment.NODE_ENV === "production") {
-    if (origin.origin !== PRODUCTION_ORIGIN) {
-      throw new Error(`SITE_URL must equal ${PRODUCTION_ORIGIN} in production`);
-    }
-  } else if (
-    origin.protocol !== "http:" ||
-    (origin.hostname !== "localhost" && origin.hostname !== "127.0.0.1")
-  ) {
-    throw new Error("SITE_URL must be an explicit HTTP localhost URL outside production");
-  }
-
-  return origin;
+export function resolveSiteOrigin(): URL {
+  return new URL(PRODUCTION_ORIGIN);
 }
 
 function encodedProductSlug(pathname: string): string | null {

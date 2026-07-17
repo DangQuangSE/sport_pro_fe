@@ -6,7 +6,7 @@ const metadataModule = new URL('../src/lib/seo/metadata.ts', import.meta.url)
 const jsonLdModule = new URL('../src/lib/seo/json-ld.ts', import.meta.url)
 const productPage = new URL('../app/[lang]/product/[slug]/page.tsx', import.meta.url)
 const catalogPage = new URL('../app/[lang]/products/page.tsx', import.meta.url)
-const origin = new URL('https://www.dongphucquangvinh.com')
+const origin = new URL('https://dongphucquangvinh.com')
 
 async function metadata() {
   return import(metadataModule.href)
@@ -22,9 +22,9 @@ test('Vietnamese home metadata is indexable, branded, and canonical', async () =
 
   assert.match(String(value.title), /Đồng Phục Quang Vinh/i)
   assert.match(value.description, /đồng phục|quần áo|thể thao|in ấn/i)
-  assert.equal(value.alternates.canonical, 'https://www.dongphucquangvinh.com/vi')
+  assert.equal(value.alternates.canonical, 'https://dongphucquangvinh.com/vi')
   assert.deepEqual(value.robots, { index: true, follow: true })
-  assert.equal(value.openGraph.url, 'https://www.dongphucquangvinh.com/vi')
+  assert.equal(value.openGraph.url, 'https://dongphucquangvinh.com/vi')
   assert.doesNotMatch(JSON.stringify(value), /sport\s*pro/i)
 })
 
@@ -32,9 +32,9 @@ test('English home remains usable but canonicalizes to Vietnamese and is noindex
   const { buildStaticPageMetadata } = await metadata()
   const value = buildStaticPageMetadata({ locale: 'en', page: 'home', origin })
 
-  assert.equal(value.alternates.canonical, 'https://www.dongphucquangvinh.com/vi')
+  assert.equal(value.alternates.canonical, 'https://dongphucquangvinh.com/vi')
   assert.deepEqual(value.robots, { index: false, follow: true })
-  assert.equal(value.openGraph.url, 'https://www.dongphucquangvinh.com/vi')
+  assert.equal(value.openGraph.url, 'https://dongphucquangvinh.com/vi')
 })
 
 test('catalog metadata collapses query variants to the Vietnamese catalog canonical', async () => {
@@ -46,7 +46,7 @@ test('catalog metadata collapses query variants to the Vietnamese catalog canoni
       origin,
       searchParams: { category: 'ao-bong-da', page: '2' },
     })
-    assert.equal(value.alternates.canonical, 'https://www.dongphucquangvinh.com/vi/products')
+    assert.equal(value.alternates.canonical, 'https://dongphucquangvinh.com/vi/products')
     assert.equal(value.robots.index, locale === 'vi')
     assert.equal(value.robots.follow, true)
     assert.match(String(value.title), /Đồng Phục Quang Vinh/i)
@@ -66,7 +66,7 @@ test('active product metadata is unique while English is noindex with Vietnamese
 
   assert.match(String(vi.title), /Áo bóng đá Phoenix/)
   assert.match(String(vi.title), /Đồng Phục Quang Vinh/)
-  assert.equal(vi.alternates.canonical, 'https://www.dongphucquangvinh.com/vi/product/ao-bong-da-phoenix')
+  assert.equal(vi.alternates.canonical, 'https://dongphucquangvinh.com/vi/product/ao-bong-da-phoenix')
   assert.deepEqual(vi.robots, { index: true, follow: true })
   assert.deepEqual(en.robots, { index: false, follow: true })
   assert.equal(en.alternates.canonical, vi.alternates.canonical)
@@ -80,7 +80,7 @@ test('product metadata tolerates missing optional image and description without 
     product: { name: 'Áo trơn', slug: 'ao-tron', description: '', images: [], variants: [] },
   })
 
-  assert.equal(value.alternates.canonical, 'https://www.dongphucquangvinh.com/vi/product/ao-tron')
+  assert.equal(value.alternates.canonical, 'https://dongphucquangvinh.com/vi/product/ao-tron')
   assert.ok(!value.openGraph.images || value.openGraph.images.length === 0)
   assert.doesNotMatch(value.description, /undefined|null/i)
 })

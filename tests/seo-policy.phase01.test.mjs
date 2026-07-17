@@ -19,14 +19,14 @@ test('production SITE_URL accepts only the exact HTTPS canonical host', async ()
   const { resolveSiteOrigin } = await policy()
 
   assert.equal(
-    resolveSiteOrigin({ NODE_ENV: 'production', SITE_URL: 'https://www.dongphucquangvinh.com' }).href,
-    'https://www.dongphucquangvinh.com/',
+    resolveSiteOrigin({ NODE_ENV: 'production', SITE_URL: 'https://dongphucquangvinh.com' }).href,
+    'https://dongphucquangvinh.com/',
   )
   for (const siteUrl of [
     undefined,
     '',
     'http://www.dongphucquangvinh.com',
-    'https://dongphucquangvinh.com',
+    'https://www.dongphucquangvinh.com',
     'https://evil.example',
   ]) {
     assert.throws(
@@ -74,7 +74,7 @@ test('catalog queries collapse to one canonical and unknown/private paths are no
 
 test('canonicalUrl is absolute and never retains query or fragment variants', async () => {
   const { canonicalUrl } = await policy()
-  const origin = new URL('https://www.dongphucquangvinh.com')
+  const origin = new URL('https://dongphucquangvinh.com')
 
-  assert.equal(canonicalUrl('/en/products?sort=price#items', origin), 'https://www.dongphucquangvinh.com/vi/products')
+  assert.equal(canonicalUrl('/en/products?sort=price#items', origin), 'https://dongphucquangvinh.com/vi/products')
 })
