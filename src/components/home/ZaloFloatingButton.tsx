@@ -5,10 +5,22 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { publicConfigService } from "@/services/publicConfigService";
 
+function validContactUrl(value?: string): string | undefined {
+  if (!value?.trim()) return undefined;
+  try {
+    const url = new URL(value.trim());
+    return url.protocol === "https:" || url.protocol === "http:"
+      ? url.toString()
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function ZaloFloatingButton() {
   const pathname = usePathname();
-  const [zaloLink, setZaloLink] = useState(
-    process.env.NEXT_PUBLIC_ZALO_LINK
+  const [zaloLink, setZaloLink] = useState(() =>
+    validContactUrl(process.env.NEXT_PUBLIC_ZALO_LINK)
   );
 
   useEffect(() => {
@@ -17,9 +29,10 @@ export function ZaloFloatingButton() {
     }
 
     let isMounted = true;
-    publicConfigService.getConfigByKey("zalo_link").then((data) => {
-      if (isMounted && data?.configValue) {
-        setZaloLink(data.configValue);
+    publicConfigService.getConfigsMap().then((configs) => {
+      const configuredLink = validContactUrl(configs.zalo_link);
+      if (isMounted && configuredLink) {
+        setZaloLink(configuredLink);
       }
     });
 
@@ -28,7 +41,7 @@ export function ZaloFloatingButton() {
     };
   }, [pathname]);
 
-  if (pathname?.includes("/admin")) {
+  if (pathname?.includes("/admin") || !zaloLink) {
     return null;
   }
 

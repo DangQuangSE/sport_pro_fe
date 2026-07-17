@@ -9,6 +9,7 @@ import { authService } from '@/services/authService'
 import { useRouter } from 'next/navigation'
 import { useAuthContext } from '@/contexts/AuthContext'
 import { toast } from 'sonner'
+import { ApiError } from '@/lib/api-client'
 
 export type AuthStep = 'REQUEST_OTP' | 'VERIFY_OTP' | 'REGISTER'
 
@@ -72,7 +73,9 @@ export function useAuthForms() {
         router.push(`/${locale}`)
       }
     } catch (error: any) {
-      console.error('Login error', error)
+      if (!(error instanceof ApiError && error.status === 401)) {
+        console.error('Login error', error)
+      }
       toast.error(error.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.")
     } finally {
       setIsLoading(false)
