@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ProductListResponse } from "@/services/productService";
+import { BRAND_CONFIG } from "@/constants/brand";
 
 interface ProductCardProps {
   product: ProductListResponse;
@@ -57,7 +58,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Details Content */}
         <div className="space-y-1.5 px-2">
           <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
-            <span>{product.brandName || "Sport Pro"}</span>
+            <span>{product.brandName || BRAND_CONFIG.name}</span>
             <span className="text-primary">{product.categoryName || "Training"}</span>
           </div>
 

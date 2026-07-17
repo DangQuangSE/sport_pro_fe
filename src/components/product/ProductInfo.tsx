@@ -9,6 +9,7 @@ import { ProductDetailResponse } from "@/services/productService";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { projectProductOffer } from "@/lib/product/offer";
 
 interface ProductInfoProps {
   product: ProductDetailResponse;
@@ -97,9 +98,10 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
     }
   };
 
-  const currentPrice = selectedVariant?.salePrice ?? product.variants[0]?.salePrice;
-  const originalPrice = selectedVariant?.originalPrice ?? product.variants[0]?.originalPrice;
-  const hasDiscount = originalPrice > currentPrice;
+  const offer = projectProductOffer(product.variants, selectedVariant);
+  const currentPrice = offer?.price;
+  const originalPrice = offer?.originalPrice;
+  const hasDiscount = offer ? offer.originalPrice > offer.price : false;
 
   return (
     <div className="flex flex-col">
@@ -109,8 +111,8 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
           {product.brandName}
         </span>
         <span className="flex items-center gap-1 font-bold text-[10px] text-secondary-fixed bg-on-surface px-2 py-1 uppercase tracking-[0.08em] rounded-full">
-          <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", (selectedVariant?.stockQuantity ?? 1) > 0 ? "bg-secondary-fixed" : "bg-error")}></span>
-          {(selectedVariant?.stockQuantity ?? 1) > 0 ? t("product.details.inStock") : "Out of Stock"}
+          <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", offer?.inStock ? "bg-secondary-fixed" : "bg-error")}></span>
+          {offer?.inStock ? t("product.details.inStock") : "Out of Stock"}
         </span>
       </div>
 
@@ -152,7 +154,7 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
           className="font-[700] text-[32px] leading-[1.3] text-on-surface"
           style={{ fontFamily: "var(--font-lexend)" }}
         >
-          {currentPrice?.toLocaleString()} VND
+          {currentPrice ? `${currentPrice.toLocaleString()} VND` : "Liên hệ"}
         </span>
         {hasDiscount && (
           <span className="text-xl text-on-surface-variant line-through opacity-50">

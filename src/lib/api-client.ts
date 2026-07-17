@@ -14,6 +14,13 @@ export type PageResponse<T> = {
   last: boolean;
 };
 
+export class ApiError extends Error {
+  constructor(message: string, public readonly status: number) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
 class ApiClient {
   private accessToken: string | null = null;
   private isRefreshing: boolean = false;
@@ -118,7 +125,10 @@ class ApiClient {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      throw new ApiError(
+        errorData.message || `HTTP error! status: ${response.status}`,
+        response.status
+      );
     }
 
     return response.json();

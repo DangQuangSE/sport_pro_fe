@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useFeaturedProducts } from "@/hooks/useFeaturedProducts";
 import { ProductListResponse } from "@/services/productService";
+import { BRAND_CONFIG } from "@/constants/brand";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface CardProps {
@@ -59,7 +60,7 @@ function LargeCard({ product }: Readonly<CardProps>) {
       {/* Content */}
       <div className="p-6 flex flex-col flex-grow">
         <div className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-1">
-          {product.brandName || "Sport Pro"}
+          {product.brandName || BRAND_CONFIG.name}
         </div>
         <h3
           className="text-[20px] font-semibold leading-[1.4] text-on-background mb-2 line-clamp-1"

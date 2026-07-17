@@ -1,7 +1,9 @@
+import { SEO_BRAND } from "@/lib/seo/policy";
+
 export const BRAND_CONFIG = {
-  name: "SPORTPRO",
+  name: SEO_BRAND,
   logo: "/vsport.svg",
   logoPng: "/vsport.png",
   logoOriginal: "/vsport.jpg",
-  alt: "Sport Pro Logo",
+  alt: `Logo ${SEO_BRAND}`,
 };

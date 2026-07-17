@@ -3,6 +3,14 @@ import HeroSection from "@/components/home/HeroSection";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import PromoBanner from "@/components/home/PromoBanner";
 import Footer from "@/components/home/Footer";
+import type { Metadata } from "next";
+import { buildStaticPageMetadata, type SeoLocale } from "@/lib/seo/metadata";
+import { resolveSiteOrigin } from "@/lib/seo/policy";
+
+export async function generateMetadata({ params }: { params: Promise<{ lang: SeoLocale }> }): Promise<Metadata> {
+  const { lang } = await params;
+  return buildStaticPageMetadata({ locale: lang, page: "home", origin: resolveSiteOrigin() });
+}
 
 // ─── Home Page ───────────────────────────────────────────────────────────────
 // Principle: High-fidelity, premium, performance-driven e-commerce experience.
