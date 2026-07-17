@@ -142,7 +142,7 @@ export default function ProductCustomizerPage() {
         </h2>
         <div className="hidden sm:block text-right text-xs">
           <span className="font-bold text-on-surface-variant uppercase tracking-widest">{t("customizer.activeVariant") || "Active Variant"}</span>
-          <p className="font-black text-primary italic">Sport Pro Premium Shirt</p>
+          <p className="font-black text-primary italic">Áo Đồng Phục Quang Vinh Cao Cấp</p>
         </div>
       </header>
 

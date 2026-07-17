@@ -22,6 +22,7 @@ export interface ProductListResponse {
 
 export interface ProductDetailResponse {
   id: number;
+  status: string;
   name: string;
   slug: string;
   description: string;
@@ -50,7 +51,7 @@ export interface ProductVariantResponse {
   colorName?: string;
   colorHex?: string;
   originalPrice: number;
-  salePrice: number;
+  salePrice: number | null;
   stockQuantity: number;
   status: string;
 }
@@ -96,4 +97,3 @@ export const productService = {
     return apiClient.get<ApiResponse<PageResponse<any>>>(`/brands${query}`);
   }
 };
-
