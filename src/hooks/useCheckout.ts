@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { orderService, PaymentMethod } from "@/services/orderService";
-import { addressService } from "@/services/addressService";
+import { addressService, AddressRequest, AddressResponse } from "@/services/addressService";
 import { cartService } from "@/services/cartService";
 import { apiClient, ApiResponse } from "@/lib/api-client";
+import { isValidPhoneNumber } from "@/lib/validators";
 import { toast } from "sonner";
 
 export interface CustomDesignInfo {
@@ -51,10 +52,14 @@ export function useCheckout() {
 
   // Delivery states
   const [email, setEmail] = useState("athlete@example.com");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [streetAddress, setStreetAddress] = useState("");
+  const [addresses, setAddresses] = useState<AddressResponse[]>([]);
+  const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
+  const [isSubmittingNewAddress, setIsSubmittingNewAddress] = useState(false);
+  // An address entered at checkout with "save for later" unchecked — used only
+  // for this order's snapshot, never persisted to the address book.
+  const [draftAddress, setDraftAddress] = useState<AddressRequest | null>(null);
 
   // Flow states
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -148,35 +153,66 @@ export function useCheckout() {
     }
   };
 
-  // Load default address to pre-fill
+  // Load saved addresses and auto-select the default one
+  const fetchAddresses = async () => {
+    setIsLoadingAddresses(true);
+    try {
+      const res = await addressService.getMyAddresses();
+      setAddresses(res.data);
+      return res.data;
+    } catch (err) {
+      console.error("Failed to load user addresses", err);
+      return [];
+    } finally {
+      setIsLoadingAddresses(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchDefaultAddress = async () => {
-      try {
-        const res = await addressService.getMyAddresses();
-        const addressList = res.data;
-        if (addressList && addressList.length > 0) {
-          const defaultAddr =
-            addressList.find((a) => a.isDefault) || addressList[0];
-          setFirstName(
-            defaultAddr.receiverName.split(" ").slice(1).join(" ") ||
-              defaultAddr.receiverName
-          );
-          setLastName(defaultAddr.receiverName.split(" ")[0] || "");
-          setPhoneNumber(defaultAddr.phoneNumber);
-          setStreetAddress(
-            `${defaultAddr.detailAddress}, ${defaultAddr.ward}, ${defaultAddr.district}, ${defaultAddr.province}`
-          );
-        }
-      } catch (err) {
-        console.error("Failed to load user addresses", err);
-      }
-    };
-    fetchDefaultAddress();
+    fetchAddresses().then((list) => {
+      const defaultAddr = list.find((a) => a.isDefault) || list[0];
+      if (defaultAddr) setSelectedAddressId(defaultAddr.id);
+    });
   }, []);
 
-  const validatePhone = (phone: string) => {
-    const regex = /^(0|\+84)[0-9]{9,10}$/;
-    return regex.test(phone.trim());
+  const selectAddress = useCallback((id: number) => {
+    setSelectedAddressId(id);
+    setDraftAddress(null);
+    setIsAddingNewAddress(false);
+  }, []);
+
+  const startAddingNewAddress = useCallback(() => setIsAddingNewAddress(true), []);
+  const cancelAddingNewAddress = useCallback(() => setIsAddingNewAddress(false), []);
+
+  const submitNewAddress = useCallback(async (data: AddressRequest, saveForLater: boolean) => {
+    if (saveForLater) {
+      setIsSubmittingNewAddress(true);
+      try {
+        const res = await addressService.createAddress(data);
+        await fetchAddresses();
+        setSelectedAddressId(res.data.id);
+        setDraftAddress(null);
+      } catch (err: any) {
+        toast.error(err.message || t("profile.addresses.genericError"));
+        return;
+      } finally {
+        setIsSubmittingNewAddress(false);
+      }
+    } else {
+      setDraftAddress(data);
+      setSelectedAddressId(null);
+    }
+    setIsAddingNewAddress(false);
+  }, [t]);
+
+  // Builds the immutable shippingAddress TEXT snapshot sent to the order —
+  // Order never references UserAddress live, so later edits/deletes to the
+  // address book cannot change a placed order's shipping address.
+  const buildShippingAddressSnapshot = (
+    address: { receiverName: string; detailAddress: string; ward: string; district: string; province: string },
+    emailValue: string
+  ) => {
+    return `${address.receiverName} - ${address.detailAddress}, ${address.ward}, ${address.district}, ${address.province} (Email: ${emailValue})`;
   };
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
@@ -188,17 +224,14 @@ export function useCheckout() {
       return;
     }
 
-    if (
-      !firstName.trim() ||
-      !lastName.trim() ||
-      !phoneNumber.trim() ||
-      !streetAddress.trim()
-    ) {
+    const activeAddress = draftAddress ?? addresses.find((a) => a.id === selectedAddressId);
+
+    if (!email.trim() || !activeAddress) {
       setErrorMsg(t("checkout.fieldsError"));
       return;
     }
 
-    if (!validatePhone(phoneNumber)) {
+    if (!isValidPhoneNumber(activeAddress.phoneNumber)) {
       setErrorMsg(t("checkout.phoneError"));
       return;
     }
@@ -206,12 +239,11 @@ export function useCheckout() {
     setIsSubmitting(true);
 
     try {
-      const receiverName = `${lastName.trim()} ${firstName.trim()}`;
-      const finalShippingAddress = `${receiverName} - ${streetAddress.trim()} (Email: ${email.trim()})`;
+      const finalShippingAddress = buildShippingAddressSnapshot(activeAddress, email.trim());
 
       const orderPayload = {
         shippingAddress: finalShippingAddress,
-        phoneNumber: phoneNumber.trim(),
+        phoneNumber: activeAddress.phoneNumber.trim(),
         paymentMethod: PaymentMethod.BANK_TRANSFER,
         cartItemIds: checkoutItems.map((item) => item.id),
       };
@@ -253,14 +285,15 @@ export function useCheckout() {
     // Delivery form fields
     email,
     setEmail,
-    firstName,
-    setFirstName,
-    lastName,
-    setLastName,
-    phoneNumber,
-    setPhoneNumber,
-    streetAddress,
-    setStreetAddress,
+    addresses,
+    isLoadingAddresses,
+    selectedAddressId,
+    selectAddress,
+    isAddingNewAddress,
+    startAddingNewAddress,
+    cancelAddingNewAddress,
+    submitNewAddress,
+    isSubmittingNewAddress,
     // Flow
     isSubmitting,
     errorMsg,

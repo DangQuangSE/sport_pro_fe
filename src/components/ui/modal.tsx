@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
@@ -22,6 +23,11 @@ export function Modal({
   footer,
   className
 }: ModalProps) {
+  // Portal to document.body: this component may be opened from within a page-level
+  // <form> (e.g. checkout), and a <form> nested inside another <form> is invalid HTML.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -36,16 +42,16 @@ export function Modal({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" 
-        onClick={onClose} 
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+        onClick={onClose}
       />
-      
+
       {/* Content */}
       <div className={cn(
         "relative bg-surface w-full max-w-lg rounded-2xl shadow-2xl border border-outline-variant overflow-hidden animate-in zoom-in-95 duration-200",
@@ -54,7 +60,7 @@ export function Modal({
         {/* Header */}
         <div className="px-6 py-4 border-b border-outline-variant flex items-center justify-between bg-surface">
           <h3 className="text-lg font-bold text-on-surface">{title}</h3>
-          <button 
+          <button
             onClick={onClose}
             className="p-2 rounded-full hover:bg-surface-variant text-on-surface-variant transition-colors"
           >
@@ -74,6 +80,7 @@ export function Modal({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

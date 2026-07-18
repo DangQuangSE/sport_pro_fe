@@ -10,7 +10,7 @@ import { CheckoutHeader } from "@/components/checkout/CheckoutHeader";
 import { CheckoutFooter } from "@/components/checkout/CheckoutFooter";
 import { OrderSuccessPage } from "@/components/checkout/OrderSuccessPage";
 import { CartItemsList } from "@/components/checkout/CartItemsList";
-import { DeliveryInfoForm } from "@/components/checkout/DeliveryInfoForm";
+import { CheckoutAddressPicker } from "@/components/checkout/CheckoutAddressPicker";
 import { PaymentMethodCard } from "@/components/checkout/PaymentMethodCard";
 import { OrderOverviewCard } from "@/components/checkout/OrderOverviewCard";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -22,10 +22,15 @@ export default function CheckoutPage() {
     updateQuantity,
     removeFromCart,
     email, setEmail,
-    firstName, setFirstName,
-    lastName, setLastName,
-    phoneNumber, setPhoneNumber,
-    streetAddress, setStreetAddress,
+    addresses,
+    isLoadingAddresses,
+    selectedAddressId,
+    selectAddress,
+    isAddingNewAddress,
+    startAddingNewAddress,
+    cancelAddingNewAddress,
+    submitNewAddress,
+    isSubmittingNewAddress,
     isSubmitting,
     errorMsg,
     successOrder,
@@ -112,17 +117,18 @@ export default function CheckoutPage() {
               />
 
               {/* Card B: Delivery Information */}
-              <DeliveryInfoForm
+              <CheckoutAddressPicker
                 email={email}
-                firstName={firstName}
-                lastName={lastName}
-                phoneNumber={phoneNumber}
-                streetAddress={streetAddress}
                 onEmailChange={setEmail}
-                onFirstNameChange={setFirstName}
-                onLastNameChange={setLastName}
-                onPhoneNumberChange={setPhoneNumber}
-                onStreetAddressChange={setStreetAddress}
+                addresses={addresses}
+                isLoadingAddresses={isLoadingAddresses}
+                selectedAddressId={selectedAddressId}
+                onSelectAddress={selectAddress}
+                isAddingNewAddress={isAddingNewAddress}
+                onStartAddNew={startAddingNewAddress}
+                onCancelAddNew={cancelAddingNewAddress}
+                onSubmitNewAddress={submitNewAddress}
+                isSubmittingNewAddress={isSubmittingNewAddress}
                 t={t}
               />
 
@@ -139,7 +145,7 @@ export default function CheckoutPage() {
               standardDelivery={standardDelivery}
               expectedTax={expectedTax}
               totalPayment={totalPayment}
-              isSubmitting={isSubmitting}
+              isSubmitting={isSubmitting || isLoadingAddresses}
               locale={locale}
               t={t}
             />

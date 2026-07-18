@@ -2,7 +2,8 @@ import { apiClient, ApiResponse } from "@/lib/api-client";
 
 export enum AddressType {
   HOME = "HOME",
-  OFFICE = "OFFICE"
+  OFFICE = "OFFICE",
+  OTHER = "OTHER"
 }
 
 export interface AddressResponse {
@@ -25,7 +26,9 @@ export interface AddressRequest {
   ward: string;
   detailAddress: string;
   isDefault: boolean;
-  type: AddressType;
+  // Never surfaced to the user — the backend defaults new addresses to HOME
+  // and preserves the existing type on update when this is omitted.
+  type?: AddressType;
 }
 
 export const addressService = {
