@@ -11,6 +11,8 @@ interface CustomDesignInfo {
   designImageUrl: string;
   textsCount: number;
   imagesCount: number;
+  materialBasePrice: number;
+  logoUnitPrice: number;
 }
 
 interface OrderOverviewCardProps {
@@ -95,28 +97,16 @@ export function OrderOverviewCard({
                     Chi tiết in ấn
                   </p>
                   <div className="flex justify-between">
-                    <span>Chất liệu ({customDesign.materialName}):</span>
+                    <span>Chất liệu ({customDesign.materialName}) × {customDesign.textsCount} lớp chữ:</span>
                     <span className="font-mono text-[#1a1c1f]">
-                      {(
-                        customDesign.printingPrice -
-                        customDesign.textsCount * 10000 -
-                        customDesign.imagesCount * 25000
-                      ).toLocaleString('vi-VN')} ₫
+                      {(customDesign.materialBasePrice * customDesign.textsCount).toLocaleString('vi-VN')} ₫
                     </span>
                   </div>
-                  {customDesign.textsCount > 0 && (
-                    <div className="flex justify-between">
-                      <span>Lớp chữ ({customDesign.textsCount} lớp):</span>
-                      <span className="font-mono text-[#1a1c1f]">
-                        +{(customDesign.textsCount * 10000).toLocaleString('vi-VN')} ₫
-                      </span>
-                    </div>
-                  )}
                   {customDesign.imagesCount > 0 && (
                     <div className="flex justify-between">
                       <span>Ảnh logo ({customDesign.imagesCount} ảnh):</span>
                       <span className="font-mono text-[#1a1c1f]">
-                        +{(customDesign.imagesCount * 25000).toLocaleString('vi-VN')} ₫
+                        +{(customDesign.logoUnitPrice * customDesign.imagesCount).toLocaleString('vi-VN')} ₫
                       </span>
                     </div>
                   )}

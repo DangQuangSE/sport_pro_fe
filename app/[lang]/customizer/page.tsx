@@ -43,6 +43,7 @@ export default function ProductCustomizerPage() {
     isLoading,
     totalPrice,
     printingPrice,
+    priceBreakdown,
     handleAddText,
     handleImageUpload,
     handleRemoveText,
@@ -193,10 +194,11 @@ export default function ProductCustomizerPage() {
       </main>
 
       {/* Bottom Pricing Summary Action Bar */}
-      <CustomizerBottomBar 
+      <CustomizerBottomBar
         totalPrice={totalPrice}
         printingPrice={printingPrice}
         selectedMaterialName={selectedMaterial?.name || "in"}
+        priceBreakdown={priceBreakdown}
         handleResetDesign={handleResetDesign}
         handleConfirmAndReturn={handleConfirmClick}
         formatCurrency={formatCurrency}

@@ -19,6 +19,8 @@ export interface CustomDesignInfo {
   textsCount: number;
   imagesCount: number;
   customDesignId?: number;
+  materialBasePrice: number;
+  logoUnitPrice: number;
 }
 
 export function useCheckout() {
@@ -96,6 +98,8 @@ export function useCheckout() {
             textsCount: res.data.numTextLines,
             imagesCount: res.data.numImages,
             customDesignId: customizedItem.customDesignId,
+            materialBasePrice: res.data.materialBasePrice,
+            logoUnitPrice: res.data.logoUnitPrice,
           });
         } catch (e) {
           console.error(
