@@ -31,6 +31,12 @@ export default function CheckoutPage() {
     cancelAddingNewAddress,
     submitNewAddress,
     isSubmittingNewAddress,
+    couponCode,
+    setCouponCode,
+    discountAmount,
+    isApplyingCoupon,
+    handleApplyCoupon,
+    handleClearCoupon,
     isSubmitting,
     errorMsg,
     successOrder,
@@ -148,6 +154,12 @@ export default function CheckoutPage() {
               isSubmitting={isSubmitting || isLoadingAddresses}
               locale={locale}
               t={t}
+              couponCode={couponCode}
+              onCouponCodeChange={setCouponCode}
+              discountAmount={discountAmount}
+              isApplyingCoupon={isApplyingCoupon}
+              onApplyCoupon={handleApplyCoupon}
+              onClearCoupon={handleClearCoupon}
             />
           </form>
         )}

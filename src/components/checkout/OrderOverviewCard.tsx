@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Wrench, CheckCircle2, Loader2 } from "lucide-react";
+import { Wrench, CheckCircle2, Loader2, Tag, X } from "lucide-react";
 import { CartResponse } from "@/services/cartService";
 
 interface CustomDesignInfo {
@@ -24,6 +24,12 @@ interface OrderOverviewCardProps {
   isSubmitting: boolean;
   locale: string;
   t: (key: string) => string;
+  couponCode: string;
+  onCouponCodeChange: (v: string) => void;
+  discountAmount: number;
+  isApplyingCoupon: boolean;
+  onApplyCoupon: () => void;
+  onClearCoupon: () => void;
 }
 
 export function OrderOverviewCard({
@@ -37,6 +43,12 @@ export function OrderOverviewCard({
   isSubmitting,
   locale,
   t,
+  couponCode,
+  onCouponCodeChange,
+  discountAmount,
+  isApplyingCoupon,
+  onApplyCoupon,
+  onClearCoupon,
 }: OrderOverviewCardProps) {
   const router = useRouter();
 
@@ -111,6 +123,43 @@ export function OrderOverviewCard({
                 </div>
               </div>
             )}
+
+            {/* Coupon input */}
+            <div className="pt-2 border-t border-[#e2e2e7]/60 border-dashed space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-widest text-[#414755]">
+                {t("checkout.couponCode")}
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={couponCode}
+                  onChange={(e) => onCouponCodeChange(e.target.value.toUpperCase())}
+                  placeholder={t("checkout.couponPlaceholder")}
+                  disabled={isApplyingCoupon}
+                  className="flex-1 h-10 px-3 rounded-lg border border-[#c1c6d7] bg-[#f9f9fe] text-xs font-semibold focus:border-primary outline-none transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={onApplyCoupon}
+                  disabled={isApplyingCoupon || !couponCode.trim()}
+                  className="h-10 px-4 rounded-lg bg-[#1a1c1f] text-white text-[10px] font-black uppercase tracking-widest disabled:opacity-50 flex items-center gap-1.5 shrink-0"
+                >
+                  {isApplyingCoupon ? <Loader2 size={14} className="animate-spin" /> : <Tag size={14} />}
+                  {t("checkout.applyCoupon")}
+                </button>
+              </div>
+              {discountAmount > 0 && (
+                <div className="flex justify-between items-center text-primary font-black text-xs">
+                  <span className="flex items-center gap-1.5">
+                    {t("checkout.discount")}
+                    <button type="button" onClick={onClearCoupon} className="text-[#717786] hover:text-error">
+                      <X size={12} />
+                    </button>
+                  </span>
+                  <span>-{discountAmount.toLocaleString('vi-VN')} ₫</span>
+                </div>
+              )}
+            </div>
 
             <div className="pt-6 border-t border-[#e2e2e7] flex justify-between items-center">
               <span className="text-sm font-black uppercase text-[#1a1c1f] tracking-tight">

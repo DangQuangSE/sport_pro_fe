@@ -6,6 +6,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { orderService, PaymentMethod } from "@/services/orderService";
 import { addressService, AddressRequest, AddressResponse } from "@/services/addressService";
+import { couponService } from "@/services/couponService";
 import { cartService } from "@/services/cartService";
 import { apiClient, ApiResponse } from "@/lib/api-client";
 import { isValidPhoneNumber } from "@/lib/validators";
@@ -61,6 +62,11 @@ export function useCheckout() {
   // for this order's snapshot, never persisted to the address book.
   const [draftAddress, setDraftAddress] = useState<AddressRequest | null>(null);
 
+  // Coupon states
+  const [couponCode, setCouponCode] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+
   // Flow states
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -111,6 +117,34 @@ export function useCheckout() {
       setCustomDesign(null);
     }
   }, [rawCart]);
+
+  const customizedItem = checkoutItems.find(
+    (item) => item.isCustomizable === true || item.customizable === true
+  );
+  const printingCost = customizedItem && customDesign ? customDesign.printingPrice : 0;
+
+  // The coupon discount is validated server-side against the pre-delivery/tax
+  // order amount (item prices + printing), not the final checkout total.
+  const couponOrderAmount = estimatedCost + printingCost;
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setIsApplyingCoupon(true);
+    try {
+      const res = await couponService.previewCoupon(couponCode.trim(), couponOrderAmount);
+      setDiscountAmount(res.data.discountAmount);
+    } catch (err: any) {
+      setDiscountAmount(0);
+      toast.error(err.message || t("checkout.fieldsError"));
+    } finally {
+      setIsApplyingCoupon(false);
+    }
+  };
+
+  const handleClearCoupon = () => {
+    setCouponCode("");
+    setDiscountAmount(0);
+  };
 
   // Remove custom design from cart
   const handleRemoveDesign = async () => {
@@ -246,6 +280,7 @@ export function useCheckout() {
         phoneNumber: activeAddress.phoneNumber.trim(),
         paymentMethod: PaymentMethod.BANK_TRANSFER,
         cartItemIds: checkoutItems.map((item) => item.id),
+        couponCode: couponCode.trim() || undefined,
       };
 
       const orderRes = await orderService.placeOrder(orderPayload);
@@ -265,14 +300,9 @@ export function useCheckout() {
   const isCartEmpty = checkoutItems.length === 0;
   const standardDelivery = 15;
   const expectedTax = 24;
-  const customizedItem = checkoutItems.find(
-    (item) => item.isCustomizable === true || item.customizable === true
-  );
-  const printingCost =
-    customizedItem && customDesign ? customDesign.printingPrice : 0;
   const totalPayment =
     estimatedCost > 0
-      ? estimatedCost + standardDelivery + expectedTax + printingCost
+      ? estimatedCost + standardDelivery + expectedTax + printingCost - discountAmount
       : 0;
 
   return {
@@ -294,6 +324,13 @@ export function useCheckout() {
     cancelAddingNewAddress,
     submitNewAddress,
     isSubmittingNewAddress,
+    // Coupon
+    couponCode,
+    setCouponCode,
+    discountAmount,
+    isApplyingCoupon,
+    handleApplyCoupon,
+    handleClearCoupon,
     // Flow
     isSubmitting,
     errorMsg,
