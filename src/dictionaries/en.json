@@ -702,6 +702,8 @@
     "saveAddressForLater": "Save this address for later",
     "paymentMethods": "PAYMENT METHODS",
     "transferQr": "TRANSFER MONEY VIA QR CODE",
+    "payosDescription": "Fast payment by QR code or bank card",
+    "payosRedirect": "After confirming, you will be redirected to the secure PayOS payment page.",
     "orderOverview": "ORDER OVERVIEW",
     "estimated": "Estimated",
     "standardDelivery": "Standard delivery",

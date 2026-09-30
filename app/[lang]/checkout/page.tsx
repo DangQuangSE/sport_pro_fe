@@ -8,7 +8,6 @@ import { useCheckout } from "@/hooks/useCheckout";
 
 import { CheckoutHeader } from "@/components/checkout/CheckoutHeader";
 import { CheckoutFooter } from "@/components/checkout/CheckoutFooter";
-import { OrderSuccessPage } from "@/components/checkout/OrderSuccessPage";
 import { CartItemsList } from "@/components/checkout/CartItemsList";
 import { CheckoutAddressPicker } from "@/components/checkout/CheckoutAddressPicker";
 import { PaymentMethodCard } from "@/components/checkout/PaymentMethodCard";
@@ -39,7 +38,6 @@ export default function CheckoutPage() {
     handleClearCoupon,
     isSubmitting,
     errorMsg,
-    successOrder,
     handlePlaceOrder,
     customDesign,
     handleRemoveDesign,
@@ -51,11 +49,6 @@ export default function CheckoutPage() {
     t,
     locale,
   } = useCheckout();
-
-  // Show success receipt when order is placed
-  if (successOrder) {
-    return <OrderSuccessPage successOrder={successOrder} locale={locale} t={t} />;
-  }
 
   return (
     <div className="flex flex-col min-h-screen bg-[#f9f9fe] font-sans antialiased text-[#1a1c1f]">

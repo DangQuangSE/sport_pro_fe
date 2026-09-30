@@ -702,6 +702,8 @@
     "saveAddressForLater": "Lưu địa chỉ này cho lần sau",
     "paymentMethods": "PHƯƠNG THỨC THANH TOÁN",
     "transferQr": "CHUYỂN KHOẢN NGÂN HÀNG QUA MÃ QR",
+    "payosDescription": "Thanh toán nhanh qua mã QR hoặc thẻ ngân hàng",
+    "payosRedirect": "Sau khi xác nhận, bạn sẽ được chuyển đến trang thanh toán PayOS an toàn.",
     "orderOverview": "TỔNG QUAN ĐƠN HÀNG",
     "estimated": "Ước tính",
     "standardDelivery": "Giao hàng tiêu chuẩn",

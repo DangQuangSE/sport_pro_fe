@@ -72,7 +72,6 @@ export function useCheckout() {
   // Flow states
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [successOrder, setSuccessOrder] = useState<any | null>(null);
 
   // Custom design state
   const [customDesign, setCustomDesign] = useState<CustomDesignInfo | null>(null);
@@ -282,14 +281,22 @@ export function useCheckout() {
       const orderPayload = {
         shippingAddress: finalShippingAddress,
         phoneNumber: activeAddress.phoneNumber.trim(),
-        paymentMethod: PaymentMethod.BANK_TRANSFER,
+        paymentMethod: PaymentMethod.PAYOS,
         cartItemIds: checkoutItems.map((item) => item.id),
         couponCode: couponCode.trim() || undefined,
       };
 
       const orderRes = await orderService.placeOrder(orderPayload);
-      setSuccessOrder(orderRes.data);
       await refreshCart();
+
+      const paymentRes = await orderService.createPayOsPayment(orderRes.data.id);
+      if (!paymentRes.data.checkoutUrl) {
+        throw new Error("PayOS did not return a checkout URL.");
+      }
+
+      // Let PayOS handle the payment UI. Its returnUrl brings the customer
+      // back to /checkout/payment-result after the payment attempt.
+      window.location.assign(paymentRes.data.checkoutUrl);
     } catch (err: any) {
       console.error("Order failed", err);
       setErrorMsg(
@@ -338,7 +345,6 @@ export function useCheckout() {
     // Flow
     isSubmitting,
     errorMsg,
-    successOrder,
     handlePlaceOrder,
     // Custom design
     customDesign,

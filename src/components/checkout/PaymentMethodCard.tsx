@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { QrCode } from "lucide-react";
+import { CreditCard, QrCode } from "lucide-react";
 
 interface PaymentMethodCardProps {
   totalPayment: number;
@@ -22,41 +22,32 @@ export function PaymentMethodCard({ totalPayment, t }: PaymentMethodCardProps) {
       </div>
 
       <div className="mt-6">
-        {/* Unified Selected Option: QR Transfer */}
+        {/* PayOS is the single online payment method for checkout. */}
         <div className="border-2 border-primary bg-primary/[0.02] p-8 rounded-3xl text-left flex flex-col md:flex-row gap-8 items-center">
           {/* Hidden radio for semantics */}
           <div className="hidden">
             <input type="radio" checked readOnly className="text-primary focus:ring-primary" />
           </div>
 
-          {/* QR Code */}
+          {/* PayOS brand and QR hint */}
           <div className="w-[140px] h-[140px] bg-white border border-[#e2e2e7] rounded-2xl flex items-center justify-center p-2 shrink-0 shadow-sm relative group overflow-hidden">
-            <img
-              src={`https://img.vietqr.io/image/vietcombank-1234567890-compact.png?amount=${totalPayment}&addInfo=SPORTPRO`}
-              className="w-full h-full object-contain"
-              alt="Vietcombank QR Code"
-            />
+            <div className="flex flex-col items-center gap-3 text-primary">
+              <QrCode size={62} strokeWidth={1.4} />
+              <span className="text-xl font-black tracking-tight">PayOS</span>
+            </div>
           </div>
 
           {/* Transaction Details */}
           <div className="space-y-2 text-sm text-[#414755] font-semibold">
             <p className="text-xs font-black uppercase tracking-widest text-[#0058bc] pb-1">
-              {t("checkout.transferQr")}
+              PayOS
             </p>
             <p>
-              Bank: <strong className="text-[#1a1c1f]">Vietcombank</strong>
+              <CreditCard size={15} className="inline mr-2 text-primary" />
+              {t("checkout.payosDescription") || "Thanh toán nhanh qua QR hoặc thẻ ngân hàng"}
             </p>
             <p>
-              Account number:{" "}
-              <strong className="text-[#1a1c1f]">1234567890</strong>
-            </p>
-            <p>
-              Account holder:{" "}
-              <strong className="text-[#1a1c1f]">CONG TY SPORT PRO</strong>
-            </p>
-            <p>
-              CK Content:{" "}
-              <strong className="text-[#1a1c1f] uppercase">[Order ID]</strong>
+              {t("checkout.payosRedirect") || "Sau khi xác nhận, bạn sẽ được chuyển đến trang thanh toán PayOS."}
             </p>
           </div>
         </div>

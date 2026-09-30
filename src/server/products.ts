@@ -3,7 +3,7 @@ import { cache } from "react";
 import type { ProductDetailResponse } from "@/services/productService";
 
 function apiOrigin(): string {
-  const value = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/u, "");
+  const value = (process.env.INTERNAL_API_URL ?? process.env.NEXT_PUBLIC_API_URL)?.replace(/\/$/u, "");
   if (!value) throw new Error("NEXT_PUBLIC_API_URL is required for server product metadata");
   return value;
 }
