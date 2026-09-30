@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { orderService, PaymentMethod } from "@/services/orderService";
-import { addressService } from "@/services/addressService";
+import { addressService, AddressRequest, AddressResponse } from "@/services/addressService";
+import { couponService } from "@/services/couponService";
 import { cartService } from "@/services/cartService";
 import { apiClient, ApiResponse } from "@/lib/api-client";
+import { isValidPhoneNumber } from "@/lib/validators";
 import { toast } from "sonner";
 
 export interface CustomDesignInfo {
@@ -17,6 +19,8 @@ export interface CustomDesignInfo {
   textsCount: number;
   imagesCount: number;
   customDesignId?: number;
+  materialBasePrice: number;
+  logoUnitPrice: number;
 }
 
 export function useCheckout() {
@@ -51,15 +55,23 @@ export function useCheckout() {
 
   // Delivery states
   const [email, setEmail] = useState("athlete@example.com");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [streetAddress, setStreetAddress] = useState("");
+  const [addresses, setAddresses] = useState<AddressResponse[]>([]);
+  const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
+  const [isSubmittingNewAddress, setIsSubmittingNewAddress] = useState(false);
+  // An address entered at checkout with "save for later" unchecked — used only
+  // for this order's snapshot, never persisted to the address book.
+  const [draftAddress, setDraftAddress] = useState<AddressRequest | null>(null);
+
+  // Coupon states
+  const [couponCode, setCouponCode] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
   // Flow states
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [successOrder, setSuccessOrder] = useState<any | null>(null);
 
   // Custom design state
   const [customDesign, setCustomDesign] = useState<CustomDesignInfo | null>(null);
@@ -85,6 +97,8 @@ export function useCheckout() {
             textsCount: res.data.numTextLines,
             imagesCount: res.data.numImages,
             customDesignId: customizedItem.customDesignId,
+            materialBasePrice: res.data.materialBasePrice,
+            logoUnitPrice: res.data.logoUnitPrice,
           });
         } catch (e) {
           console.error(
@@ -106,6 +120,34 @@ export function useCheckout() {
       setCustomDesign(null);
     }
   }, [rawCart]);
+
+  const customizedItem = checkoutItems.find(
+    (item) => item.isCustomizable === true || item.customizable === true
+  );
+  const printingCost = customizedItem && customDesign ? customDesign.printingPrice : 0;
+
+  // The coupon discount is validated server-side against the pre-delivery/tax
+  // order amount (item prices + printing), not the final checkout total.
+  const couponOrderAmount = estimatedCost + printingCost;
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setIsApplyingCoupon(true);
+    try {
+      const res = await couponService.previewCoupon(couponCode.trim(), couponOrderAmount);
+      setDiscountAmount(res.data.discountAmount);
+    } catch (err: any) {
+      setDiscountAmount(0);
+      toast.error(err.message || t("checkout.fieldsError"));
+    } finally {
+      setIsApplyingCoupon(false);
+    }
+  };
+
+  const handleClearCoupon = () => {
+    setCouponCode("");
+    setDiscountAmount(0);
+  };
 
   // Remove custom design from cart
   const handleRemoveDesign = async () => {
@@ -148,35 +190,66 @@ export function useCheckout() {
     }
   };
 
-  // Load default address to pre-fill
+  // Load saved addresses and auto-select the default one
+  const fetchAddresses = async () => {
+    setIsLoadingAddresses(true);
+    try {
+      const res = await addressService.getMyAddresses();
+      setAddresses(res.data);
+      return res.data;
+    } catch (err) {
+      console.error("Failed to load user addresses", err);
+      return [];
+    } finally {
+      setIsLoadingAddresses(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchDefaultAddress = async () => {
-      try {
-        const res = await addressService.getMyAddresses();
-        const addressList = res.data;
-        if (addressList && addressList.length > 0) {
-          const defaultAddr =
-            addressList.find((a) => a.isDefault) || addressList[0];
-          setFirstName(
-            defaultAddr.receiverName.split(" ").slice(1).join(" ") ||
-              defaultAddr.receiverName
-          );
-          setLastName(defaultAddr.receiverName.split(" ")[0] || "");
-          setPhoneNumber(defaultAddr.phoneNumber);
-          setStreetAddress(
-            `${defaultAddr.detailAddress}, ${defaultAddr.ward}, ${defaultAddr.district}, ${defaultAddr.province}`
-          );
-        }
-      } catch (err) {
-        console.error("Failed to load user addresses", err);
-      }
-    };
-    fetchDefaultAddress();
+    fetchAddresses().then((list) => {
+      const defaultAddr = list.find((a) => a.isDefault) || list[0];
+      if (defaultAddr) setSelectedAddressId(defaultAddr.id);
+    });
   }, []);
 
-  const validatePhone = (phone: string) => {
-    const regex = /^(0|\+84)[0-9]{9,10}$/;
-    return regex.test(phone.trim());
+  const selectAddress = useCallback((id: number) => {
+    setSelectedAddressId(id);
+    setDraftAddress(null);
+    setIsAddingNewAddress(false);
+  }, []);
+
+  const startAddingNewAddress = useCallback(() => setIsAddingNewAddress(true), []);
+  const cancelAddingNewAddress = useCallback(() => setIsAddingNewAddress(false), []);
+
+  const submitNewAddress = useCallback(async (data: AddressRequest, saveForLater: boolean) => {
+    if (saveForLater) {
+      setIsSubmittingNewAddress(true);
+      try {
+        const res = await addressService.createAddress(data);
+        await fetchAddresses();
+        setSelectedAddressId(res.data.id);
+        setDraftAddress(null);
+      } catch (err: any) {
+        toast.error(err.message || t("profile.addresses.genericError"));
+        return;
+      } finally {
+        setIsSubmittingNewAddress(false);
+      }
+    } else {
+      setDraftAddress(data);
+      setSelectedAddressId(null);
+    }
+    setIsAddingNewAddress(false);
+  }, [t]);
+
+  // Builds the immutable shippingAddress TEXT snapshot sent to the order —
+  // Order never references UserAddress live, so later edits/deletes to the
+  // address book cannot change a placed order's shipping address.
+  const buildShippingAddressSnapshot = (
+    address: { receiverName: string; detailAddress: string; ward: string; district: string; province: string },
+    emailValue: string
+  ) => {
+    return `${address.receiverName} - ${address.detailAddress}, ${address.ward}, ${address.district}, ${address.province} (Email: ${emailValue})`;
   };
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
@@ -188,17 +261,14 @@ export function useCheckout() {
       return;
     }
 
-    if (
-      !firstName.trim() ||
-      !lastName.trim() ||
-      !phoneNumber.trim() ||
-      !streetAddress.trim()
-    ) {
+    const activeAddress = draftAddress ?? addresses.find((a) => a.id === selectedAddressId);
+
+    if (!email.trim() || !activeAddress) {
       setErrorMsg(t("checkout.fieldsError"));
       return;
     }
 
-    if (!validatePhone(phoneNumber)) {
+    if (!isValidPhoneNumber(activeAddress.phoneNumber)) {
       setErrorMsg(t("checkout.phoneError"));
       return;
     }
@@ -206,19 +276,27 @@ export function useCheckout() {
     setIsSubmitting(true);
 
     try {
-      const receiverName = `${lastName.trim()} ${firstName.trim()}`;
-      const finalShippingAddress = `${receiverName} - ${streetAddress.trim()} (Email: ${email.trim()})`;
+      const finalShippingAddress = buildShippingAddressSnapshot(activeAddress, email.trim());
 
       const orderPayload = {
         shippingAddress: finalShippingAddress,
-        phoneNumber: phoneNumber.trim(),
-        paymentMethod: PaymentMethod.BANK_TRANSFER,
+        phoneNumber: activeAddress.phoneNumber.trim(),
+        paymentMethod: PaymentMethod.PAYOS,
         cartItemIds: checkoutItems.map((item) => item.id),
+        couponCode: couponCode.trim() || undefined,
       };
 
       const orderRes = await orderService.placeOrder(orderPayload);
-      setSuccessOrder(orderRes.data);
       await refreshCart();
+
+      const paymentRes = await orderService.createPayOsPayment(orderRes.data.id);
+      if (!paymentRes.data.checkoutUrl) {
+        throw new Error("PayOS did not return a checkout URL.");
+      }
+
+      // Let PayOS handle the payment UI. Its returnUrl brings the customer
+      // back to /checkout/payment-result after the payment attempt.
+      window.location.assign(paymentRes.data.checkoutUrl);
     } catch (err: any) {
       console.error("Order failed", err);
       setErrorMsg(
@@ -233,14 +311,9 @@ export function useCheckout() {
   const isCartEmpty = checkoutItems.length === 0;
   const standardDelivery = 15;
   const expectedTax = 24;
-  const customizedItem = checkoutItems.find(
-    (item) => item.isCustomizable === true || item.customizable === true
-  );
-  const printingCost =
-    customizedItem && customDesign ? customDesign.printingPrice : 0;
   const totalPayment =
     estimatedCost > 0
-      ? estimatedCost + standardDelivery + expectedTax + printingCost
+      ? estimatedCost + standardDelivery + expectedTax + printingCost - discountAmount
       : 0;
 
   return {
@@ -253,18 +326,25 @@ export function useCheckout() {
     // Delivery form fields
     email,
     setEmail,
-    firstName,
-    setFirstName,
-    lastName,
-    setLastName,
-    phoneNumber,
-    setPhoneNumber,
-    streetAddress,
-    setStreetAddress,
+    addresses,
+    isLoadingAddresses,
+    selectedAddressId,
+    selectAddress,
+    isAddingNewAddress,
+    startAddingNewAddress,
+    cancelAddingNewAddress,
+    submitNewAddress,
+    isSubmittingNewAddress,
+    // Coupon
+    couponCode,
+    setCouponCode,
+    discountAmount,
+    isApplyingCoupon,
+    handleApplyCoupon,
+    handleClearCoupon,
     // Flow
     isSubmitting,
     errorMsg,
-    successOrder,
     handlePlaceOrder,
     // Custom design
     customDesign,

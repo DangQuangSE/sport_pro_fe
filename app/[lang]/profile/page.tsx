@@ -22,7 +22,8 @@ import {
   Gift, 
   Zap, 
   ChevronRight,
-  ShoppingBag
+  ShoppingBag,
+  MapPin
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -216,12 +217,20 @@ export default function UserProfilePage() {
             </h1>
             <p className="text-on-surface-variant font-medium text-sm">{t("profile.subtitle")}</p>
           </div>
-          <Link href={`/${locale}/profile/orders`}>
-            <Button variant="outline" className="h-12 px-6 rounded-xl font-bold uppercase tracking-widest text-[10px] gap-2 border-outline-variant hover:border-primary">
-              <ShoppingBag size={14} />
-              {t("profile.orders.title")}
-            </Button>
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            <Link href={`/${locale}/profile/addresses`}>
+              <Button variant="outline" className="h-12 px-6 rounded-xl font-bold uppercase tracking-widest text-[10px] gap-2 border-outline-variant hover:border-primary">
+                <MapPin size={14} />
+                {t("profile.addresses.title")}
+              </Button>
+            </Link>
+            <Link href={`/${locale}/profile/orders`}>
+              <Button variant="outline" className="h-12 px-6 rounded-xl font-bold uppercase tracking-widest text-[10px] gap-2 border-outline-variant hover:border-primary">
+                <ShoppingBag size={14} />
+                {t("profile.orders.title")}
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* 2-Column Grid */}

@@ -1,0 +1,29 @@
+name: sport-pro-fe-oracle
+
+services:
+  web:
+    container_name: sport_pro_fe_web
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?NEXT_PUBLIC_API_URL is required}
+    restart: unless-stopped
+    env_file:
+      - path: .env.production
+        required: true
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+      INTERNAL_API_URL: ${INTERNAL_API_URL:-http://api:8080/api}
+    ports:
+      - "127.0.0.1:${WEB_PORT:-3000}:3000"
+    networks:
+      - default
+      - backend
+
+networks:
+  backend:
+    external: true
+    name: sport_pro_oracle_internal

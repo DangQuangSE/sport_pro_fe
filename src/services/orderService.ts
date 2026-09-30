@@ -3,12 +3,14 @@ import { apiClient, ApiResponse } from "@/lib/api-client";
 export enum PaymentMethod {
   COD = "COD",
   BANK_TRANSFER = "BANK_TRANSFER",
-  CREDIT_CARD = "CREDIT_CARD"
+  CREDIT_CARD = "CREDIT_CARD",
+  PAYOS = "PAYOS"
 }
 
 export enum OrderStatus {
   PENDING = "PENDING",
   CONFIRMED = "CONFIRMED",
+  PROCESSING = "PROCESSING",
   SHIPPED = "SHIPPED",
   DELIVERED = "DELIVERED",
   CANCELLED = "CANCELLED",
@@ -49,6 +51,17 @@ export interface OrderRequest {
   cartItemIds: number[];
 }
 
+export interface PayOsPaymentResponse {
+  orderCode: number;
+  amount: number;
+  currency?: string;
+  paymentLinkId: string;
+  checkoutUrl: string;
+  qrCode?: string;
+  status?: string;
+  expiredAt?: number;
+}
+
 export const orderService = {
   placeOrder: (data: OrderRequest) => {
     return apiClient.post<ApiResponse<OrderResponse>>("/v1/orders", data);
@@ -61,5 +74,9 @@ export const orderService = {
 
   getOrderDetails: (orderId: number) => {
     return apiClient.get<ApiResponse<OrderResponse>>(`/v1/orders/${orderId}`);
+  },
+
+  createPayOsPayment: (orderId: number) => {
+    return apiClient.post<ApiResponse<PayOsPaymentResponse>>(`/v1/payments/payos/orders/${orderId}`);
   }
 };

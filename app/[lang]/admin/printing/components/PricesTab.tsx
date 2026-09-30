@@ -26,7 +26,11 @@ export default function PricesTab({
   containerVariants,
   itemVariants
 }: PricesTabProps) {
-  if (priceConfigs.length === 0) {
+  // TEXT unit price no longer factors into printing price calculation
+  // (formula is now material.basePrice × numTextLines) — hide it from admin.
+  const visiblePriceConfigs = priceConfigs.filter((cfg) => cfg.type !== "TEXT");
+
+  if (visiblePriceConfigs.length === 0) {
     return (
       <div className="text-center py-24 bg-surface rounded-[2rem] border-2 border-dashed border-outline-variant text-on-surface-variant font-medium italic">
         <DollarSign size={48} className="mx-auto text-outline-variant mb-4 animate-bounce" />
@@ -43,7 +47,7 @@ export default function PricesTab({
         animate="show"
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
       >
-        {priceConfigs.map((cfg) => (
+        {visiblePriceConfigs.map((cfg) => (
           <motion.div
             key={cfg.id}
             variants={itemVariants}
@@ -111,7 +115,7 @@ export default function PricesTab({
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant font-medium">
-            {priceConfigs.map((cfg) => (
+            {visiblePriceConfigs.map((cfg) => (
               <tr key={cfg.id} className="hover:bg-surface-variant/10 transition-colors group">
                 <td className="px-8 py-5 font-mono text-sm text-on-surface font-semibold">#{cfg.id}</td>
                 <td className="px-8 py-5">

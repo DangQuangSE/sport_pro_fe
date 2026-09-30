@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { apiClient, ApiResponse } from "@/lib/api-client";
 import { customDesignService } from "@/services/customDesignService";
@@ -128,21 +128,30 @@ export function useCustomizer() {
     fetchConfigs();
   }, []);
 
+  // Price breakdown, Formula: (material.basePrice × numTextLines) + (logoUnitPrice × numImages)
+  const priceBreakdown = useMemo(() => {
+    const logoUnitPrice = (priceConfigs.find(c => c.type === "IMAGE") || defaultPriceConfigs[1]).unitPrice;
+    const materialBasePrice = selectedMaterial?.basePrice || 0;
+    const materialCost = materialBasePrice * texts.length;
+    const logoCost = images.length * logoUnitPrice;
+
+    return {
+      materialBasePrice,
+      textsCount: texts.length,
+      materialCost,
+      logoUnitPrice,
+      imagesCount: images.length,
+      logoCost,
+      total: materialCost + logoCost
+    };
+  }, [selectedMaterial, texts.length, images.length, priceConfigs]);
+
   // Recalculate Printing Price
   useEffect(() => {
     if (!selectedMaterial) return;
-
-    const textConfig = priceConfigs.find(c => c.type === "TEXT") || defaultPriceConfigs[0];
-    const imageConfig = priceConfigs.find(c => c.type === "IMAGE") || defaultPriceConfigs[1];
-
-    const materialBaseCost = selectedMaterial.basePrice;
-    const textExtraCost = texts.length * textConfig.unitPrice;
-    const imageExtraCost = images.length * imageConfig.unitPrice;
-
-    const calculatedPrinting = materialBaseCost + textExtraCost + imageExtraCost;
-    setPrintingPrice(calculatedPrinting);
-    setTotalPrice(productBasePrice + calculatedPrinting);
-  }, [selectedMaterial, texts, images, priceConfigs, productBasePrice]);
+    setPrintingPrice(priceBreakdown.total);
+    setTotalPrice(productBasePrice + priceBreakdown.total);
+  }, [selectedMaterial, priceBreakdown, productBasePrice]);
 
   // Add Text Layer
   const handleAddText = (e: React.FormEvent) => {
@@ -396,7 +405,9 @@ export function useCustomizer() {
       designImageUrl: designImageUrl,
       textsCount: texts.length,
       imagesCount: images.length,
-      customDesignId: designId
+      customDesignId: designId,
+      materialBasePrice: priceBreakdown.materialBasePrice,
+      logoUnitPrice: priceBreakdown.logoUnitPrice
     };
     localStorage.setItem("sport_pro_custom_design", JSON.stringify(customDesignLocalData));
 
@@ -468,6 +479,7 @@ export function useCustomizer() {
     isLoading,
     totalPrice,
     printingPrice,
+    priceBreakdown,
     handleAddText,
     handleRemoveText,
     handleImageUpload,

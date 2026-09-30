@@ -243,7 +243,7 @@ export default function AdminPrintingPage() {
         >
           <span className="flex items-center gap-2">
             <DollarSign size={14} />
-            Đơn giá thành phần ({priceConfigs.length})
+            Đơn giá thành phần ({priceConfigs.filter((c) => c.type !== "TEXT").length})
           </span>
         </button>
         <button

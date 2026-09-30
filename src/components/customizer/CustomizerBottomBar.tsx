@@ -4,10 +4,20 @@ import React from "react";
 import { Info, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+interface PriceBreakdown {
+  readonly materialBasePrice: number;
+  readonly textsCount: number;
+  readonly materialCost: number;
+  readonly logoUnitPrice: number;
+  readonly imagesCount: number;
+  readonly logoCost: number;
+}
+
 interface CustomizerBottomBarProps {
   readonly totalPrice: number;
   readonly printingPrice: number;
   readonly selectedMaterialName: string;
+  readonly priceBreakdown: PriceBreakdown;
   readonly handleResetDesign: () => void;
   readonly handleConfirmAndReturn: () => void;
   readonly formatCurrency: (amt: number) => string;
@@ -18,11 +28,13 @@ export default function CustomizerBottomBar({
   totalPrice,
   printingPrice,
   selectedMaterialName,
+  priceBreakdown,
   handleResetDesign,
   handleConfirmAndReturn,
   formatCurrency,
   locale
 }: CustomizerBottomBarProps) {
+  const { materialBasePrice, textsCount, materialCost, logoUnitPrice, imagesCount, logoCost } = priceBreakdown;
   return (
     <div className="w-full bg-white border-t border-[#e2e2e7] p-5 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] sticky bottom-0 z-40">
       <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-left">
@@ -39,7 +51,12 @@ export default function CustomizerBottomBar({
             <span className="flex items-center gap-1.5 font-bold uppercase text-primary mb-0.5">
               <Info size={12} /> Giá in thêm: {formatCurrency(printingPrice)}
             </span>
-            Bao gồm giá phôi {selectedMaterialName || "in"} và đơn giá tăng thêm theo số lớp chữ/logo.
+            <span className="block">
+              {selectedMaterialName || "in"}: {formatCurrency(materialBasePrice)} × {textsCount} lớp chữ = {formatCurrency(materialCost)}
+            </span>
+            <span className="block">
+              Logo: {formatCurrency(logoUnitPrice)} × {imagesCount} = {formatCurrency(logoCost)}
+            </span>
           </div>
         </div>
 

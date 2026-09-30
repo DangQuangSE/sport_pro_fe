@@ -8,9 +8,8 @@ import { useCheckout } from "@/hooks/useCheckout";
 
 import { CheckoutHeader } from "@/components/checkout/CheckoutHeader";
 import { CheckoutFooter } from "@/components/checkout/CheckoutFooter";
-import { OrderSuccessPage } from "@/components/checkout/OrderSuccessPage";
 import { CartItemsList } from "@/components/checkout/CartItemsList";
-import { DeliveryInfoForm } from "@/components/checkout/DeliveryInfoForm";
+import { CheckoutAddressPicker } from "@/components/checkout/CheckoutAddressPicker";
 import { PaymentMethodCard } from "@/components/checkout/PaymentMethodCard";
 import { OrderOverviewCard } from "@/components/checkout/OrderOverviewCard";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -22,13 +21,23 @@ export default function CheckoutPage() {
     updateQuantity,
     removeFromCart,
     email, setEmail,
-    firstName, setFirstName,
-    lastName, setLastName,
-    phoneNumber, setPhoneNumber,
-    streetAddress, setStreetAddress,
+    addresses,
+    isLoadingAddresses,
+    selectedAddressId,
+    selectAddress,
+    isAddingNewAddress,
+    startAddingNewAddress,
+    cancelAddingNewAddress,
+    submitNewAddress,
+    isSubmittingNewAddress,
+    couponCode,
+    setCouponCode,
+    discountAmount,
+    isApplyingCoupon,
+    handleApplyCoupon,
+    handleClearCoupon,
     isSubmitting,
     errorMsg,
-    successOrder,
     handlePlaceOrder,
     customDesign,
     handleRemoveDesign,
@@ -40,11 +49,6 @@ export default function CheckoutPage() {
     t,
     locale,
   } = useCheckout();
-
-  // Show success receipt when order is placed
-  if (successOrder) {
-    return <OrderSuccessPage successOrder={successOrder} locale={locale} t={t} />;
-  }
 
   return (
     <div className="flex flex-col min-h-screen bg-[#f9f9fe] font-sans antialiased text-[#1a1c1f]">
@@ -112,17 +116,18 @@ export default function CheckoutPage() {
               />
 
               {/* Card B: Delivery Information */}
-              <DeliveryInfoForm
+              <CheckoutAddressPicker
                 email={email}
-                firstName={firstName}
-                lastName={lastName}
-                phoneNumber={phoneNumber}
-                streetAddress={streetAddress}
                 onEmailChange={setEmail}
-                onFirstNameChange={setFirstName}
-                onLastNameChange={setLastName}
-                onPhoneNumberChange={setPhoneNumber}
-                onStreetAddressChange={setStreetAddress}
+                addresses={addresses}
+                isLoadingAddresses={isLoadingAddresses}
+                selectedAddressId={selectedAddressId}
+                onSelectAddress={selectAddress}
+                isAddingNewAddress={isAddingNewAddress}
+                onStartAddNew={startAddingNewAddress}
+                onCancelAddNew={cancelAddingNewAddress}
+                onSubmitNewAddress={submitNewAddress}
+                isSubmittingNewAddress={isSubmittingNewAddress}
                 t={t}
               />
 
@@ -139,9 +144,15 @@ export default function CheckoutPage() {
               standardDelivery={standardDelivery}
               expectedTax={expectedTax}
               totalPayment={totalPayment}
-              isSubmitting={isSubmitting}
+              isSubmitting={isSubmitting || isLoadingAddresses}
               locale={locale}
               t={t}
+              couponCode={couponCode}
+              onCouponCodeChange={setCouponCode}
+              discountAmount={discountAmount}
+              isApplyingCoupon={isApplyingCoupon}
+              onApplyCoupon={handleApplyCoupon}
+              onClearCoupon={handleClearCoupon}
             />
           </form>
         )}
