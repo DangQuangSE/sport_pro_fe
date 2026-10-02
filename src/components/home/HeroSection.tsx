@@ -2,10 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { HERO_SHOE_IMAGE, HERO_INLINE_IMAGE } from "@/data/homeData";
 import { Truck, BadgeCheck, RefreshCw } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
 
 // ─── Trust Indicator sub-component ───────────────────────────────────────────
 interface TrustItemProps {
@@ -27,6 +31,31 @@ function TrustItem({ icon, label }: Readonly<TrustItemProps>) {
 // ─── HeroSection ─────────────────────────────────────────────────────────────
 export default function HeroSection() {
   const { t, locale } = useTranslation();
+  const router = useRouter();
+  const { isLoading: isAuthLoading } = useAuth();
+  const { cart, isLoading: isCartLoading } = useCart();
+
+  const handleDesignNow = () => {
+    if (isAuthLoading || isCartLoading) {
+      toast.info(
+        t("home.hero.cartChecking") ||
+          (locale === "vi" ? "Đang kiểm tra giỏ hàng..." : "Checking your cart...")
+      );
+      return;
+    }
+
+    if (!cart?.items?.length) {
+      toast.info(
+        t("home.hero.emptyDesignCart") ||
+          (locale === "vi"
+            ? "Chưa có sản phẩm nào để thiết kế. Vui lòng thêm sản phẩm vào giỏ hàng trước."
+            : "There are no products to design yet. Add a product to your cart first.")
+      );
+      return;
+    }
+
+    router.push(`/${locale}/cart`);
+  };
 
   return (
     <section
@@ -90,8 +119,9 @@ export default function HeroSection() {
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <Link
-            href={`/${locale}/customizer`}
+          <button
+            type="button"
+            onClick={handleDesignNow}
             className={cn(
               "bg-secondary-container text-white text-center",
               "font-semibold text-[12px] uppercase tracking-[0.05em]",
@@ -102,7 +132,7 @@ export default function HeroSection() {
             )}
           >
             {t("home.hero.ctaPrimary")}
-          </Link>
+          </button>
           <Link
             href={`/${locale}/products`}
             className={cn(

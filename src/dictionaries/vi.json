@@ -66,6 +66,8 @@
       "loadingCategories": "Đang tải danh mục..."
     },
     "hero": {
+      "cartChecking": "Đang kiểm tra giỏ hàng...",
+      "emptyDesignCart": "Chưa có sản phẩm nào để thiết kế. Vui lòng thêm sản phẩm vào giỏ hàng trước.",
       "overline": "XƯỞNG MAY ĐỒNG PHỤC QUANG VINH",
       "title": "Phong cách của Bạn,",
       "titlePunctuation": "In không giới hạn.",
