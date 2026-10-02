@@ -66,6 +66,8 @@
       "loadingCategories": "Loading categories..."
     },
     "hero": {
+      "cartChecking": "Checking your cart...",
+      "emptyDesignCart": "There are no products to design yet. Add a product to your cart first.",
       "overline": "QUANG VINH CUSTOM APPAREL",
       "title": "Your Style,",
       "titlePunctuation": "Limitless Printing.",
