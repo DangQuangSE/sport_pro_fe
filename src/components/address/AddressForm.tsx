@@ -26,6 +26,21 @@ const EMPTY_FORM: AddressRequest = {
   isDefault: false
 };
 
+function RequiredFieldLabel({
+  htmlFor,
+  children
+}: {
+  htmlFor: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Label htmlFor={htmlFor}>
+      {children}
+      <span className="ml-1 text-error" aria-hidden="true">*</span>
+    </Label>
+  );
+}
+
 export function AddressForm({ formId, initialData, onSubmit, isLoading }: AddressFormProps) {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<AddressRequest>(EMPTY_FORM);
@@ -60,7 +75,9 @@ export function AddressForm({ formId, initialData, onSubmit, isLoading }: Addres
   return (
     <form id={formId} onSubmit={handleSubmit} className="space-y-5">
       <div className="space-y-2">
-        <Label htmlFor="address-receiver-name">{t("profile.addresses.receiverName")}</Label>
+        <RequiredFieldLabel htmlFor="address-receiver-name">
+          {t("profile.addresses.receiverName")}
+        </RequiredFieldLabel>
         <Input
           id="address-receiver-name"
           value={formData.receiverName}
@@ -72,7 +89,9 @@ export function AddressForm({ formId, initialData, onSubmit, isLoading }: Addres
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="address-phone">{t("profile.addresses.phoneNumber")}</Label>
+        <RequiredFieldLabel htmlFor="address-phone">
+          {t("profile.addresses.phoneNumber")}
+        </RequiredFieldLabel>
         <Input
           id="address-phone"
           value={formData.phoneNumber}
@@ -87,9 +106,11 @@ export function AddressForm({ formId, initialData, onSubmit, isLoading }: Addres
         {phoneError && <p className="text-xs font-medium text-error">{phoneError}</p>}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="address-province">{t("profile.addresses.province")}</Label>
+          <RequiredFieldLabel htmlFor="address-province">
+            {t("profile.addresses.province")}
+          </RequiredFieldLabel>
           <Input
             id="address-province"
             value={formData.province}
@@ -99,8 +120,11 @@ export function AddressForm({ formId, initialData, onSubmit, isLoading }: Addres
             className={INPUT_CLASS}
           />
         </div>
+
         <div className="space-y-2">
-          <Label htmlFor="address-district">{t("profile.addresses.district")}</Label>
+          <RequiredFieldLabel htmlFor="address-district">
+            {t("profile.addresses.district")}
+          </RequiredFieldLabel>
           <Input
             id="address-district"
             value={formData.district}
@@ -110,8 +134,11 @@ export function AddressForm({ formId, initialData, onSubmit, isLoading }: Addres
             className={INPUT_CLASS}
           />
         </div>
+
         <div className="space-y-2">
-          <Label htmlFor="address-ward">{t("profile.addresses.ward")}</Label>
+          <RequiredFieldLabel htmlFor="address-ward">
+            {t("profile.addresses.ward")}
+          </RequiredFieldLabel>
           <Input
             id="address-ward"
             value={formData.ward}
@@ -124,7 +151,9 @@ export function AddressForm({ formId, initialData, onSubmit, isLoading }: Addres
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="address-detail">{t("profile.addresses.detailAddress")}</Label>
+        <RequiredFieldLabel htmlFor="address-detail">
+          {t("profile.addresses.detailAddress")}
+        </RequiredFieldLabel>
         <Input
           id="address-detail"
           value={formData.detailAddress}
