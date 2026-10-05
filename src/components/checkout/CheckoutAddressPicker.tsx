@@ -61,6 +61,7 @@ export function CheckoutAddressPicker({
       <div className="space-y-2 mt-6">
         <label className="text-[9px] font-black uppercase tracking-widest text-[#414755]">
           {t("checkout.emailAddress")}
+          <span className="ml-1 text-error" aria-hidden="true">*</span>
         </label>
         <input
           type="email"
