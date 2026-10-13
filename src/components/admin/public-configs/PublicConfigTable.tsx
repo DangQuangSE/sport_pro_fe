@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Settings, Image as ImageIcon, ExternalLink, Check, X } from "lucide-react";
+import { Image as ImageIcon, ExternalLink, Check, X } from "lucide-react";
 import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
 import { PublicConfig } from "@/services/adminService";
 import { 
@@ -75,7 +75,7 @@ export function PublicConfigTable({
         return (
           <Badge variant={isTrue ? "success" : "secondary"} className="gap-1">
             {isTrue ? <Check size={12} /> : <X size={12} />}
-            {isTrue ? "True" : "False"}
+            {isTrue ? t("admin.publicConfigs.form.booleanOptions.true") : t("admin.publicConfigs.form.booleanOptions.false")}
           </Badge>
         );
       case "NUMBER":
@@ -104,6 +104,8 @@ export function PublicConfigTable({
             <TableHead>{t("admin.publicConfigs.table.key")}</TableHead>
             <TableHead>{t("admin.publicConfigs.table.type")}</TableHead>
             <TableHead>{t("admin.publicConfigs.table.value")}</TableHead>
+            <TableHead>{t("admin.publicConfigs.table.groupUnit")}</TableHead>
+            <TableHead>{t("admin.publicConfigs.table.status")}</TableHead>
             <TableHead>{t("admin.publicConfigs.table.description")}</TableHead>
             <TableHead className="text-right">{t("admin.publicConfigs.table.actions")}</TableHead>
           </TableRow>
@@ -112,14 +114,14 @@ export function PublicConfigTable({
           {isLoading ? (
             Array.from({ length: 5 }).map((_, i) => (
               <TableRow key={i}>
-                {Array.from({ length: 6 }).map((_, j) => (
+                {Array.from({ length: 8 }).map((_, j) => (
                   <TableCell key={j}><Skeleton className="h-6 w-full" /></TableCell>
                 ))}
               </TableRow>
             ))
           ) : configs.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="h-32 text-center text-on-surface-variant italic">
+              <TableCell colSpan={8} className="h-32 text-center text-on-surface-variant italic">
                 {t("admin.publicConfigs.table.empty")}
               </TableCell>
             </TableRow>
@@ -139,6 +141,18 @@ export function PublicConfigTable({
                 </TableCell>
                 <TableCell>
                   {renderValuePreview(config)}
+                </TableCell>
+                <TableCell className="text-xs text-on-surface-variant">
+                  <span className="font-semibold">{config.category || t("admin.publicConfigs.table.emptyValue")}</span>
+                  {config.unit && <span className="block font-mono text-[10px]">{config.unit}</span>}
+                </TableCell>
+                <TableCell>
+                  <Badge variant={config.active === false ? "secondary" : "success"}>
+                    {config.active === false ? t("admin.publicConfigs.table.off") : t("admin.publicConfigs.table.on")}
+                  </Badge>
+                  {config.version !== undefined && <span className="block mt-1 text-[10px] text-on-surface-variant">{t("admin.publicConfigs.table.version").replace("{version}", String(config.version))}</span>}
+                  {config.updatedBy !== undefined && <span className="block text-[10px] text-on-surface-variant">{t("admin.publicConfigs.table.updatedBy").replace("{id}", String(config.updatedBy))}</span>}
+                  {config.updatedAt && <span className="block text-[10px] text-on-surface-variant">{new Date(config.updatedAt).toLocaleString()}</span>}
                 </TableCell>
                 <TableCell className="text-on-surface-variant text-xs max-w-[200px] truncate">
                   {config.description || <span className="italic text-outline/60">{t("admin.publicConfigs.table.noDescription")}</span>}

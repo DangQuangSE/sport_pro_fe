@@ -46,6 +46,8 @@ export default function CheckoutPage() {
     expectedTax,
     printingCost,
     totalPayment,
+    isQuoteLoading,
+    quoteError,
     t,
     locale,
   } = useCheckout();
@@ -144,7 +146,9 @@ export default function CheckoutPage() {
               standardDelivery={standardDelivery}
               expectedTax={expectedTax}
               totalPayment={totalPayment}
-              isSubmitting={isSubmitting || isLoadingAddresses}
+              isQuoteLoading={isQuoteLoading}
+              quoteError={quoteError}
+              isSubmitting={isSubmitting || isLoadingAddresses || isQuoteLoading || !!quoteError}
               locale={locale}
               t={t}
               couponCode={couponCode}

@@ -4,10 +4,38 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 import { BRAND_CONFIG } from "@/constants/brand";
+import { useEffect, useState } from "react";
+import {
+  getLocalizedPublicContent,
+  getSafePublicUrl,
+  publicConfigService,
+  type PublicContentMap,
+} from "@/services/publicConfigService";
 
 // ─── Footer ──────────────────────────────────────────────────────────────────
 export default function Footer() {
   const { t, locale } = useTranslation();
+  const [content, setContent] = useState<PublicContentMap>({});
+
+  useEffect(() => {
+    let mounted = true;
+    publicConfigService.getConfigsMap().then((configs) => {
+      if (mounted) setContent(configs);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const publicLink = (key: keyof PublicContentMap) =>
+    getSafePublicUrl(content[key], "#");
+
+  const description = getLocalizedPublicContent(
+    content,
+    "footer.description",
+    locale,
+    t("home.footer.description"),
+  );
 
   const FOOTER_COLUMNS = [
     {
@@ -25,11 +53,11 @@ export default function Footer() {
       id: "support",
       heading: t("home.footer.columns.support"),
       links: [
-        { id: "contact", label: t("home.footer.links.contact"), href: "#" },
-        { id: "returns", label: t("home.footer.links.returns"), href: "#" },
-        { id: "tracking", label: t("home.footer.links.orderTracking"), href: "#" },
-        { id: "size", label: t("home.footer.links.sizeGuide"), href: "#" },
-        { id: "faq", label: t("home.footer.links.faq"), href: "#" },
+        { id: "contact", label: t("home.footer.links.contact"), href: publicLink("footer.contact_url") },
+        { id: "returns", label: t("home.footer.links.returns"), href: publicLink("footer.returns_url") },
+        { id: "tracking", label: t("home.footer.links.orderTracking"), href: publicLink("footer.tracking_url") },
+        { id: "size", label: t("home.footer.links.sizeGuide"), href: publicLink("footer.size_guide_url") },
+        { id: "faq", label: t("home.footer.links.faq"), href: publicLink("footer.faq_url") },
       ],
     },
     {
@@ -64,7 +92,7 @@ export default function Footer() {
             />
           </Link>
           <p className="text-[14px] leading-[1.6] text-on-surface-variant">
-            {t("home.footer.description")}
+            {description}
           </p>
         </div>
 

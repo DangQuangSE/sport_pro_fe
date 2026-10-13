@@ -317,6 +317,36 @@ export const adminService = {
   getPublicConfigs: () => {
     return apiClient.get<ApiResponse<PublicConfig[]>>("/public-configs");
   },
+  getAdminSettings: () => {
+    return apiClient.get<ApiResponse<PublicConfig[]>>("/admin/settings");
+  },
+  createAdminSetting: (data: PublicConfigRequest) => {
+    return apiClient.post<ApiResponse<PublicConfig>>("/admin/settings", data);
+  },
+  updateAdminSetting: (key: string, data: PublicConfigUpdateRequest) => {
+    return apiClient.put<ApiResponse<PublicConfig>>(`/admin/settings/${key}`, data);
+  },
+  setAdminSettingActive: (key: string, data: SettingActivationRequest) => {
+    return apiClient.patch<ApiResponse<void>>(`/admin/settings/${key}/active`, data);
+  },
+  deleteAdminSetting: (key: string, expectedVersion: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/admin/settings/${key}?expectedVersion=${expectedVersion}`);
+  },
+  getMembershipTiers: (active?: boolean) => {
+    return apiClient.get<ApiResponse<MembershipTierAdmin[]>>(`/v1/admin/membership-tiers${active === undefined ? "" : `?active=${active}`}`);
+  },
+  createMembershipTier: (data: MembershipTierRequest) => {
+    return apiClient.post<ApiResponse<MembershipTierAdmin>>("/v1/admin/membership-tiers", data);
+  },
+  updateMembershipTier: (code: string, data: MembershipTierRequest) => {
+    return apiClient.put<ApiResponse<MembershipTierAdmin>>(`/v1/admin/membership-tiers/${encodeURIComponent(code)}`, data);
+  },
+  setMembershipTierActive: (code: string, active: boolean, expectedVersion: number) => {
+    return apiClient.patch<ApiResponse<void>>(`/v1/admin/membership-tiers/${encodeURIComponent(code)}/active?active=${active}&expectedVersion=${expectedVersion}`);
+  },
+  deleteMembershipTier: (code: string, expectedVersion: number) => {
+    return apiClient.delete<ApiResponse<void>>(`/v1/admin/membership-tiers/${encodeURIComponent(code)}?expectedVersion=${expectedVersion}`);
+  },
   createPublicConfig: (data: PublicConfigRequest) => {
     return apiClient.post<ApiResponse<PublicConfig>>("/admin/public-configs", data);
   },
@@ -392,6 +422,13 @@ export interface PublicConfig {
   description?: string;
   createdAt?: string;
   updatedAt?: string;
+  category?: string;
+  unit?: string;
+  scope?: "PUBLIC" | "INTERNAL";
+  active?: boolean;
+  validationRules?: string;
+  version?: number;
+  updatedBy?: number;
 }
 
 export interface PublicConfigRequest {
@@ -399,10 +436,53 @@ export interface PublicConfigRequest {
   configValue: string;
   configType: "TEXT" | "IMAGE" | "COLOR" | "NUMBER" | "BOOLEAN";
   description?: string;
+  category?: string;
+  unit?: string;
+  scope?: "PUBLIC" | "INTERNAL";
+  active?: boolean;
+  validationRules?: string;
 }
 
 export interface PublicConfigUpdateRequest {
   configValue: string;
   description?: string;
+  category?: string;
+  unit?: string;
+  scope?: "PUBLIC" | "INTERNAL";
+  active?: boolean;
+  validationRules?: string;
+  expectedVersion?: number;
+}
+
+export interface SettingActivationRequest {
+  active: boolean;
+  expectedVersion: number;
+}
+
+export interface MembershipTierAdmin {
+  id: number;
+  code: string;
+  displayNames: Record<string, string>;
+  descriptions: Record<string, string>;
+  threshold: number;
+  sortOrder: number;
+  discountPercentage: number;
+  freeShipping: boolean;
+  benefits: Record<string, unknown>;
+  active: boolean;
+  version: number;
+}
+
+export interface MembershipTierRequest {
+  code?: string;
+  displayNames: Record<string, string>;
+  descriptions: Record<string, string>;
+  threshold: number;
+  sortOrder: number;
+  discountPercentage: number;
+  freeShipping: boolean;
+  benefits: Record<string, unknown>;
+  active?: boolean;
+  expectedVersion?: number;
 }
 

@@ -128,6 +128,11 @@
       "copyright": "© 2026 ĐỒNG PHỤC QUANG VINH. CHẤT LƯỢNG VÀ UY TÍN. BẢO LƯU MỌI QUYỀN."
     }
   },
+  "homeZalo": {
+    "ariaLabel": "Liên hệ qua Zalo",
+    "alt": "Liên hệ Zalo",
+    "tooltip": "Chat với chúng tôi qua Zalo"
+  },
   "product": {
     "details": {
       "inStock": "Còn hàng - Sẵn sàng vận chuyển",
@@ -145,7 +150,6 @@
       "addedToBag": "Đã thêm vào giỏ hàng!",
       "selectColor": "Chọn màu sắc",
       "selectSize": "Chọn kích cỡ",
-      "wishlist": "Thêm vào Yêu thích",
       "noReviews": "Chưa có đánh giá nào",
       "reviewsCount": "({count} đánh giá)",
       "description": "Mô tả sản phẩm",
@@ -154,7 +158,8 @@
       "quickView": "Xem nhanh",
       "zoomIn": "Phóng to",
       "zoomOut": "Thu nhỏ",
-      "resetDesign": "Đặt lại thiết kế"
+      "resetDesign": "Đặt lại thiết kế",
+      "addToBagError": "Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại."
     },
     "related": {
       "title": "Có thể bạn cũng thích"
@@ -508,7 +513,20 @@
         "noCustomLogo": "Không có ảnh logo nào.",
         "noDesignData": "Không có dữ liệu thiết kế.",
         "close": "Đóng",
-        "openOriginal": "Mở Ảnh Gốc"
+        "openOriginal": "Mở Ảnh Gốc",
+        "loadError": "Không thể tải chi tiết đơn hàng hoặc đơn hàng không tồn tại.",
+        "customDesignLoadError": "Không thể tải thông tin thiết kế in ấn.",
+        "statusUpdateSuccess": "Cập nhật trạng thái đơn hàng thành {status} thành công",
+        "statusUpdateError": "Cập nhật trạng thái đơn hàng thất bại.",
+        "notAvailable": "—"
+      },
+      "pricing": {
+        "breakdownSaved": "Đã lưu breakdown",
+        "legacyBreakdown": "Breakdown đơn cũ",
+        "printing": "Phí in",
+        "discount": "Giảm hạng / mã giảm giá",
+        "shipping": "Phí vận chuyển",
+        "legacyMessage": "Đơn hàng cũ: backend không lưu breakdown theo pricing engine mới nên không suy diễn phí cũ."
       }
     },
     "productForm": {
@@ -620,7 +638,13 @@
         "noDescription": "Không có mô tả",
         "noImage": "(Không có ảnh)",
         "emptyValue": "(Trống)",
-        "notConfigured": "(Chưa cấu hình)"
+        "notConfigured": "(Chưa cấu hình)",
+        "groupUnit": "Nhóm / đơn vị",
+        "status": "Trạng thái",
+        "on": "Bật",
+        "off": "Tắt",
+        "updatedBy": "bởi #{id}",
+        "version": "v{version}"
       },
       "form": {
         "addTitle": "Thêm Cấu hình Hệ thống",
@@ -646,14 +670,86 @@
         "imagePreview": "Đường dẫn ảnh đang dùng: {url}",
         "cancel": "Hủy bỏ",
         "create": "Tạo cấu hình",
-        "save": "Lưu thay đổi"
+        "save": "Lưu thay đổi",
+        "categoryLabel": "Nhóm",
+        "unitLabel": "Đơn vị",
+        "unitPlaceholder": "VND, %, days...",
+        "activeLabel": "Kích hoạt cấu hình",
+        "scopeLabel": "Phạm vi hiển thị",
+        "scopeOptions": {
+          "public": "Công khai",
+          "internal": "Nội bộ"
+        },
+        "categories": {
+          "commerce": "Thương mại",
+          "membership": "Hạng thành viên",
+          "checkout": "Thanh toán / Chính sách",
+          "content": "Nội dung website"
+        }
       },
       "messages": {
         "createSuccess": "Tạo cấu hình hệ thống thành công!",
         "updateSuccess": "Cập nhật cấu hình thành công!",
         "deleteSuccess": "Xóa cấu hình thành công!",
         "deleteConfirm": "Bạn có chắc chắn muốn xóa cấu hình \"{key}\" này không?",
-        "error": "Đã có lỗi xảy ra. Vui lòng thử lại."
+        "error": "Đã có lỗi xảy ra. Vui lòng thử lại.",
+        "conflict": "Cấu hình đã thay đổi ở phiên khác. Đã tải lại dữ liệu mới nhất; hãy so sánh rồi thử lại.",
+        "versionMissing": "Thiếu phiên bản cấu hình. Hãy tải lại trang rồi thử lại."
+      },
+      "tabs": {
+        "commerce": "Thương mại",
+        "membership": "Hạng thành viên",
+        "checkout": "Thanh toán / Chính sách",
+        "content": "Nội dung website"
+      }
+    },
+    "membershipTiers": {
+      "title": "Hạng thành viên",
+      "description": "Ngưỡng chi tiêu, giảm giá và miễn phí vận chuyển được quản lý từ backend.",
+      "reload": "Tải lại",
+      "add": "Thêm hạng",
+      "columns": {
+        "code": "Mã",
+        "threshold": "Ngưỡng (VND)",
+        "discount": "Giảm giá",
+        "freeShipping": "Miễn ship",
+        "sortOrder": "Thứ tự",
+        "version": "Phiên bản",
+        "actions": "Thao tác"
+      },
+      "active": {
+        "on": "Bật",
+        "off": "Tắt",
+        "yes": "Có",
+        "no": "Không"
+      },
+      "modal": {
+        "edit": "Sửa hạng {code}",
+        "create": "Thêm hạng thành viên"
+      },
+      "fields": {
+        "code": "Mã hạng",
+        "sortOrder": "Thứ tự",
+        "threshold": "Ngưỡng chi tiêu (VND)",
+        "discount": "Giảm giá (%)",
+        "nameVi": "Tên tiếng Việt",
+        "nameEn": "Tên tiếng Anh",
+        "freeShipping": "Miễn phí vận chuyển"
+      },
+      "buttons": {
+        "cancel": "Hủy",
+        "save": "Lưu"
+      },
+      "messages": {
+        "loadError": "Không thể tải cấu hình hạng thành viên.",
+        "saveSuccess": "Đã lưu cấu hình hạng thành viên.",
+        "conflict": "Cấu hình đã thay đổi ở phiên khác. Đã tải lại dữ liệu mới nhất; hãy so sánh rồi lưu lại.",
+        "saveError": "Không thể lưu cấu hình hạng.",
+        "toggleError": "Không thể cập nhật trạng thái hạng.",
+        "deleteConfirm": "Xóa hạng {code}? Backend sẽ từ chối nếu hạng đang được tham chiếu.",
+        "deleteSuccess": "Đã xóa hạng thành viên.",
+        "deleteConflict": "Hạng đã thay đổi hoặc đang được tham chiếu. Đã tải lại dữ liệu mới nhất.",
+        "deleteError": "Không thể xóa hạng thành viên."
       }
     }
   },
@@ -713,7 +809,6 @@
     "couponCode": "MÃ GIẢM GIÁ",
     "couponPlaceholder": "Nhập mã giảm giá",
     "applyCoupon": "Áp dụng",
-    "discount": "Giảm giá",
     "removeCoupon": "Xóa mã",
     "customizeButton": "TÙY CHỈNH IN CHỮ & LOGO",
     "confirmButton": "XÁC NHẬN & GỬI ĐƠN HÀNG",
@@ -728,7 +823,48 @@
       "productInactive": "Sản phẩm tạm thời ngừng kinh doanh",
       "outOfStock": "Sản phẩm đã hết hàng",
       "insufficientStock": "Số lượng vượt quá tồn kho (Còn lại: {stock})"
-    }
+    },
+    "quote": {
+      "products": "{count} sản phẩm",
+      "printing": "Thiết kế in ({material})",
+      "printingDetails": "Chi tiết in ấn",
+      "material": "Chất liệu ({material}) × {count} lớp chữ",
+      "logoImages": "Ảnh logo ({count} ảnh)",
+      "calculating": "Đang tính…",
+      "unavailable": "—"
+    },
+    "cartEstimate": {
+      "productSubtotal": "Tạm tính sản phẩm",
+      "shippingAtCheckout": "Tính ở bước thanh toán",
+      "finalNote": "Tổng cuối cùng gồm giảm giá, vận chuyển và thuế sẽ lấy từ báo giá backend tại bước thanh toán."
+    },
+    "messages": {
+      "removeDesignLoading": "Đang xóa thiết kế khỏi giỏ hàng...",
+      "removeDesignSuccess": "Đã xóa thiết kế in khỏi giỏ hàng.",
+      "removeDesignError": "Xóa thiết kế thất bại.",
+      "quoteError": "Không thể tính tổng thanh toán.",
+      "quotePending": "Tổng thanh toán vẫn đang được tính. Vui lòng thử lại.",
+      "paymentUrlMissing": "PayOS không trả về đường dẫn thanh toán.",
+      "checkoutFailed": "Đã có lỗi trong quá trình thanh toán. Vui lòng thử lại."
+    },
+    "cart": {
+      "removeDesignLoading": "Đang xóa thiết kế khỏi giỏ hàng...",
+      "removeDesignSuccess": "Đã xóa thiết kế in khỏi giỏ hàng.",
+      "removeDesignError": "Xóa thiết kế thất bại.",
+      "updateQuantityError": "Cập nhật số lượng thất bại.",
+      "removeItemSuccess": "Đã xóa sản phẩm khỏi giỏ hàng.",
+      "removeItemError": "Xóa sản phẩm thất bại.",
+      "syncing": "Đang đồng bộ giỏ hàng...",
+      "summary": "Tóm tắt",
+      "promoQuestion": "Bạn có mã khuyến mãi?",
+      "promoPlaceholder": "NHẬP MÃ KHUYẾN MÃI",
+      "estimatedShipping": "Phí vận chuyển & xử lý ước tính",
+      "estimatedTax": "Thuế ước tính",
+      "notAvailable": "—",
+      "selectItemError": "Vui lòng chọn ít nhất một sản phẩm để thanh toán.",
+      "proceed": "Tiến hành thanh toán"
+    },
+    "shopProducts": "Mua sắm sản phẩm"
   },
   "profile": {
     "title": "Hồ Sơ Cá Nhân",
@@ -744,7 +880,10 @@
     "avatar": {
       "hoverChange": "Đổi Ảnh",
       "uploading": "Đang tải ảnh lên...",
-      "success": "Cập nhật ảnh đại diện thành công!"
+      "success": "Cập nhật ảnh đại diện thành công!",
+      "imageOnly": "Vui lòng tải lên tệp hình ảnh.",
+      "fileTooLarge": "Tệp hình ảnh phải nhỏ hơn 5MB.",
+      "uploadError": "Không thể tải ảnh đại diện."
     },
     "membership": {
       "cardTitle": "THẺ THÀNH VIÊN LOYALTY",
@@ -754,13 +893,17 @@
       "silver": "BẠC (SILVER)",
       "gold": "VÀNG (GOLD)",
       "platinum": "BẠCH KIM (PLATINUM)",
-      "bronzeDesc": "Tự động kích hoạt khi tham gia Đồng Phục Quang Vinh. Bắt đầu hành trình chinh phục thử thách mới.",
-      "silverDesc": "Đạt mốc từ 5.000.000đ. Giảm ngay 5% cho mọi đơn hàng tiếp theo.",
-      "goldDesc": "Đạt mốc từ 15.000.000đ. Ưu đãi 10% và miễn phí dịch vụ in ấn cá nhân hóa độc quyền.",
-      "platinumDesc": "Hạng tối thượng từ 30.000.000đ. Ưu đãi 15% trọn đời cùng đặc quyền chăm sóc VIP.",
       "nextProgress": "Cần tích lũy thêm {amount} để đạt hạng {nextTier}",
       "maxTier": "Chúc mừng! Bạn đã đạt cấp độ thành viên cao nhất của Đồng Phục Quang Vinh.",
-      "benefitsTitle": "Đặc Quyền Của Bạn"
+      "benefitsTitle": "Đặc Quyền Của Bạn",
+      "syncing": "Thông tin hạng đang được đồng bộ.",
+      "discountConfigured": "Đã cấu hình giảm {discount}% cho hạng này.",
+      "benefitsConfigured": "Quyền lợi thành viên sẽ hiển thị tại đây.",
+      "freeShippingActive": "Hạng này đang được miễn phí vận chuyển.",
+      "additionalBenefits": "Quyền lợi bổ sung do quản trị viên cấu hình.",
+      "athlete": "Vận động viên",
+      "memberDiscounts": "Ưu đãi thành viên",
+      "customizationPrivilege": "Đặc quyền tùy chỉnh"
     },
     "orders": {
       "title": "Đơn Hàng Của Tôi",
@@ -793,6 +936,10 @@
       "shippingFree": "Miễn phí",
       "totalAmount": "Tổng thanh toán",
       "items": "Danh sách sản phẩm",
+      "size": "Kích cỡ",
+      "color": "Màu sắc",
+      "quantity": "SL",
+      "each": "mỗi sản phẩm",
       "loadingDetail": "Đang tải chi tiết đơn hàng...",
       "errorDetail": "Không thể tải chi tiết đơn hàng này. Vui lòng thử lại sau.",
       "notFound": "Không tìm thấy đơn hàng yêu cầu.",
@@ -814,7 +961,15 @@
         "errorMaxImages": "Bạn chỉ có thể tải lên tối đa 3 ảnh.",
         "errorRating": "Vui lòng chọn số sao đánh giá.",
         "errorComment": "Vui lòng nhập nội dung đánh giá."
-      }
+      },
+      "printing": "Phí in",
+      "discount": "Giảm giá",
+      "tax": "Thuế",
+      "breakdownSummary": "Tạm tính {subtotal} · Ship {shipping}",
+      "legacyBreakdown": "Không có breakdown của đơn cũ",
+      "legacyDetailMessage": "Đơn hàng này được tạo trước pricing engine mới; breakdown chi tiết không khả dụng.",
+      "notAvailable": "—",
+      "syncing": "Đang đồng bộ phiên vận động viên..."
     },
     "addresses": {
       "title": "Địa Chỉ Của Tôi",
@@ -846,6 +1001,12 @@
       "genericError": "Có lỗi xảy ra. Vui lòng thử lại.",
       "limitReached": "Bạn đã đạt giới hạn số lượng địa chỉ được lưu.",
       "phoneError": "Số điện thoại không hợp lệ (ví dụ: 0987654321 hoặc +84987654321)"
+    },
+    "loading": {
+      "session": "ĐANG ĐỒNG BỘ PHIÊN VẬN ĐỘNG VIÊN...",
+      "file": "ĐANG TẢI HỒ SƠ VẬN ĐỘNG VIÊN...",
+      "loadError": "Không thể tải hồ sơ vận động viên.",
+      "retry": "Thử lại"
     }
   },
   "customizer": {

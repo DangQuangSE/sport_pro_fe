@@ -118,7 +118,10 @@ export function OrderTable({
                     })}
                   </TableCell>
                   <TableCell className="font-black text-on-surface">
-                    ${order.totalAmount.toLocaleString()}
+                    <span>{order.totalAmount.toLocaleString('vi-VN')} ₫</span>
+                    <span className={`block text-[9px] uppercase tracking-wider ${order.pricingSnapshotStatus === "COMPLETE" ? "text-success" : "text-amber-600"}`}>
+                      {order.pricingSnapshotStatus === "COMPLETE" ? t("admin.orders.pricing.breakdownSaved") : t("admin.orders.pricing.legacyBreakdown")}
+                    </span>
                   </TableCell>
                   <TableCell>
                     <Badge variant="outline" className="font-mono text-[10px] uppercase tracking-tighter">

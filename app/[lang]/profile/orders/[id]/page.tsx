@@ -62,7 +62,7 @@ export default function OrderDetailPage() {
     if (!e.target.files) return;
     const files = Array.from(e.target.files);
     if (selectedFiles.length + files.length > 3) {
-      toast.error(t("profile.orders.reviewModal.errorMaxImages") || "You can upload a maximum of 3 images.");
+      toast.error(t("profile.orders.reviewModal.errorMaxImages"));
       return;
     }
     setSelectedFiles(prev => [...prev, ...files]);
@@ -78,18 +78,18 @@ export default function OrderDetailPage() {
   const handleSubmitReview = async () => {
     if (!selectedOrderItem) return;
     if (rating === 0) {
-      toast.error(t("profile.orders.reviewModal.errorRating") || "Please select a rating.");
+      toast.error(t("profile.orders.reviewModal.errorRating"));
       return;
     }
     if (!comment.trim()) {
-      toast.error(t("profile.orders.reviewModal.errorComment") || "Please enter a comment.");
+      toast.error(t("profile.orders.reviewModal.errorComment"));
       return;
     }
 
     try {
       setIsSubmittingReview(true);
       await reviewService.createReview(rating, comment, selectedOrderItem.id, selectedFiles);
-      toast.success(t("profile.orders.reviewModal.success") || "Review submitted successfully!");
+      toast.success(t("profile.orders.reviewModal.success"));
       setIsReviewModalOpen(false);
       
       // Reload order details to refresh the isReviewed status of items
@@ -97,7 +97,7 @@ export default function OrderDetailPage() {
       setOrder(res.data);
     } catch (err: any) {
       console.error(err);
-      toast.error(err.message || t("profile.orders.reviewModal.error") || "Failed to submit review.");
+      toast.error(err.message || t("profile.orders.reviewModal.error"));
     } finally {
       setIsSubmittingReview(false);
     }
@@ -157,7 +157,10 @@ export default function OrderDetailPage() {
 
   // Helper to split custom prefix receiver from shippingAddress string if formatted like: "Receiver Name - Address details..."
   const parseAddress = (fullAddr: string) => {
-    if (!fullAddr) return { receiver: "N/A", address: "N/A" };
+    if (!fullAddr) {
+      const unavailable = t("profile.orders.notAvailable");
+      return { receiver: unavailable, address: unavailable };
+    }
     const parts = fullAddr.split(" - ");
     if (parts.length > 1) {
       return {
@@ -166,10 +169,14 @@ export default function OrderDetailPage() {
       };
     }
     return {
-      receiver: "N/A",
+      receiver: t("profile.orders.notAvailable"),
       address: fullAddr
     };
   };
+
+  const formatAmount = (value?: number | null) => value === undefined || value === null
+    ? t("profile.orders.notAvailable")
+    : `${Number(value).toLocaleString(locale === "vi" ? "vi-VN" : "en-US")} ₫`;
 
   if (isLoading) {
     return (
@@ -306,32 +313,32 @@ export default function OrderDetailPage() {
                     <div className="flex-grow text-left space-y-1 overflow-hidden">
                       <p className="text-sm font-black uppercase truncate text-on-surface">{item.productName}</p>
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] font-bold text-on-surface-variant/80">
-                        <span>SIZE: <span className="text-on-surface">{item.size}</span></span>
+                        <span>{t("profile.orders.size")}: <span className="text-on-surface">{item.size}</span></span>
                         <span className="w-1.5 h-1.5 rounded-full bg-outline-variant" />
-                        <span>COLOR: <span className="text-on-surface">{item.color}</span></span>
+                        <span>{t("profile.orders.color")}: <span className="text-on-surface">{item.color}</span></span>
                         <span className="w-1.5 h-1.5 rounded-full bg-outline-variant" />
-                        <span>QTY: <span className="text-on-surface">{item.quantity}</span></span>
+                        <span>{t("profile.orders.quantity")}: <span className="text-on-surface">{item.quantity}</span></span>
                       </div>
                       {order.status === OrderStatus.DELIVERED && (
                         <div className="pt-2">
                           {item.isReviewed ? (
                             <span className="inline-flex items-center text-[10px] font-black tracking-wider uppercase text-success/80 border border-success/20 bg-success/5 px-2.5 py-0.5 rounded-full">
-                              {t("profile.orders.alreadyReviewed") || "Reviewed"}
+                              {t("profile.orders.alreadyReviewed")}
                             </span>
                           ) : (
                             <button
                               onClick={() => handleOpenReviewModal(item)}
                               className="text-[10px] font-black tracking-wider uppercase text-primary hover:underline hover:text-primary/95 transition-all"
                             >
-                              {t("profile.orders.writeReview") || "Write Review"}
+                              {t("profile.orders.writeReview")}
                             </button>
                           )}
                         </div>
                       )}
                     </div>
                     <div className="text-right shrink-0 space-y-0.5">
-                      <p className="text-xs font-semibold text-on-surface-variant/70">{item.price.toLocaleString('vi-VN')} ₫ each</p>
-                      <p className="text-sm font-black italic text-on-surface">{(item.price * item.quantity).toLocaleString('vi-VN')} ₫</p>
+                      <p className="text-xs font-semibold text-on-surface-variant/70">{(item.unitPrice ?? item.price).toLocaleString('vi-VN')} ₫ {t("profile.orders.each")}</p>
+                      <p className="text-sm font-black italic text-on-surface">{(item.itemTotal ?? ((item.unitPrice ?? item.price) * item.quantity)).toLocaleString('vi-VN')} ₫</p>
                     </div>
                   </div>
                 ))}
@@ -348,18 +355,43 @@ export default function OrderDetailPage() {
                 {t("profile.orders.summary")}
               </h3>
 
+              {order.pricingSnapshotStatus === "LEGACY" && (
+                <div className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-800">
+                  {t("profile.orders.legacyDetailMessage")}
+                </div>
+              )}
               <div className="space-y-4 text-xs font-semibold text-on-surface-variant">
                 <div className="flex justify-between">
                   <span>{t("profile.orders.subtotal")}</span>
-                  <span className="text-on-surface">{order.totalAmount?.toLocaleString('vi-VN')} ₫</span>
+                  <span className="text-on-surface">{formatAmount(order.subtotalAmount)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>{t("profile.orders.printing")}</span>
+                  <span className="text-on-surface">{formatAmount(order.printingAmount)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>{t("profile.orders.discount")}</span>
+                  <span className="text-on-surface">
+                    {order.pricingSnapshotStatus === "COMPLETE"
+                      ? `-${formatAmount((order.tierDiscountAmount ?? 0) + (order.couponDiscountAmount ?? 0))}`
+                      : order.discountAmount === undefined || order.discountAmount === null
+                        ? t("profile.orders.notAvailable")
+                        : order.discountAmount > 0
+                          ? `-${formatAmount(order.discountAmount)}`
+                          : formatAmount(order.discountAmount)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>{t("profile.orders.shipping")}</span>
-                  <span className="text-primary uppercase font-bold italic text-[10px]">{t("profile.orders.shippingFree")}</span>
+                  <span className="text-on-surface">{formatAmount(order.shippingAmount)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>{t("profile.orders.tax")}</span>
+                  <span className="text-on-surface">{formatAmount(order.taxAmount)}</span>
                 </div>
                 <div className="flex justify-between border-t border-outline-variant/60 pt-4 text-sm font-black text-on-surface uppercase">
                   <span>{t("profile.orders.totalAmount")}</span>
-                  <span className="text-lg text-primary italic font-black">{order.totalAmount?.toLocaleString('vi-VN')} ₫</span>
+                  <span className="text-lg text-primary italic font-black">{formatAmount(order.totalAmount)}</span>
                 </div>
               </div>
             </div>

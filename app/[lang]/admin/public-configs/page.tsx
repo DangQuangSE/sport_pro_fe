@@ -16,6 +16,7 @@ import { PublicConfig } from "@/services/adminService";
 import { useTranslation } from "@/hooks/useTranslation";
 import Link from "next/link";
 import { toast } from "sonner";
+import { MembershipTierSettings } from "@/components/admin/public-configs/MembershipTierSettings";
 
 export default function PublicConfigsPage() {
   const { t, locale } = useTranslation();
@@ -31,6 +32,7 @@ export default function PublicConfigsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingConfig, setEditingConfig] = useState<PublicConfig | null>(null);
+  const [activeTab, setActiveTab] = useState<"commerce" | "membership" | "checkout" | "content">("commerce");
 
   const handleOpenCreate = () => {
     setEditingConfig(null);
@@ -113,14 +115,36 @@ export default function PublicConfigsPage() {
         </div>
       </div>
 
-      <div className="space-y-6">
-        <PublicConfigTable 
-          configs={filteredConfigs}
-          isLoading={isLoading}
-          onEdit={handleOpenEdit}
-          onDelete={handleDelete}
-        />
+      <div className="flex flex-wrap gap-2 rounded-2xl border border-outline-variant bg-surface p-2">
+        {([
+          ["commerce", t("admin.publicConfigs.tabs.commerce")],
+          ["membership", t("admin.publicConfigs.tabs.membership")],
+          ["checkout", t("admin.publicConfigs.tabs.checkout")],
+          ["content", t("admin.publicConfigs.tabs.content")],
+        ] as const).map(([key, label]) => (
+          <button key={key} type="button" onClick={() => setActiveTab(key)} className={`rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-colors ${activeTab === key ? "bg-primary text-white" : "text-on-surface-variant hover:bg-surface-variant/40"}`}>
+            {label}
+          </button>
+        ))}
       </div>
+
+      {activeTab === "membership" ? (
+        <MembershipTierSettings />
+      ) : (
+        <div className="space-y-6">
+          <PublicConfigTable
+            configs={filteredConfigs.filter((config) => {
+              const category = (config.category || "CONTENT").toLowerCase();
+              if (activeTab === "commerce") return category === "commerce" || /shipping|tax|coupon|printing|currency|order/.test(config.configKey.toLowerCase());
+              if (activeTab === "checkout") return category.includes("checkout") || /checkout|payment|quote|policy|threshold|free_shipping/.test(config.configKey.toLowerCase());
+              return category === "content" || category === "website content" || config.scope === "PUBLIC";
+            })}
+            isLoading={isLoading}
+            onEdit={handleOpenEdit}
+            onDelete={handleDelete}
+          />
+        </div>
+      )}
 
       <PublicConfigFormModal 
         isOpen={isModalOpen}

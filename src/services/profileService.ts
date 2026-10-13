@@ -9,6 +9,30 @@ export interface UserProfileResponse {
   role: string;
   tier: string; // BRONZE, SILVER, GOLD, PLATINUM
   totalSpending: number;
+  membership?: MembershipProfile;
+}
+
+export interface MembershipTier {
+  id: number;
+  code: string;
+  displayNames?: Record<string, string>;
+  descriptions?: Record<string, string>;
+  threshold: number;
+  sortOrder: number;
+  discountPercentage: number;
+  freeShipping: boolean;
+  benefits?: Record<string, unknown>;
+  active: boolean;
+  version: number;
+}
+
+export interface MembershipProfile {
+  currentTier?: MembershipTier | null;
+  nextTier?: MembershipTier | null;
+  activeTiers?: MembershipTier[];
+  totalSpending: number;
+  amountToNextTier?: number | null;
+  progressPercentage?: number | null;
 }
 
 export interface UpdateProfileRequest {

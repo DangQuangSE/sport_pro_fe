@@ -31,11 +31,12 @@ import Link from "next/link";
 import MembershipBadge from "@/components/ui/MembershipBadge";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
-const TIER_THRESHOLDS = {
-  BRONZE: { limit: 0, next: "SILVER", nextLimit: 5000000, color: "from-amber-600 via-amber-700 to-amber-900", text: "text-amber-500" },
-  SILVER: { limit: 5000000, next: "GOLD", nextLimit: 15000000, color: "from-slate-400 via-slate-500 to-slate-700", text: "text-slate-400" },
-  GOLD: { limit: 15000000, next: "PLATINUM", nextLimit: 30000000, color: "from-yellow-400 via-amber-500 to-yellow-600", text: "text-yellow-500" },
-  PLATINUM: { limit: 30000000, next: null, nextLimit: null, color: "from-cyan-400 via-blue-500 to-indigo-600", text: "text-cyan-400" }
+const TIER_PRESENTATION: Record<string, { color: string; text: string }> = {
+  BRONZE: { color: "from-amber-600 via-amber-700 to-amber-900", text: "text-amber-500" },
+  SILVER: { color: "from-slate-400 via-slate-500 to-slate-700", text: "text-slate-400" },
+  GOLD: { color: "from-yellow-400 via-amber-500 to-yellow-600", text: "text-yellow-500" },
+  PLATINUM: { color: "from-cyan-400 via-blue-500 to-indigo-600", text: "text-cyan-400" },
+  UNKNOWN: { color: "from-slate-600 via-slate-700 to-slate-900", text: "text-slate-300" },
 };
 
 export default function UserProfilePage() {
@@ -61,7 +62,7 @@ export default function UserProfilePage() {
       setLastName(res.data.lastName || "");
     } catch (err) {
       console.error("Failed to load user profile", err);
-      toast.error(t("profile.orders.errorDetail") || "Failed to load profile");
+      toast.error(t("profile.loading.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -83,7 +84,7 @@ export default function UserProfilePage() {
         <Navbar />
         <div className="flex-grow flex flex-col items-center justify-center pt-32 pb-20 gap-4 text-on-surface-variant">
           <Loader2 size={40} className="animate-spin text-primary" />
-          <p className="text-xs font-bold uppercase tracking-widest italic">SYNCING ATHLETE SESSION...</p>
+          <p className="text-xs font-bold uppercase tracking-widest italic">{t("profile.loading.session")}</p>
         </div>
         <Footer />
       </div>
@@ -124,12 +125,12 @@ export default function UserProfilePage() {
     const file = files[0];
     // Check file type
     if (!file.type.startsWith("image/")) {
-      toast.error("Please upload an image file.");
+      toast.error(t("profile.avatar.imageOnly"));
       return;
     }
     // Check file size (5MB limit)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image file must be less than 5MB.");
+      toast.error(t("profile.avatar.fileTooLarge"));
       return;
     }
 
@@ -140,7 +141,7 @@ export default function UserProfilePage() {
       toast.success(t("profile.avatar.success"));
     } catch (err) {
       console.error("Failed to upload avatar", err);
-      toast.error("Failed to upload avatar image");
+      toast.error(t("profile.avatar.uploadError"));
     } finally {
       setIsUploading(false);
     }
@@ -152,7 +153,7 @@ export default function UserProfilePage() {
         <Navbar />
         <div className="flex-grow flex flex-col items-center justify-center pt-32 pb-20 gap-4 text-on-surface-variant">
           <Loader2 size={40} className="animate-spin text-primary" />
-          <p className="text-xs font-bold uppercase tracking-widest italic">LOADING ATHLETE FILE...</p>
+          <p className="text-xs font-bold uppercase tracking-widest italic">{t("profile.loading.file")}</p>
         </div>
         <Footer />
       </div>
@@ -164,9 +165,9 @@ export default function UserProfilePage() {
       <div className="flex flex-col min-h-screen bg-surface">
         <Navbar />
         <div className="flex-grow flex flex-col items-center justify-center pt-32 pb-20 gap-4 text-on-surface-variant">
-          <p className="text-sm font-bold text-error">Could not load your athlete profile.</p>
+          <p className="text-sm font-bold text-error">{t("profile.loading.loadError")}</p>
           <Button onClick={fetchProfile} className="uppercase tracking-widest font-black text-xs h-12 px-6 rounded-xl">
-            Retry
+            {t("profile.loading.retry")}
           </Button>
         </div>
         <Footer />
@@ -174,22 +175,28 @@ export default function UserProfilePage() {
     );
   }
 
-  // Calculate membership details
-  const userTier = (profile.tier || "BRONZE").toUpperCase() as keyof typeof TIER_THRESHOLDS;
-  const tierInfo = TIER_THRESHOLDS[userTier] || TIER_THRESHOLDS.BRONZE;
-
-  // Dynamic spending fetched directly from the backend database!
-  const simulatedSpending = profile.totalSpending ?? 0;
-
-  const nextTier = tierInfo.next;
-  const nextLimit = tierInfo.nextLimit;
-  const currentLimit = tierInfo.limit;
-
-  const progressPercent = nextLimit 
-    ? Math.min(100, Math.max(0, ((simulatedSpending - currentLimit) / (nextLimit - currentLimit)) * 100))
-    : 100;
-
-  const remainingToNext = nextLimit ? nextLimit - simulatedSpending : 0;
+  // Membership thresholds, discounts and benefits are backend-managed. The
+  // frontend keeps only a safe visual map for known/unknown tier codes.
+  const membership = profile.membership;
+  const currentTier = membership?.currentTier ?? null;
+  const nextTier = membership?.nextTier ?? null;
+  const userTier = (currentTier?.code || profile.tier || "UNKNOWN").toUpperCase();
+  const tierInfo = TIER_PRESENTATION[userTier] || TIER_PRESENTATION.UNKNOWN;
+  const spending = membership?.totalSpending ?? profile.totalSpending ?? 0;
+  const currentLimit = currentTier?.threshold ?? 0;
+  const nextLimit = nextTier?.threshold ?? null;
+  const progressPercent = Math.min(100, Math.max(0, Number(membership?.progressPercentage ?? (nextTier ? 0 : 100))));
+  const remainingToNext = membership?.amountToNextTier ?? (nextLimit ? Math.max(0, nextLimit - spending) : 0);
+  const tierLabel = currentTier?.displayNames?.[locale] || currentTier?.displayNames?.en || userTier;
+  const nextTierLabel = nextTier?.displayNames?.[locale] || nextTier?.displayNames?.en || nextTier?.code || "";
+  const discountPercentage = currentTier?.discountPercentage ?? 0;
+  const tierDescription = currentTier?.descriptions?.[locale] || currentTier?.descriptions?.en || "";
+  const benefitSummary = currentTier?.benefits
+    ? Object.entries(currentTier.benefits).map(([key, value]) => {
+        if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") return `${key}: ${value}`;
+        return `${key}: ${JSON.stringify(value)}`;
+      }).join(" · ")
+    : "";
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat(locale === "vi" ? "vi-VN" : "en-US", {
@@ -268,25 +275,25 @@ export default function UserProfilePage() {
               {/* User Identity */}
               <div className="space-y-4">
                 <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Athlete</p>
+                  <p className="text-[10px] font-bold text-white/60 uppercase tracking-widest">{t("profile.membership.athlete")}</p>
                   <div className="flex items-center gap-3">
                     <p className="text-xl font-black uppercase tracking-wide">
                       {profile.lastName} {profile.firstName}
                     </p>
-                    <MembershipBadge tier={profile.tier} size="sm" showLabel={true} className="bg-white/10 border-white/20 text-white hover:bg-white/20" />
+                    <MembershipBadge tier={userTier} size="sm" showLabel={true} className="bg-white/10 border-white/20 text-white hover:bg-white/20" />
                   </div>
                 </div>
                 <div className="flex justify-between items-end border-t border-white/10 pt-4">
                   <div>
                     <p className="text-[9px] font-bold text-white/60 uppercase tracking-widest">{t("profile.membership.currentTier")}</p>
                     <p className="text-lg font-black italic tracking-wider text-yellow-400">
-                      {t(`profile.membership.${profile.tier.toLowerCase()}` as any)}
+                      {tierLabel}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-[9px] font-bold text-white/60 uppercase tracking-widest">{t("profile.membership.totalSpending")}</p>
                     <p className="text-lg font-black tracking-wide font-mono">
-                      {formatCurrency(simulatedSpending)}
+                      {formatCurrency(spending)}
                     </p>
                   </div>
                 </div>
@@ -301,9 +308,11 @@ export default function UserProfilePage() {
                     {t("profile.membership.benefitsTitle")}
                   </h3>
                   <p className="text-xs text-on-surface-variant font-medium">
-                    {userTier === "PLATINUM" 
-                      ? t("profile.membership.maxTier") 
-                      : t("profile.membership.nextProgress").replace("{amount}", formatCurrency(remainingToNext)).replace("{nextTier}", t(`profile.membership.${nextTier?.toLowerCase()}` as any))}
+                    {!membership
+                      ? (t("profile.membership.syncing"))
+                      : !nextTier
+                        ? t("profile.membership.maxTier")
+                        : t("profile.membership.nextProgress").replace("{amount}", formatCurrency(remainingToNext)).replace("{nextTier}", nextTierLabel)}
                   </p>
                 </div>
                 <TrendingUp size={20} className="text-primary" />
@@ -335,12 +344,11 @@ export default function UserProfilePage() {
                     <Gift size={16} />
                   </div>
                   <div className="space-y-1">
-                    <h4 className="text-xs font-black uppercase tracking-wider text-on-surface">Member discounts</h4>
+                    <h4 className="text-xs font-black uppercase tracking-wider text-on-surface">{t("profile.membership.memberDiscounts")}</h4>
                     <p className="text-[11px] text-on-surface-variant font-medium">
-                      {userTier === "BRONZE" && "Base access to exclusive sport releases."}
-                      {userTier === "SILVER" && "5% discount applied automatically on all orders."}
-                      {userTier === "GOLD" && "10% discount applied automatically on all orders."}
-                      {userTier === "PLATINUM" && "15% discount applied automatically on all orders."}
+                      {membership
+                        ? t("profile.membership.discountConfigured").replace("{discount}", String(discountPercentage))
+                        : t("profile.membership.benefitsConfigured")}
                     </p>
                   </div>
                 </div>
@@ -349,12 +357,11 @@ export default function UserProfilePage() {
                     <Zap size={16} />
                   </div>
                   <div className="space-y-1">
-                    <h4 className="text-xs font-black uppercase tracking-wider text-on-surface">Customization privilege</h4>
+                    <h4 className="text-xs font-black uppercase tracking-wider text-on-surface">{t("profile.membership.customizationPrivilege")}</h4>
                     <p className="text-[11px] text-on-surface-variant font-medium">
-                      {userTier === "BRONZE" && "Standard custom printing services."}
-                      {userTier === "SILVER" && "Priority custom logo processing."}
-                      {userTier === "GOLD" && "Free text & logo customization on gear."}
-                      {userTier === "PLATINUM" && "Free ultimate 3D custom printing & VIP priority."}
+                      {tierDescription || benefitSummary || (currentTier?.freeShipping
+                        ? t("profile.membership.freeShippingActive")
+                        : t("profile.membership.additionalBenefits"))}
                     </p>
                   </div>
                 </div>
