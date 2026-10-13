@@ -67,7 +67,7 @@ export default function OrderHistoryPage() {
         <main className="flex-grow flex items-center justify-center pt-32 pb-20">
           <div className="flex flex-col items-center gap-4">
             <Loader2 size={48} className="animate-spin text-primary" />
-            <p className="font-lexend font-bold uppercase tracking-widest text-xs text-on-surface-variant">Syncing athlete session...</p>
+            <p className="font-lexend font-bold uppercase tracking-widest text-xs text-on-surface-variant">{t("profile.orders.syncing")}</p>
           </div>
         </main>
         <Footer />
@@ -236,11 +236,11 @@ export default function OrderHistoryPage() {
                       <div className="flex-grow text-left space-y-0.5 overflow-hidden">
                         <p className="text-xs font-bold uppercase truncate text-on-surface">{item.productName}</p>
                         <p className="text-[10px] font-semibold text-on-surface-variant/80">
-                          SIZE: {item.size} | COLOR: {item.color} | QTY: {item.quantity}
+                          {t("profile.orders.size")}: {item.size} | {t("profile.orders.color")}: {item.color} | {t("profile.orders.quantity")}: {item.quantity}
                         </p>
                       </div>
                       <span className="text-xs font-black italic text-on-surface shrink-0">
-                        {(item.price * item.quantity).toLocaleString('vi-VN')} ₫
+                        {((item.unitPrice ?? item.price) * item.quantity).toLocaleString('vi-VN')} ₫
                       </span>
                     </div>
                   ))}
@@ -255,6 +255,13 @@ export default function OrderHistoryPage() {
                     <div className="text-right">
                       <p className="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-0.5">{t("profile.orders.total")}</p>
                       <p className="text-lg font-black italic tracking-tighter text-on-surface">{order.totalAmount?.toLocaleString('vi-VN')} ₫</p>
+                      <p className="text-[9px] text-on-surface-variant">
+                        {order.pricingSnapshotStatus === "COMPLETE"
+                          ? t("profile.orders.breakdownSummary")
+                              .replace("{subtotal}", `${order.subtotalAmount?.toLocaleString('vi-VN')} ₫`)
+                              .replace("{shipping}", `${order.shippingAmount?.toLocaleString('vi-VN')} ₫`)
+                          : t("profile.orders.legacyBreakdown")}
+                      </p>
                     </div>
                     
                     <Button asChild variant="outline" className="h-10 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest border-outline-variant hover:bg-surface-container/50">

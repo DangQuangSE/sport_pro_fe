@@ -56,11 +56,7 @@ export default function AdminOrderDetailPage() {
       setSelectedDesign(res.data);
     } catch (err: any) {
       console.error("Failed to fetch custom design details", err);
-      toast.error(
-        locale === "vi"
-          ? "Không thể tải thông tin thiết kế in ấn."
-          : "Failed to retrieve custom printing details."
-      );
+      toast.error(t("admin.orders.detail.customDesignLoadError"));
       setIsDesignModalOpen(false);
     } finally {
       setIsDesignLoading(false);
@@ -96,11 +92,7 @@ export default function AdminOrderDetailPage() {
       setOrder(res.data);
     } catch (err: any) {
       console.error("Failed to fetch admin order details", err);
-      setError(
-        locale === "vi" 
-          ? "Không thể tải chi tiết đơn hàng hoặc đơn hàng không tồn tại." 
-          : "Failed to retrieve order details or order does not exist."
-      );
+      setError(t("admin.orders.detail.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -117,17 +109,13 @@ export default function AdminOrderDetailPage() {
     try {
       setIsUpdatingStatus(true);
       await adminService.updateOrderStatus(order.id, newStatus);
-      toast.success(
-        locale === "vi" 
-          ? `Cập nhật trạng thái đơn hàng thành ${newStatus} thành công` 
-          : `Order status successfully updated to ${newStatus}`
-      );
+      toast.success(t("admin.orders.detail.statusUpdateSuccess").replace("{status}", newStatus));
       // Refresh order data
       const updatedRes = await adminService.getOrderDetails(order.id);
       setOrder(updatedRes.data);
     } catch (err: any) {
       console.error("Failed to update status", err);
-      toast.error(err.message || (locale === "vi" ? "Cập nhật trạng thái đơn hàng thất bại." : "Failed to update order status."));
+      toast.error(err.message || t("admin.orders.detail.statusUpdateError"));
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -238,10 +226,10 @@ export default function AdminOrderDetailPage() {
 
   const { receiver, address, extraEmail } = parseAddress(order.shippingAddress);
   
-  // Financial specs matching storefront checkout calculations
-  const estimatedCost = order.totalAmount ? order.totalAmount - 39 : 0;
-  const standardDelivery = 15;
-  const expectedTax = 24;
+  const hasPricingSnapshot = order.pricingSnapshotStatus === "COMPLETE";
+  const formatMoney = (value?: number | null) => value === undefined || value === null
+    ? t("admin.orders.detail.notAvailable")
+    : `${Number(value).toLocaleString(locale === "vi" ? "vi-VN" : "en-US")} ₫`;
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 text-left">
@@ -385,9 +373,9 @@ export default function AdminOrderDetailPage() {
                   </div>
 
                   <div className="text-right shrink-0">
-                    <p className="text-xs font-black text-on-surface-variant">${(item.price ?? item.salePrice ?? 0).toLocaleString()} {t("admin.orders.detail.each")}</p>
+                    <p className="text-xs font-black text-on-surface-variant">{formatMoney(item.unitPrice ?? item.price)} {t("admin.orders.detail.each")}</p>
                     <p className="text-sm font-black italic text-primary" style={{ fontFamily: 'var(--font-lexend)' }}>
-                      ${((item.price ?? item.salePrice ?? 0) * item.quantity).toLocaleString()}
+                      {formatMoney(item.itemTotal ?? ((item.unitPrice ?? item.price ?? 0) * item.quantity))}
                     </p>
                   </div>
                 </div>
@@ -453,26 +441,50 @@ export default function AdminOrderDetailPage() {
               {t("admin.orders.detail.billingSpecs")}
             </h3>
 
+            {!hasPricingSnapshot && (
+              <div className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-800">
+                {t("admin.orders.pricing.legacyMessage")}
+              </div>
+            )}
+
             <div className="space-y-4 text-xs font-semibold text-on-surface-variant">
               <div className="flex justify-between items-center">
                 <span>{t("admin.orders.detail.estimatedSubtotal")}</span>
-                <span className="text-on-surface">${estimatedCost.toLocaleString()}</span>
+                <span className="text-on-surface">{formatMoney(order.subtotalAmount)}</span>
               </div>
               
               <div className="flex justify-between items-center">
-                <span>{t("admin.orders.detail.standardHandlingFee")}</span>
-                <span className="text-on-surface">${standardDelivery.toLocaleString()}</span>
+                <span>{t("admin.orders.pricing.printing")}</span>
+                <span className="text-on-surface">{formatMoney(order.printingAmount)}</span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span>{t("admin.orders.pricing.discount")}</span>
+                <span className="text-on-surface">
+                  {hasPricingSnapshot
+                    ? `-${formatMoney((order.tierDiscountAmount ?? 0) + (order.couponDiscountAmount ?? 0))}`
+                    : order.discountAmount === undefined || order.discountAmount === null
+                      ? t("admin.orders.detail.notAvailable")
+                      : order.discountAmount > 0
+                        ? `-${formatMoney(order.discountAmount)}`
+                        : formatMoney(order.discountAmount)}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span>{t("admin.orders.pricing.shipping")}</span>
+                <span className="text-on-surface">{formatMoney(order.shippingAmount)}</span>
               </div>
 
               <div className="flex justify-between items-center">
                 <span>{t("admin.orders.detail.expectedTax")}</span>
-                <span className="text-on-surface">${expectedTax.toLocaleString()}</span>
+                <span className="text-on-surface">{formatMoney(order.taxAmount)}</span>
               </div>
 
               <div className="pt-5 border-t border-outline-variant/60 flex justify-between items-center">
                 <span className="text-sm font-black uppercase text-on-surface tracking-tight">{t("admin.orders.detail.totalFulfillmentValue")}</span>
                 <span className="text-xl font-black italic tracking-tighter text-primary" style={{ fontFamily: 'var(--font-lexend)' }}>
-                  ${order.totalAmount?.toLocaleString()}
+                  {formatMoney(order.totalAmount)}
                 </span>
               </div>
 
