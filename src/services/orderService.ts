@@ -24,11 +24,14 @@ export interface OrderItemResponse {
   size: string;
   color: string;
   price: number;
+  unitPrice?: number;
   quantity: number;
-  itemTotal: number;
+  itemTotal?: number;
   customDesignId?: number;
   designImageUrl?: string;
   backDesignImageUrl?: string;
+  printingPrice?: number;
+  printingAmount?: number;
   isReviewed?: boolean;
 }
 
@@ -37,6 +40,18 @@ export interface OrderResponse {
   shippingAddress: string;
   phoneNumber: string;
   totalAmount: number;
+  currency?: string;
+  /** Stored aggregate discount for legacy orders; never recompute it. */
+  discountAmount?: number;
+  subtotalAmount?: number;
+  printingAmount?: number;
+  tierDiscountAmount?: number;
+  couponDiscountAmount?: number;
+  shippingAmount?: number;
+  taxAmount?: number;
+  appliedTierCode?: string | null;
+  pricingRuleVersions?: Record<string, number>;
+  pricingSnapshotStatus?: "LEGACY" | "COMPLETE";
   status: OrderStatus;
   paymentMethod: PaymentMethod;
   createdAt: string;

@@ -105,9 +105,7 @@ export default function CartPage() {
     if (!customizedItem) return;
 
     const toastId = toast.loading(
-      locale === "vi"
-        ? "Đang xóa thiết kế khỏi giỏ hàng..."
-        : "Removing design from cart..."
+      t("checkout.cart.removeDesignLoading")
     );
     try {
       await cartService.addOrUpdateItem({
@@ -122,16 +120,14 @@ export default function CartPage() {
       await refreshCart();
 
       toast.success(
-        locale === "vi"
-          ? "Đã xóa thiết kế in ấn khỏi giỏ hàng!"
-          : "Custom design removed from cart successfully!",
+        t("checkout.cart.removeDesignSuccess"),
         { id: toastId }
       );
     } catch (err: any) {
       console.error("Failed to remove design", err);
       toast.error(
         err.message ||
-          (locale === "vi" ? "Xóa thiết kế thất bại." : "Failed to remove design."),
+          (t("checkout.cart.removeDesignError")),
         { id: toastId }
       );
     }
@@ -159,16 +155,16 @@ export default function CartPage() {
     try {
       await updateQuantity(variantId, newQty);
     } catch (err: any) {
-      toast.error(err.message || (locale === "vi" ? "Cập nhật số lượng thất bại" : "Failed to update quantity"));
+      toast.error(err.message || t("checkout.cart.updateQuantityError"));
     }
   };
 
   const handleRemoveFromCart = async (itemId: number) => {
     try {
       await removeFromCart(itemId);
-      toast.success(locale === "vi" ? "Đã xóa sản phẩm khỏi giỏ hàng." : "Item removed from bag.");
+      toast.success(t("checkout.cart.removeItemSuccess"));
     } catch (err: any) {
-      toast.error(err.message || (locale === "vi" ? "Xóa sản phẩm thất bại" : "Failed to remove item"));
+      toast.error(err.message || t("checkout.cart.removeItemError"));
     }
   };
 
@@ -180,7 +176,7 @@ export default function CartPage() {
           <div className="flex flex-col items-center gap-4">
             <Loader2 size={48} className="animate-spin text-primary" />
             <p className="font-lexend font-bold uppercase tracking-widest text-xs text-on-surface-variant">
-              {locale === "vi" ? "Đang đồng bộ giỏ hàng..." : "Syncing your gear..."}
+              {t("checkout.cart.syncing")}
             </p>
           </div>
         </main>
@@ -456,17 +452,17 @@ export default function CartPage() {
             <div className="w-full lg:w-[420px] shrink-0">
               <div className="sticky top-32 space-y-8">
                 <div className="space-y-6">
-                  <h3 className="text-xl font-black uppercase tracking-tight">{t("checkout.orderSummary") || "Summary"}</h3>
+                  <h3 className="text-xl font-black uppercase tracking-tight">{t("checkout.cart.summary")}</h3>
                   
                   {/* Promo Code */}
                   <div className="space-y-2">
                     <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
-                      {locale === "vi" ? "Bạn có mã khuyến mãi?" : "Do you have a Promo Code?"}
+                      {t("checkout.cart.promoQuestion")}
                     </p>
                     <div className="flex gap-2">
                       <input 
                         type="text" 
-                        placeholder={locale === "vi" ? "NHẬP MÃ KHUYẾN MÃI" : "ENTER CODE"}
+                        placeholder={t("checkout.cart.promoPlaceholder")}
                         className="flex-grow h-12 px-4 rounded-xl border border-outline-variant bg-transparent text-xs font-bold uppercase tracking-widest focus:border-primary outline-none"
                       />
                       <Button variant="outline" className="h-12 px-6 rounded-xl border-on-surface bg-on-surface text-surface hover:bg-on-surface/90 text-[10px] font-black uppercase tracking-widest">
@@ -478,27 +474,28 @@ export default function CartPage() {
                   {/* Calculations */}
                   <div className="space-y-4 pt-4 border-t border-outline-variant">
                     <div className="flex justify-between items-center text-sm">
-                      <span className="font-medium text-on-surface-variant">{t("checkout.subtotal") || "Subtotal"}</span>
+                      <span className="font-medium text-on-surface-variant">{t("checkout.cartEstimate.productSubtotal")}</span>
                       <span className="font-bold">
                         {`${subtotal.toLocaleString('vi-VN')} ₫`}
                       </span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
-                      <span className="font-medium text-on-surface-variant">{t("checkout.shipping") || "Estimated Shipping & Handling"}</span>
-                      <span className="font-bold">{t("checkout.shippingFree") || "Free"}</span>
+                      <span className="font-medium text-on-surface-variant">{t("checkout.cart.estimatedShipping")}</span>
+                      <span className="font-bold">{t("checkout.cartEstimate.shippingAtCheckout")}</span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
-                      <span className="font-medium text-on-surface-variant">{t("checkout.expectedTax") || "Estimated Tax"}</span>
-                      <span className="font-bold">—</span>
+                      <span className="font-medium text-on-surface-variant">{t("checkout.cart.estimatedTax")}</span>
+                      <span className="font-bold">{t("checkout.cart.notAvailable")}</span>
                     </div>
                     
                     <div className="pt-4 border-t border-on-surface space-y-1">
                       <div className="flex justify-between items-center">
-                        <span className="text-base font-black uppercase tracking-tight">{t("checkout.total") || "Total"}</span>
+                        <span className="text-base font-black uppercase tracking-tight">{t("checkout.total")}</span>
                         <span className="text-2xl font-black italic tracking-tighter">
                           {`${subtotal.toLocaleString('vi-VN')} ₫`}
                         </span>
                       </div>
+                      <p className="text-[10px] text-on-surface-variant text-right">{t("checkout.cartEstimate.finalNote")}</p>
                     </div>
 
                     <Button 
@@ -513,13 +510,13 @@ export default function CartPage() {
                         onClick={(e) => {
                           if (selectedIds.length === 0) {
                             e.preventDefault();
-                            toast.error(locale === "vi" ? "Vui lòng chọn ít nhất một sản phẩm để thanh toán." : "Please select at least one item to checkout.");
+                            toast.error(t("checkout.cart.selectItemError"));
                             return;
                           }
                           localStorage.setItem("sport_pro_checkout_selected_ids", JSON.stringify(selectedIds));
                         }}
                       >
-                        {locale === "vi" ? "Tiến hành Thanh toán" : "Proceed to Checkout"}
+                        {t("checkout.cart.proceed")}
                         <ArrowRight size={18} />
                       </Link>
                     </Button>

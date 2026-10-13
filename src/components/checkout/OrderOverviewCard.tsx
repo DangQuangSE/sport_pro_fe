@@ -23,6 +23,8 @@ interface OrderOverviewCardProps {
   standardDelivery: number;
   expectedTax: number;
   totalPayment: number;
+  isQuoteLoading: boolean;
+  quoteError: string | null;
   isSubmitting: boolean;
   locale: string;
   t: (key: string) => string;
@@ -42,6 +44,8 @@ export function OrderOverviewCard({
   standardDelivery,
   expectedTax,
   totalPayment,
+  isQuoteLoading,
+  quoteError,
   isSubmitting,
   locale,
   t,
@@ -53,6 +57,9 @@ export function OrderOverviewCard({
   onClearCoupon,
 }: OrderOverviewCardProps) {
   const router = useRouter();
+
+  const formatAmount = (amount: number) =>
+    isQuoteLoading ? t("checkout.quote.calculating") : quoteError ? t("checkout.quote.unavailable") : `${amount.toLocaleString("vi-VN")} ₫`;
 
   return (
     <div className="w-full lg:w-[380px] shrink-0">
@@ -70,41 +77,40 @@ export function OrderOverviewCard({
             <div className="flex justify-between items-center">
               <span>
                 {t("checkout.estimated")} (
-                {cart.items.reduce((sum, item) => sum + item.quantity, 0)}{" "}
-                products)
+                {t("checkout.quote.products").replace("{count}", String(cart.items.reduce((sum, item) => sum + item.quantity, 0)))}
               </span>
-              <span className="text-[#1a1c1f]">{estimatedCost.toLocaleString('vi-VN')} ₫</span>
+              <span className="text-[#1a1c1f]">{formatAmount(estimatedCost)}</span>
             </div>
 
             <div className="flex justify-between items-center">
               <span>{t("checkout.standardDelivery")}</span>
-              <span className="text-[#1a1c1f]">{standardDelivery.toLocaleString('vi-VN')} ₫</span>
+              <span className="text-[#1a1c1f]">{formatAmount(standardDelivery)}</span>
             </div>
 
             <div className="flex justify-between items-center">
               <span>{t("checkout.expectedTax")}</span>
-              <span className="text-[#1a1c1f]">{expectedTax.toLocaleString('vi-VN')} ₫</span>
+              <span className="text-[#1a1c1f]">{formatAmount(expectedTax)}</span>
             </div>
 
             {customDesign && (
               <div className="space-y-1.5 pt-2 pb-1 border-t border-[#e2e2e7]/60 border-dashed">
                 <div className="flex justify-between items-center text-primary font-black">
-                  <span>Thiết kế in ({customDesign.materialName})</span>
-                  <span>+{printingCost.toLocaleString('vi-VN')} ₫</span>
+                  <span>{t("checkout.quote.printing").replace("{material}", customDesign.materialName)}</span>
+                  <span>+{formatAmount(printingCost)}</span>
                 </div>
                 <div className="bg-[#f9f9fe] p-3 rounded-xl border border-primary/10 text-[10px] font-semibold text-[#717786] space-y-1 leading-relaxed">
                   <p className="font-bold text-primary uppercase text-[8px] tracking-widest mb-1">
-                    Chi tiết in ấn
+                    {t("checkout.quote.printingDetails")}
                   </p>
                   <div className="flex justify-between">
-                    <span>Chất liệu ({customDesign.materialName}) × {customDesign.textsCount} lớp chữ:</span>
+                    <span>{t("checkout.quote.material").replace("{material}", customDesign.materialName).replace("{count}", String(customDesign.textsCount))}:</span>
                     <span className="font-mono text-[#1a1c1f]">
                       {(customDesign.materialBasePrice * customDesign.textsCount).toLocaleString('vi-VN')} ₫
                     </span>
                   </div>
                   {customDesign.imagesCount > 0 && (
                     <div className="flex justify-between">
-                      <span>Ảnh logo ({customDesign.imagesCount} ảnh):</span>
+                      <span>{t("checkout.quote.logoImages").replace("{count}", String(customDesign.imagesCount))}:</span>
                       <span className="font-mono text-[#1a1c1f]">
                         +{(customDesign.logoUnitPrice * customDesign.imagesCount).toLocaleString('vi-VN')} ₫
                       </span>
@@ -138,7 +144,7 @@ export function OrderOverviewCard({
                   {t("checkout.applyCoupon")}
                 </button>
               </div>
-              {discountAmount > 0 && (
+              {discountAmount > 0 && !isQuoteLoading && (
                 <div className="flex justify-between items-center text-primary font-black text-xs">
                   <span className="flex items-center gap-1.5">
                     {t("checkout.discount")}
@@ -151,6 +157,12 @@ export function OrderOverviewCard({
               )}
             </div>
 
+            {quoteError && (
+              <p className="rounded-lg border border-error/20 bg-error/5 px-3 py-2 text-[10px] font-bold text-error">
+                {quoteError}
+              </p>
+            )}
+
             <div className="pt-6 border-t border-[#e2e2e7] flex justify-between items-center">
               <span className="text-sm font-black uppercase text-[#1a1c1f] tracking-tight">
                 {t("checkout.total")}
@@ -159,7 +171,7 @@ export function OrderOverviewCard({
                 className="text-2xl font-black italic tracking-tighter text-[#1a1c1f]"
                 style={{ fontFamily: "var(--font-lexend)" }}
               >
-                {totalPayment.toLocaleString('vi-VN')} ₫
+                {formatAmount(totalPayment)}
               </span>
             </div>
           </div>

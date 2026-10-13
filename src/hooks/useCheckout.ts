@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useCart } from "@/contexts/CartContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { orderService, PaymentMethod } from "@/services/orderService";
 import { addressService, AddressRequest, AddressResponse } from "@/services/addressService";
-import { couponService } from "@/services/couponService";
 import { cartService } from "@/services/cartService";
+import { pricingService, PricingBreakdown } from "@/services/pricingService";
 import { apiClient, ApiResponse } from "@/lib/api-client";
 import { isValidPhoneNumber } from "@/lib/validators";
 import { toast } from "sonner";
@@ -26,7 +25,6 @@ export interface CustomDesignInfo {
 export function useCheckout() {
   const { cart: rawCart, refreshCart, updateQuantity, removeFromCart } = useCart();
   const { t, locale } = useTranslation();
-  const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<number[] | null>(null);
 
   useEffect(() => {
@@ -41,17 +39,15 @@ export function useCheckout() {
     }
   }, [refreshCart]);
 
-  const checkoutItems = rawCart 
-    ? (selectedIds ? rawCart.items.filter(item => selectedIds.includes(item.id)) : rawCart.items)
-    : [];
+  const checkoutItems = useMemo(
+    () => rawCart
+      ? (selectedIds ? rawCart.items.filter(item => selectedIds.includes(item.id)) : rawCart.items)
+      : [],
+    [rawCart, selectedIds]
+  );
 
-  const estimatedCost = checkoutItems.reduce((acc, item) => acc + (item.salePrice * item.quantity), 0);
-
-  const checkoutCart = rawCart ? {
-    ...rawCart,
-    items: checkoutItems,
-    totalAmount: estimatedCost
-  } : null;
+  const checkoutItemIds = useMemo(() => checkoutItems.map((item) => item.id), [checkoutItems]);
+  const checkoutItemIdsKey = checkoutItemIds.join(",");
 
   // Delivery states
   const [email, setEmail] = useState("athlete@example.com");
@@ -66,8 +62,10 @@ export function useCheckout() {
 
   // Coupon states
   const [couponCode, setCouponCode] = useState("");
-  const [discountAmount, setDiscountAmount] = useState(0);
-  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+  const [quote, setQuote] = useState<PricingBreakdown | null>(null);
+  const [isQuoteLoading, setIsQuoteLoading] = useState(false);
+  const [quoteError, setQuoteError] = useState<string | null>(null);
+  const [quoteRevision, setQuoteRevision] = useState(0);
 
   // Flow states
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,6 +73,56 @@ export function useCheckout() {
 
   // Custom design state
   const [customDesign, setCustomDesign] = useState<CustomDesignInfo | null>(null);
+
+  const activeAddress = draftAddress ?? addresses.find((a) => a.id === selectedAddressId);
+  const shippingAddressContext = activeAddress
+    ? `${activeAddress.detailAddress}, ${activeAddress.ward}, ${activeAddress.district}, ${activeAddress.province}`
+    : undefined;
+
+  // Monetary values always come from the backend quote. The request contains
+  // checkout context only; prices, discounts, tax and shipping are recalculated
+  // against current database state by the API.
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!rawCart || checkoutItemIds.length === 0) {
+      setQuote(null);
+      setQuoteError(null);
+      setIsQuoteLoading(false);
+      return;
+    }
+
+    setIsQuoteLoading(true);
+    setQuoteError(null);
+
+    pricingService.getCheckoutQuote({
+      cartItemIds: checkoutItemIds,
+      couponCode: couponCode.trim() || undefined,
+      shippingAddress: shippingAddressContext,
+    })
+      .then((response) => {
+        if (!cancelled) setQuote(response.data);
+      })
+      .catch((error: any) => {
+        if (!cancelled) {
+          setQuote(null);
+          setQuoteError(error.message || t("checkout.messages.quoteError"));
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setIsQuoteLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [rawCart, checkoutItemIds, checkoutItemIdsKey, couponCode, shippingAddressContext, quoteRevision]);
+
+  const checkoutCart = rawCart ? {
+    ...rawCart,
+    items: checkoutItems,
+    totalAmount: quote?.totalAmount ?? 0,
+  } : null;
 
   // Fetch custom design details when cart changes
   useEffect(() => {
@@ -121,32 +169,15 @@ export function useCheckout() {
     }
   }, [rawCart]);
 
-  const customizedItem = checkoutItems.find(
-    (item) => item.isCustomizable === true || item.customizable === true
-  );
-  const printingCost = customizedItem && customDesign ? customDesign.printingPrice : 0;
+  const printingCost = quote?.printingAmount ?? 0;
 
-  // The coupon discount is validated server-side against the pre-delivery/tax
-  // order amount (item prices + printing), not the final checkout total.
-  const couponOrderAmount = estimatedCost + printingCost;
-
-  const handleApplyCoupon = async () => {
+  const handleApplyCoupon = () => {
     if (!couponCode.trim()) return;
-    setIsApplyingCoupon(true);
-    try {
-      const res = await couponService.previewCoupon(couponCode.trim(), couponOrderAmount);
-      setDiscountAmount(res.data.discountAmount);
-    } catch (err: any) {
-      setDiscountAmount(0);
-      toast.error(err.message || t("checkout.fieldsError"));
-    } finally {
-      setIsApplyingCoupon(false);
-    }
+    setQuoteRevision((revision) => revision + 1);
   };
 
   const handleClearCoupon = () => {
     setCouponCode("");
-    setDiscountAmount(0);
   };
 
   // Remove custom design from cart
@@ -158,9 +189,7 @@ export function useCheckout() {
     if (!customizedItem) return;
 
     const toastId = toast.loading(
-      locale === "vi"
-        ? "Đang xóa thiết kế khỏi giỏ hàng..."
-        : "Removing design from cart..."
+      t("checkout.messages.removeDesignLoading")
     );
     try {
       await cartService.addOrUpdateItem({
@@ -175,16 +204,14 @@ export function useCheckout() {
       await refreshCart();
 
       toast.success(
-        locale === "vi"
-          ? "Đã xóa thiết kế in ấn khỏi giỏ hàng!"
-          : "Custom design removed from cart successfully!",
+        t("checkout.messages.removeDesignSuccess"),
         { id: toastId }
       );
     } catch (err: any) {
       console.error("Failed to remove design", err);
       toast.error(
         err.message ||
-          (locale === "vi" ? "Xóa thiết kế thất bại." : "Failed to remove design."),
+          t("checkout.messages.removeDesignError"),
         { id: toastId }
       );
     }
@@ -273,6 +300,11 @@ export function useCheckout() {
       return;
     }
 
+    if (isQuoteLoading || !quote) {
+      setErrorMsg(quoteError || t("checkout.messages.quotePending"));
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -291,7 +323,7 @@ export function useCheckout() {
 
       const paymentRes = await orderService.createPayOsPayment(orderRes.data.id);
       if (!paymentRes.data.checkoutUrl) {
-        throw new Error("PayOS did not return a checkout URL.");
+        throw new Error(t("checkout.messages.paymentUrlMissing"));
       }
 
       // Let PayOS handle the payment UI. Its returnUrl brings the customer
@@ -300,7 +332,7 @@ export function useCheckout() {
     } catch (err: any) {
       console.error("Order failed", err);
       setErrorMsg(
-        err.message || "Something went wrong during checkout. Please try again."
+        err.message || t("checkout.messages.checkoutFailed")
       );
     } finally {
       setIsSubmitting(false);
@@ -309,12 +341,11 @@ export function useCheckout() {
 
   // Computed values
   const isCartEmpty = checkoutItems.length === 0;
-  const standardDelivery = 15;
-  const expectedTax = 24;
-  const totalPayment =
-    estimatedCost > 0
-      ? estimatedCost + standardDelivery + expectedTax + printingCost - discountAmount
-      : 0;
+  const estimatedCost = quote?.subtotalAmount ?? 0;
+  const standardDelivery = quote?.shippingAmount ?? 0;
+  const expectedTax = quote?.taxAmount ?? 0;
+  const totalPayment = quote?.totalAmount ?? 0;
+  const discountAmount = quote?.couponDiscountAmount ?? 0;
 
   return {
     // Cart
@@ -339,9 +370,12 @@ export function useCheckout() {
     couponCode,
     setCouponCode,
     discountAmount,
-    isApplyingCoupon,
+    isApplyingCoupon: false,
     handleApplyCoupon,
     handleClearCoupon,
+    quote,
+    isQuoteLoading,
+    quoteError,
     // Flow
     isSubmitting,
     errorMsg,
