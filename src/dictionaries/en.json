@@ -128,6 +128,11 @@
       "copyright": "© 2026 QUANG VINH UNIFORM. QUALITY & TRUST. ALL RIGHTS RESERVED."
     }
   },
+  "homeZalo": {
+    "ariaLabel": "Contact via Zalo",
+    "alt": "Zalo contact",
+    "tooltip": "Chat with us on Zalo"
+  },
   "product": {
     "details": {
       "inStock": "In Stock - Ready to Ship",
@@ -145,7 +150,6 @@
       "addedToBag": "Added to Bag!",
       "selectColor": "Select Color",
       "selectSize": "Select Size",
-      "wishlist": "Add to Wishlist",
       "noReviews": "No reviews yet",
       "reviewsCount": "({count} reviews)",
       "description": "Product Description",
@@ -154,7 +158,8 @@
       "quickView": "Quick View",
       "zoomIn": "Zoom In",
       "zoomOut": "Zoom Out",
-      "resetDesign": "Reset Design"
+      "resetDesign": "Reset Design",
+      "addToBagError": "Failed to add item to bag. Please try again."
     },
     "related": {
       "title": "You May Also Like"
@@ -508,7 +513,20 @@
         "noCustomLogo": "No custom logos added.",
         "noDesignData": "No design data found.",
         "close": "Close",
-        "openOriginal": "Open Original Image"
+        "openOriginal": "Open Original Image",
+        "loadError": "Failed to retrieve order details or order does not exist.",
+        "customDesignLoadError": "Failed to retrieve custom printing details.",
+        "statusUpdateSuccess": "Order status successfully updated to {status}",
+        "statusUpdateError": "Failed to update order status.",
+        "notAvailable": "—"
+      },
+      "pricing": {
+        "breakdownSaved": "Breakdown saved",
+        "legacyBreakdown": "Legacy breakdown",
+        "printing": "Printing",
+        "discount": "Tier / coupon discount",
+        "shipping": "Shipping",
+        "legacyMessage": "Legacy order: the backend did not store a pricing-engine breakdown, so historical fees are not inferred."
       }
     },
     "productForm": {
@@ -620,7 +638,13 @@
         "noDescription": "No description",
         "noImage": "(No image)",
         "emptyValue": "(Empty)",
-        "notConfigured": "(Not configured)"
+        "notConfigured": "(Not configured)",
+        "groupUnit": "Group / unit",
+        "status": "Status",
+        "on": "On",
+        "off": "Off",
+        "updatedBy": "by #{id}",
+        "version": "v{version}"
       },
       "form": {
         "addTitle": "Add System Config",
@@ -646,14 +670,86 @@
         "imagePreview": "Active image path: {url}",
         "cancel": "Cancel",
         "create": "Create Config",
-        "save": "Save Changes"
+        "save": "Save Changes",
+        "categoryLabel": "Group",
+        "unitLabel": "Unit",
+        "unitPlaceholder": "VND, %, days...",
+        "activeLabel": "Enable configuration",
+        "scopeLabel": "Visibility",
+        "scopeOptions": {
+          "public": "Public",
+          "internal": "Internal"
+        },
+        "categories": {
+          "commerce": "Commerce",
+          "membership": "Membership",
+          "checkout": "Checkout / Policies",
+          "content": "Website Content"
+        }
       },
       "messages": {
         "createSuccess": "System config created successfully!",
         "updateSuccess": "Config updated successfully!",
         "deleteSuccess": "Config deleted successfully!",
         "deleteConfirm": "Are you sure you want to delete config \"{key}\"?",
-        "error": "An error occurred. Please try again."
+        "error": "An error occurred. Please try again.",
+        "conflict": "This setting changed in another session. The latest values were reloaded; compare and retry.",
+        "versionMissing": "Setting version is missing. Reload the page and try again."
+      },
+      "tabs": {
+        "commerce": "Commerce",
+        "membership": "Membership",
+        "checkout": "Checkout / Policies",
+        "content": "Website Content"
+      }
+    },
+    "membershipTiers": {
+      "title": "Membership tiers",
+      "description": "Spending thresholds, discounts and free shipping are managed by the backend.",
+      "reload": "Reload",
+      "add": "Add tier",
+      "columns": {
+        "code": "Code",
+        "threshold": "Threshold (VND)",
+        "discount": "Discount",
+        "freeShipping": "Free shipping",
+        "sortOrder": "Order",
+        "version": "Version",
+        "actions": "Actions"
+      },
+      "active": {
+        "on": "On",
+        "off": "Off",
+        "yes": "Yes",
+        "no": "No"
+      },
+      "modal": {
+        "edit": "Edit tier {code}",
+        "create": "Add membership tier"
+      },
+      "fields": {
+        "code": "Tier code",
+        "sortOrder": "Order",
+        "threshold": "Spending threshold (VND)",
+        "discount": "Discount (%)",
+        "nameVi": "Vietnamese name",
+        "nameEn": "English name",
+        "freeShipping": "Free shipping"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "save": "Save"
+      },
+      "messages": {
+        "loadError": "Unable to load membership tier settings.",
+        "saveSuccess": "Membership tier settings saved.",
+        "conflict": "The settings changed in another session. Reloaded the latest data; compare and save again.",
+        "saveError": "Unable to save membership tier settings.",
+        "toggleError": "Unable to update tier status.",
+        "deleteConfirm": "Delete tier {code}? The backend will reject this if the tier is still referenced.",
+        "deleteSuccess": "Membership tier deleted.",
+        "deleteConflict": "The tier changed or is still referenced. Latest data was reloaded.",
+        "deleteError": "Unable to delete membership tier."
       }
     }
   },
@@ -713,7 +809,6 @@
     "couponCode": "COUPON CODE",
     "couponPlaceholder": "Enter coupon code",
     "applyCoupon": "Apply",
-    "discount": "Discount",
     "removeCoupon": "Remove",
     "customizeButton": "CUSTOMIZE TEXT & LOGO PRINTING",
     "confirmButton": "CONFIRM & SEND ORDER",
@@ -728,7 +823,48 @@
       "productInactive": "Product is temporarily unavailable",
       "outOfStock": "Product is out of stock",
       "insufficientStock": "Quantity exceeds available stock (Remaining: {stock})"
-    }
+    },
+    "quote": {
+      "products": "{count} products",
+      "printing": "Print design ({material})",
+      "printingDetails": "Printing details",
+      "material": "Material ({material}) × {count} text layers",
+      "logoImages": "Logo images ({count})",
+      "calculating": "Calculating…",
+      "unavailable": "—"
+    },
+    "cartEstimate": {
+      "productSubtotal": "Estimated product subtotal",
+      "shippingAtCheckout": "Calculated at checkout",
+      "finalNote": "Final discounts, shipping and tax are calculated by the backend at checkout."
+    },
+    "messages": {
+      "removeDesignLoading": "Removing design from cart...",
+      "removeDesignSuccess": "Custom print design removed from cart.",
+      "removeDesignError": "Failed to remove design.",
+      "quoteError": "Unable to calculate checkout total.",
+      "quotePending": "Checkout total is still being calculated. Please try again.",
+      "paymentUrlMissing": "PayOS did not return a checkout URL.",
+      "checkoutFailed": "Something went wrong during checkout. Please try again."
+    },
+    "cart": {
+      "removeDesignLoading": "Removing design from cart...",
+      "removeDesignSuccess": "Custom design removed from cart.",
+      "removeDesignError": "Failed to remove design.",
+      "updateQuantityError": "Failed to update quantity.",
+      "removeItemSuccess": "Item removed from bag.",
+      "removeItemError": "Failed to remove item.",
+      "syncing": "Syncing your gear...",
+      "summary": "Summary",
+      "promoQuestion": "Do you have a promo code?",
+      "promoPlaceholder": "ENTER CODE",
+      "estimatedShipping": "Estimated Shipping & Handling",
+      "estimatedTax": "Estimated Tax",
+      "notAvailable": "—",
+      "selectItemError": "Please select at least one item to checkout.",
+      "proceed": "Proceed to Checkout"
+    },
+    "shopProducts": "Shop Products"
   },
   "profile": {
     "title": "User Profile",
@@ -744,7 +880,10 @@
     "avatar": {
       "hoverChange": "Change Image",
       "uploading": "Uploading photo...",
-      "success": "Avatar updated successfully!"
+      "success": "Avatar updated successfully!",
+      "imageOnly": "Please upload an image file.",
+      "fileTooLarge": "Image file must be less than 5MB.",
+      "uploadError": "Failed to upload avatar image."
     },
     "membership": {
       "cardTitle": "LOYALTY MEMBERSHIP CARD",
@@ -754,13 +893,17 @@
       "silver": "SILVER",
       "gold": "GOLD",
       "platinum": "PLATINUM",
-      "bronzeDesc": "Automatically activated when you join Đồng Phục Quang Vinh. Start your journey.",
-      "silverDesc": "Spend 5,000,000đ. Get a 5% discount on all subsequent orders.",
-      "goldDesc": "Spend 15,000,000đ. Get a 10% discount and free custom design printing.",
-      "platinumDesc": "Ultimate tier for 30,000,000đ spent. Get a 15% lifetime discount and dedicated VIP support.",
       "nextProgress": "Spend {amount} more to unlock {nextTier}",
       "maxTier": "Congratulations! You have reached the highest Đồng Phục Quang Vinh membership tier.",
-      "benefitsTitle": "Your Exclusive Benefits"
+      "benefitsTitle": "Your Exclusive Benefits",
+      "syncing": "Membership details are syncing.",
+      "discountConfigured": "{discount}% discount configured for this tier.",
+      "benefitsConfigured": "Configured membership benefits will appear here.",
+      "freeShippingActive": "Free shipping is active for this tier.",
+      "additionalBenefits": "Additional benefits are configured by the administrator.",
+      "athlete": "Athlete",
+      "memberDiscounts": "Member discounts",
+      "customizationPrivilege": "Customization privilege"
     },
     "orders": {
       "title": "My Orders",
@@ -793,6 +936,10 @@
       "shippingFree": "Free",
       "totalAmount": "Total Payment",
       "items": "Itemized List",
+      "size": "Size",
+      "color": "Color",
+      "quantity": "Qty",
+      "each": "each",
       "loadingDetail": "Loading order details...",
       "errorDetail": "Failed to load order details. Please try again later.",
       "notFound": "Order not found.",
@@ -814,7 +961,15 @@
         "errorMaxImages": "You can upload a maximum of 3 images.",
         "errorRating": "Please select a rating.",
         "errorComment": "Please enter a comment."
-      }
+      },
+      "printing": "Printing",
+      "discount": "Discount",
+      "tax": "Tax",
+      "breakdownSummary": "Subtotal {subtotal} · Ship {shipping}",
+      "legacyBreakdown": "Legacy breakdown unavailable",
+      "legacyDetailMessage": "This order was created before the new pricing engine; detailed breakdown is unavailable.",
+      "notAvailable": "—",
+      "syncing": "Syncing athlete session..."
     },
     "addresses": {
       "title": "My Addresses",
@@ -846,6 +1001,12 @@
       "genericError": "Something went wrong. Please try again.",
       "limitReached": "You have reached the maximum number of saved addresses.",
       "phoneError": "Invalid phone number (e.g. 0987654321 or +84987654321)"
+    },
+    "loading": {
+      "session": "SYNCING ATHLETE SESSION...",
+      "file": "LOADING ATHLETE FILE...",
+      "loadError": "Could not load your athlete profile.",
+      "retry": "Retry"
     }
   },
   "customizer": {

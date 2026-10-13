@@ -1,7 +1,7 @@
 "use client"
 
 import { useParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 export function useTranslation() {
   const params = useParams()
@@ -14,7 +14,7 @@ export function useTranslation() {
     })
   }, [locale])
 
-  const t = (key: string) => {
+  const t = useCallback((key: string) => {
     if (!dict) return ''
     const keys = key.split('.')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,7 +24,7 @@ export function useTranslation() {
       val = val[k]
     }
     return val
-  }
+  }, [dict])
 
   return { t, locale }
 }
