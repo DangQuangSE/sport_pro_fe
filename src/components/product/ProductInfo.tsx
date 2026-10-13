@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ChevronDown, Heart, ShoppingBag, Loader2, CheckCircle2, Star, Minus, Plus } from "lucide-react";
+import { ChevronDown, ShoppingBag, Loader2, CheckCircle2, Star, Minus, Plus } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -60,19 +60,19 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
 
   const handleAddToCart = async () => {
     if (!selectedSize) {
-      toast.error(t("product.details.selectSize") || "Please select a size.");
+      toast.error(t("product.details.selectSize"));
       return;
     }
 
     if (!selectedVariant) {
-      toast.error(t("product.details.selectSize") || "Please select a size.");
+      toast.error(t("product.details.selectSize"));
       return;
     }
 
     // Guest Redirection Flow
     if (!isLoggedIn) {
-      toast.error(t("product.details.authRequired") || "Sign In Required", {
-        description: t("product.details.pleaseLoginCart") || "Please sign in to add gear to your bag.",
+      toast.error(t("product.details.authRequired"), {
+        description: t("product.details.pleaseLoginCart"),
       });
       setTimeout(() => {
         router.push(`/${locale}/login`);
@@ -87,12 +87,12 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
         quantity: quantity
       });
       
-      toast.success(t("product.details.addedToBag") || "Added to Bag!", {
+      toast.success(t("product.details.addedToBag"), {
         description: `${product.name} - ${selectedColor}, Size ${selectedSize}`,
         icon: <CheckCircle2 className="text-primary" size={18} />
       });
     } catch (error: any) {
-      toast.error(error.message || "Failed to add to bag. Please try again.");
+      toast.error(error.message || t("product.details.addToBagError"));
     } finally {
       setIsAdding(false);
     }
@@ -112,7 +112,7 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
         </span>
         <span className="flex items-center gap-1 font-bold text-[10px] text-secondary-fixed bg-on-surface px-2 py-1 uppercase tracking-[0.08em] rounded-full">
           <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", offer?.inStock ? "bg-secondary-fixed" : "bg-error")}></span>
-          {offer?.inStock ? t("product.details.inStock") : "Out of Stock"}
+          {offer?.inStock ? t("product.details.inStock") : t("product.details.outOfStock")}
         </span>
       </div>
 
@@ -311,14 +311,6 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
           </button>
         </div>
 
-        {/* Wishlist */}
-        <button
-          aria-label={t("product.details.wishlist") || "Add to Wishlist"}
-          className="w-full h-14 border border-outline-variant bg-surface text-on-surface-variant hover:text-on-surface hover:border-on-surface flex items-center justify-center gap-3 transition-all duration-300 rounded-xl font-bold text-xs uppercase tracking-widest cursor-pointer"
-        >
-          <Heart className="w-5 h-5" />
-          {t("product.details.wishlist") || "Add to Wishlist"}
-        </button>
       </div>
 
       {/* Accordions / Information */}
