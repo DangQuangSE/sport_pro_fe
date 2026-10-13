@@ -17,6 +17,14 @@ interface PublicConfigFormModalProps {
   readonly isSubmitting: boolean;
 }
 
+const normalizeCategory = (value?: string) => {
+  const normalized = (value || "").toLowerCase();
+  if (normalized.includes("checkout")) return "CHECKOUT";
+  if (normalized.includes("commerce")) return "COMMERCE";
+  if (normalized.includes("membership")) return "MEMBERSHIP";
+  return "CONTENT";
+};
+
 export function PublicConfigFormModal({
   isOpen,
   onClose,
@@ -29,6 +37,10 @@ export function PublicConfigFormModal({
   const [configType, setConfigType] = useState<"TEXT" | "IMAGE" | "COLOR" | "NUMBER" | "BOOLEAN">("TEXT");
   const [configValue, setConfigValue] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("CONTENT");
+  const [unit, setUnit] = useState("");
+  const [active, setActive] = useState(true);
+  const [scope, setScope] = useState<"PUBLIC" | "INTERNAL">("PUBLIC");
 
   useEffect(() => {
     if (initialData) {
@@ -36,11 +48,20 @@ export function PublicConfigFormModal({
       setConfigType(initialData.configType || "TEXT");
       setConfigValue(initialData.configValue || "");
       setDescription(initialData.description || "");
+      const normalizedCategory = normalizeCategory(initialData.category);
+      setCategory(normalizedCategory);
+      setUnit(initialData.unit || "");
+      setActive(initialData.active !== false);
+      setScope(initialData.scope || (normalizedCategory === "CONTENT" ? "PUBLIC" : "INTERNAL"));
     } else {
       setConfigKey("");
       setConfigType("TEXT");
       setConfigValue("");
       setDescription("");
+      setCategory("CONTENT");
+      setUnit("");
+      setActive(true);
+      setScope("PUBLIC");
     }
   }, [initialData, isOpen]);
 
@@ -62,9 +83,9 @@ export function PublicConfigFormModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (initialData) {
-      await onSubmit({ configValue, description });
+      await onSubmit({ configValue, description, category, unit, active, scope });
     } else {
-      await onSubmit({ configKey, configType, configValue, description });
+      await onSubmit({ configKey, configType, configValue, description, category, unit, active, scope });
     }
   };
 
@@ -103,6 +124,46 @@ export function PublicConfigFormModal({
               {t("admin.publicConfigs.form.keyHint")}
             </p>
           )}
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="config-category" className="font-bold text-xs uppercase tracking-wider">{t("admin.publicConfigs.form.categoryLabel")}</Label>
+            <select
+              id="config-category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="flex h-10 w-full rounded-xl border border-outline-variant bg-white px-3 py-2 text-sm font-semibold"
+            >
+              <option value="COMMERCE">{t("admin.publicConfigs.form.categories.commerce")}</option>
+              <option value="MEMBERSHIP">{t("admin.publicConfigs.form.categories.membership")}</option>
+              <option value="CHECKOUT">{t("admin.publicConfigs.form.categories.checkout")}</option>
+              <option value="CONTENT">{t("admin.publicConfigs.form.categories.content")}</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="config-unit" className="font-bold text-xs uppercase tracking-wider">{t("admin.publicConfigs.form.unitLabel")}</Label>
+            <Input id="config-unit" value={unit} onChange={(e) => setUnit(e.target.value)} placeholder={t("admin.publicConfigs.form.unitPlaceholder")} className="bg-white border-outline-variant" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-on-surface">
+            <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} />
+            {t("admin.publicConfigs.form.activeLabel")}
+          </label>
+          <div className="space-y-2">
+            <Label htmlFor="config-scope" className="font-bold text-xs uppercase tracking-wider">{t("admin.publicConfigs.form.scopeLabel")}</Label>
+            <select
+              id="config-scope"
+              value={scope}
+              onChange={(e) => setScope(e.target.value as "PUBLIC" | "INTERNAL")}
+              className="flex h-10 w-full rounded-xl border border-outline-variant bg-white px-3 py-2 text-sm font-semibold"
+            >
+              <option value="PUBLIC">{t("admin.publicConfigs.form.scopeOptions.public")}</option>
+              <option value="INTERNAL">{t("admin.publicConfigs.form.scopeOptions.internal")}</option>
+            </select>
+          </div>
         </div>
 
         {/* Config Type: Only editable during creation */}
