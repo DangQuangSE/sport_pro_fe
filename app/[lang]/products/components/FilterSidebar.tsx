@@ -5,7 +5,7 @@ import { SlidersHorizontal, RefreshCw, ChevronUp, ChevronDown } from "lucide-rea
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 import { motion, AnimatePresence } from "framer-motion";
-import { getColorHex, getGenderLabel } from "./utils";
+import { ColorHexMap, getColorHex, getGenderLabel, isLightColor } from "./utils";
 import { ProductListResponse } from "@/services/productService";
 
 interface FilterSidebarProps {
@@ -20,6 +20,7 @@ interface FilterSidebarProps {
   maxPrice: number | "";
   masterSizes: string[];
   masterColors: string[];
+  colorHexMap: ColorHexMap;
   products: ProductListResponse[];
   expandedCategories: Record<number, boolean>;
   handleCategorySelect: (categorySlug: string) => void;
@@ -47,6 +48,7 @@ export default function FilterSidebar({
   maxPrice,
   masterSizes,
   masterColors,
+  colorHexMap,
   products,
   expandedCategories,
   handleCategorySelect,
@@ -263,8 +265,8 @@ export default function FilterSidebar({
               {masterColors.map((colorName) => {
                 const isSelected = selectedColor === colorName;
                 const isDimmed = products.length > 0 && !activeColors.has(colorName) && !isSelected;
-                const hexColor = getColorHex(colorName);
-                const isWhite = colorName.toLowerCase() === "white";
+                const hexColor = getColorHex(colorName, colorHexMap);
+                const isWhite = isLightColor(hexColor);
 
                 return (
                   <button

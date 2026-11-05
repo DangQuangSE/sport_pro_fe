@@ -56,6 +56,12 @@ export interface ProductVariantResponse {
   status: string;
 }
 
+export interface ColorOption {
+  id: number;
+  name: string;
+  hexCode: string;
+}
+
 export const productService = {
   getProducts: (params?: any) => {
     const cleanParams: Record<string, string> = {};
@@ -95,5 +101,9 @@ export const productService = {
     }
     const query = Object.keys(cleanParams).length > 0 ? `?${new URLSearchParams(cleanParams).toString()}` : "";
     return apiClient.get<ApiResponse<PageResponse<any>>>(`/brands${query}`);
+  },
+
+  getColors: () => {
+    return apiClient.get<ApiResponse<ColorOption[]>>("/colors");
   }
 };

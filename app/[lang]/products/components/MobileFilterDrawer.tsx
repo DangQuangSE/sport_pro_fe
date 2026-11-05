@@ -5,7 +5,7 @@ import { SlidersHorizontal, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 import { motion, AnimatePresence } from "framer-motion";
-import { getColorHex, getGenderLabel } from "./utils";
+import { ColorHexMap, getColorHex, getGenderLabel, isLightColor } from "./utils";
 import { Button } from "@/components/ui/button";
 import { ProductListResponse } from "@/services/productService";
 
@@ -21,6 +21,7 @@ interface MobileFilterDrawerProps {
   maxPrice: number | "";
   masterSizes: string[];
   masterColors: string[];
+  colorHexMap: ColorHexMap;
   products: ProductListResponse[];
   mobileFilterOpen: boolean;
   setMobileFilterOpen: (open: boolean) => void;
@@ -47,6 +48,7 @@ export default function MobileFilterDrawer({
   maxPrice,
   masterSizes,
   masterColors,
+  colorHexMap,
   products,
   mobileFilterOpen,
   setMobileFilterOpen,
@@ -228,8 +230,8 @@ export default function MobileFilterDrawer({
                       {masterColors.map((colorName) => {
                         const isSelected = selectedColor === colorName;
                         const isDimmed = products.length > 0 && !activeColors.has(colorName) && !isSelected;
-                        const hexColor = getColorHex(colorName);
-                        const isWhite = colorName.toLowerCase() === "white";
+                        const hexColor = getColorHex(colorName, colorHexMap);
+                        const isWhite = isLightColor(hexColor);
 
                         return (
                           <button

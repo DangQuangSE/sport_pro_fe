@@ -1,4 +1,22 @@
-export const getColorHex = (colorName: string): string => {
+export type ColorHexMap = Record<string, string>;
+
+export const normalizeColorName = (colorName: string): string =>
+  colorName
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .toLowerCase()
+    .trim();
+
+export const buildColorHexMap = (colors: Array<{ name: string; hexCode: string }>): ColorHexMap =>
+  colors.reduce<ColorHexMap>((map, color) => {
+    if (color.name && color.hexCode) {
+      map[normalizeColorName(color.name)] = color.hexCode;
+    }
+    return map;
+  }, {});
+
+export const getColorHex = (colorName: string, colorHexMap: ColorHexMap = {}): string => {
   const map: Record<string, string> = {
     black: "#0D0D0D",
     white: "#F9F9F9",
@@ -15,7 +33,17 @@ export const getColorHex = (colorName: string): string => {
     pink: "#EC4899",
     brown: "#78350F"
   };
-  return map[colorName.toLowerCase()] || "#CCCCCC";
+  const normalizedName = normalizeColorName(colorName);
+  return colorHexMap[normalizedName] || map[normalizedName] || "#CCCCCC";
+};
+
+export const isLightColor = (hexColor: string): boolean => {
+  const normalized = hexColor.replace("#", "");
+  if (!/^[0-9a-f]{6}$/i.test(normalized)) return false;
+  const red = Number.parseInt(normalized.slice(0, 2), 16);
+  const green = Number.parseInt(normalized.slice(2, 4), 16);
+  const blue = Number.parseInt(normalized.slice(4, 6), 16);
+  return (red * 299 + green * 587 + blue * 114) / 1000 > 180;
 };
 
 export const getGenderLabel = (g: string, t: any): string => {

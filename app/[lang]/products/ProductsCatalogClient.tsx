@@ -21,6 +21,7 @@ import FilterSidebar from "./components/FilterSidebar";
 import MobileFilterDrawer from "./components/MobileFilterDrawer";
 import CatalogToolbar from "./components/CatalogToolbar";
 import ActiveFiltersPreview from "./components/ActiveFiltersPreview";
+import { buildColorHexMap, ColorHexMap } from "./components/utils";
 
 export default function ProductsCatalogPage() {
   const { t, locale } = useTranslation();
@@ -60,6 +61,7 @@ export default function ProductsCatalogPage() {
   const [selectedColor, setSelectedColor] = useState("");
   const [masterSizes, setMasterSizes] = useState<string[]>([]);
   const [masterColors, setMasterColors] = useState<string[]>([]);
+  const [colorHexMap, setColorHexMap] = useState<ColorHexMap>({});
 
   // Sync initial query params
   useEffect(() => {
@@ -84,6 +86,12 @@ export default function ProductsCatalogPage() {
 
   // Dynamic extraction of master sizes & colors from unfiltered catalog background fetch
   useEffect(() => {
+    productService.getColors()
+      .then(res => {
+        if (res?.data) setColorHexMap(buildColorHexMap(res.data));
+      })
+      .catch(err => console.error("Error loading color definitions:", err));
+
     productService.getProducts({ size: 200 })
       .then(res => {
         if (res && res.data && res.data.content) {
@@ -269,6 +277,7 @@ export default function ProductsCatalogPage() {
           maxPrice={maxPrice}
           masterSizes={masterSizes}
           masterColors={masterColors}
+          colorHexMap={colorHexMap}
           products={products}
           expandedCategories={expandedCategories}
           handleCategorySelect={handleCategorySelect}
@@ -422,6 +431,7 @@ export default function ProductsCatalogPage() {
         maxPrice={maxPrice}
         masterSizes={masterSizes}
         masterColors={masterColors}
+        colorHexMap={colorHexMap}
         products={products}
         mobileFilterOpen={mobileFilterOpen}
         setMobileFilterOpen={setMobileFilterOpen}
