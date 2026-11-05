@@ -13,10 +13,12 @@ import { CheckoutAddressPicker } from "@/components/checkout/CheckoutAddressPick
 import { PaymentMethodCard } from "@/components/checkout/PaymentMethodCard";
 import { OrderOverviewCard } from "@/components/checkout/OrderOverviewCard";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { CheckoutLoading } from "@/components/loading/StorefrontLoading";
 
 export default function CheckoutPage() {
   const {
     cart,
+    isCartLoading,
     isCartEmpty,
     updateQuantity,
     removeFromCart,
@@ -52,6 +54,8 @@ export default function CheckoutPage() {
     locale,
   } = useCheckout();
 
+  if (isCartLoading) return <CheckoutLoading />;
+
   return (
     <div className="flex flex-col min-h-screen bg-[#f9f9fe] font-sans antialiased text-[#1a1c1f]">
       {/* 1. Secure Header */}
@@ -63,7 +67,7 @@ export default function CheckoutPage() {
       />
 
       {/* 2. Main Two-Column Layout */}
-      <main className="flex-grow max-w-[1280px] mx-auto w-full px-4 sm:px-8 py-16 animate-in fade-in duration-700">
+      <main className="flex-grow max-w-[1280px] mx-auto w-full px-4 sm:px-8 py-16 ">
         <Breadcrumbs 
           items={[
             { label: t("checkout.shoppingCart") || "Cart", href: "/cart" },

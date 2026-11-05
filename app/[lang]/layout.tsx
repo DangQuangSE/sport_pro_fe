@@ -3,6 +3,7 @@ import { use } from "react";
 import "../globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { OrderIntakeProvider } from "@/contexts/OrderIntakeContext";
 import { Toaster } from "sonner";
 import { ZaloFloatingButton } from "@/components/home/ZaloFloatingButton";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -31,9 +32,11 @@ export default function RootLayout({
         <JsonLd value={buildWebsiteJsonLd(origin)} />
         <AuthProvider>
           <CartProvider>
+            <OrderIntakeProvider>
             {children}
             <ZaloFloatingButton />
             <Toaster richColors position="top-right" closeButton />
+            </OrderIntakeProvider>
           </CartProvider>
         </AuthProvider>
       </body>

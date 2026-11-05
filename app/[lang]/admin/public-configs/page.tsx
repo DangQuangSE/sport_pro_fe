@@ -17,6 +17,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import Link from "next/link";
 import { toast } from "sonner";
 import { MembershipTierSettings } from "@/components/admin/public-configs/MembershipTierSettings";
+import { OrderIntakeSettings, ORDER_INTAKE_SETTING } from "@/components/admin/public-configs/OrderIntakeSettings";
 
 export default function PublicConfigsPage() {
   const { t, locale } = useTranslation();
@@ -68,14 +69,14 @@ export default function PublicConfigsPage() {
     }
   };
 
-  const filteredConfigs = configs.filter(config => 
+  const filteredConfigs = configs.filter(config => config.configKey !== ORDER_INTAKE_SETTING).filter(config =>
     config.configKey.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (config.configValue && config.configValue.toLowerCase().includes(searchQuery.toLowerCase())) ||
     (config.description && config.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-6 ">
       {/* Breadcrumbs & Actions Row */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-2 border-outline-variant pb-6">
         <div className="flex flex-col gap-1 flex-shrink-0">
@@ -114,6 +115,13 @@ export default function PublicConfigsPage() {
           </Button>
         </div>
       </div>
+
+      <OrderIntakeSettings
+        config={configs.find(config => config.configKey === ORDER_INTAKE_SETTING)}
+        loading={isLoading}
+        submitting={isSubmitting}
+        onUpdate={updateConfig}
+      />
 
       <div className="flex flex-wrap gap-2 rounded-2xl border border-outline-variant bg-surface p-2">
         {([

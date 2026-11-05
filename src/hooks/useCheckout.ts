@@ -10,6 +10,8 @@ import { pricingService, PricingBreakdown } from "@/services/pricingService";
 import { apiClient, ApiResponse } from "@/lib/api-client";
 import { isValidPhoneNumber } from "@/lib/validators";
 import { toast } from "sonner";
+import { useOrderIntake } from "@/contexts/OrderIntakeContext";
+import { useAuth } from "@/hooks/useAuth";
 
 export interface CustomDesignInfo {
   printingPrice: number;
@@ -23,7 +25,9 @@ export interface CustomDesignInfo {
 }
 
 export function useCheckout() {
-  const { cart: rawCart, refreshCart, updateQuantity, removeFromCart } = useCart();
+  const intake = useOrderIntake();
+  const { isLoading: isAuthLoading } = useAuth();
+  const { cart: rawCart, isLoading: isCartLoading, refreshCart, updateQuantity, removeFromCart } = useCart();
   const { t, locale } = useTranslation();
   const [selectedIds, setSelectedIds] = useState<number[] | null>(null);
 
@@ -85,7 +89,7 @@ export function useCheckout() {
   useEffect(() => {
     let cancelled = false;
 
-    if (!rawCart || checkoutItemIds.length === 0) {
+    if (intake.paused || !rawCart || checkoutItemIds.length === 0) {
       setQuote(null);
       setQuoteError(null);
       setIsQuoteLoading(false);
@@ -116,7 +120,7 @@ export function useCheckout() {
     return () => {
       cancelled = true;
     };
-  }, [rawCart, checkoutItemIds, checkoutItemIdsKey, couponCode, shippingAddressContext, quoteRevision]);
+  }, [intake.paused, rawCart, checkoutItemIds, checkoutItemIdsKey, couponCode, shippingAddressContext, quoteRevision]);
 
   const checkoutCart = rawCart ? {
     ...rawCart,
@@ -283,6 +287,11 @@ export function useCheckout() {
     e.preventDefault();
     setErrorMsg(null);
 
+    if (intake.paused) {
+      setErrorMsg(t(intake.unavailable ? "orderIntake.unavailable" : "orderIntake.notice"));
+      return;
+    }
+
     if (checkoutItems.length === 0) {
       setErrorMsg(t("checkout.noCartItems"));
       return;
@@ -349,6 +358,7 @@ export function useCheckout() {
 
   return {
     // Cart
+    isCartLoading: isAuthLoading || (isCartLoading && !rawCart),
     cart: checkoutCart,
     checkoutItems,
     isCartEmpty,
@@ -374,8 +384,8 @@ export function useCheckout() {
     handleApplyCoupon,
     handleClearCoupon,
     quote,
-    isQuoteLoading,
-    quoteError,
+    isQuoteLoading: isQuoteLoading || intake.loading,
+    quoteError: intake.paused ? t(intake.unavailable ? "orderIntake.unavailable" : "orderIntake.notice") : quoteError,
     // Flow
     isSubmitting,
     errorMsg,

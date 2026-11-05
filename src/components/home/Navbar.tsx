@@ -13,9 +13,11 @@ import { productService } from "@/services/productService";
 import { motion, AnimatePresence } from "framer-motion";
 import MembershipBadge from "@/components/ui/MembershipBadge";
 import { BRAND_CONFIG } from "@/constants/brand";
+import { useOrderIntake } from "@/contexts/OrderIntakeContext";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function Navbar() {
+  const intake = useOrderIntake();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileAccordionOpen, setMobileAccordionOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -64,6 +66,11 @@ export default function Navbar() {
         "shadow-[0_2px_15px_-3px_rgba(0,0,0,0.04),0_4px_20px_-2px_rgba(0,0,0,0.02)]"
       )}
     >
+      {!intake.loading && intake.paused && (
+        <div role="status" className="bg-amber-50 px-4 py-2 text-center text-xs font-medium text-amber-900">
+          {t(intake.unavailable ? "orderIntake.unavailable" : "orderIntake.notice")}
+        </div>
+      )}
       <div className="flex justify-between items-center px-4 sm:px-8 h-20 w-full max-w-[1280px] mx-auto">
         {/* Brand */}
         <Link

@@ -1,7 +1,10 @@
 "use client";
 
+import { Spinner } from "@/components/ui/spinner";
+import { useOrderIntake } from "@/contexts/OrderIntakeContext";
+
 import { useState, useMemo } from "react";
-import { ChevronDown, ShoppingBag, Loader2, CheckCircle2, Star, Minus, Plus } from "lucide-react";
+import { ChevronDown, ShoppingBag, CheckCircle2, Star, Minus, Plus } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -16,6 +19,7 @@ interface ProductInfoProps {
 }
 
 export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
+  const intake = useOrderIntake();
   const { t, locale } = useTranslation();
   const { addToCart } = useCart();
   const { isLoggedIn } = useAuth();
@@ -59,6 +63,10 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
   }, [availableSizes, selectedSize]);
 
   const handleAddToCart = async () => {
+    if (intake.paused) {
+      toast.error(t("orderIntake.notice"));
+      return;
+    }
     if (!selectedSize) {
       toast.error(t("product.details.selectSize"));
       return;
@@ -291,7 +299,7 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
           {/* Primary CTA */}
           <button
             onClick={handleAddToCart}
-            disabled={isAdding || (selectedVariant && selectedVariant.stockQuantity <= 0)}
+            disabled={intake.paused || isAdding || (selectedVariant && selectedVariant.stockQuantity <= 0)}
             className={cn(
               "flex-1 h-14 font-black text-[14px] uppercase tracking-[0.1em]",
               "bg-secondary-container text-on-secondary-container",
@@ -301,11 +309,11 @@ export default function ProductInfo({ product }: Readonly<ProductInfoProps>) {
             )}
           >
             {isAdding ? (
-              <Loader2 className="animate-spin" size={20} />
+              <Spinner size={20} />
             ) : (
               <>
                 <ShoppingBag size={20} />
-                {selectedVariant ? t("product.details.addToCart") : t("product.details.selectSize")}
+                {intake.paused ? t("orderIntake.pausedLabel") : selectedVariant ? t("product.details.addToCart") : t("product.details.selectSize")}
               </>
             )}
           </button>
