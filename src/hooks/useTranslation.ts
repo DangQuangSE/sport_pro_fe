@@ -1,30 +1,23 @@
-"use client"
+"use client";
 
-import { useParams } from 'next/navigation'
-import { useState, useEffect, useCallback } from 'react'
+import { useParams } from "next/navigation";
+import { useCallback } from "react";
+import en from "@/dictionaries/en.json";
+import vi from "@/dictionaries/vi.json";
+
+const dictionaries = { en, vi };
 
 export function useTranslation() {
-  const params = useParams()
-  const locale = (params.lang as 'en' | 'vi') || 'en'
-  const [dict, setDict] = useState<Record<string, unknown> | null>(null)
-
-  useEffect(() => {
-    import(`@/dictionaries/${locale}.json`).then((module) => {
-      setDict(module.default)
-    })
-  }, [locale])
-
-  const t = useCallback((key: string) => {
-    if (!dict) return ''
-    const keys = key.split('.')
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let val: any = dict
-    for (const k of keys) {
-      if (val[k] === undefined) return key
-      val = val[k]
+  const params = useParams();
+  const locale: "en" | "vi" = params.lang === "vi" ? "vi" : "en";
+  const dictionary = dictionaries[locale];
+  const t = useCallback((key: string): string => {
+    let value: unknown = dictionary;
+    for (const segment of key.split(".")) {
+      if (!value || typeof value !== "object" || !(segment in value)) return key;
+      value = (value as Record<string, unknown>)[segment];
     }
-    return val
-  }, [dict])
-
-  return { t, locale }
+    return typeof value === "string" ? value : key;
+  }, [dictionary]);
+  return { t, locale };
 }

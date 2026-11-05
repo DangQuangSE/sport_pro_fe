@@ -1,4 +1,23 @@
 {
+  "pageLoading": { "label": "Đang tải nội dung…" },
+  "orderIntake": {
+    "notice": "Website đang giới thiệu sản phẩm và tạm ngừng nhận đơn. Vui lòng quay lại sau.",
+    "unavailable": "Chưa thể xác nhận trạng thái nhận đơn. Vui lòng thử lại sau.",
+    "pausedLabel": "Tạm ngừng nhận đơn"
+  },
+  "adminOrderIntake": {
+    "title": "Tạm ngừng nhận đơn",
+    "description": "Khi tạm ngừng, khách vẫn xem được sản phẩm nhưng không thể đặt đơn mới hoặc tạo liên kết thanh toán. Đơn cũ vẫn được xử lý.",
+    "loading": "Đang tải trạng thái…",
+    "paused": "Đang tạm ngừng nhận đơn",
+    "open": "Đang nhận đơn",
+    "pause": "Tạm ngừng nhận đơn",
+    "resume": "Mở lại nhận đơn",
+    "resumeConfirm": "Bạn muốn mở lại nhận đơn? Hãy đảm bảo website đã sẵn sàng bán hàng và tồn kho đã được cập nhật.",
+    "saved": "Đã cập nhật trạng thái nhận đơn.",
+    "unconfigured": "Thiếu hoặc sai cấu hình nhận đơn. Hệ thống sẽ ngừng nhận đơn cho tới khi cấu hình được khôi phục.",
+    "inventoryNote": "Thay đổi này không sửa giá hoặc tồn kho. Khi mở bán, cần khôi phục tồn kho thực tế riêng."
+  },
   "auth": {
     "loginTitle": "SPORT PRO",
     "loginSubtitle": "Đăng nhập hồ sơ vận động viên",
@@ -91,7 +110,10 @@
     },
     "featured": {
       "title": "Nổi bật Tuần này",
-      "subtitle": "Các thiết kế đồng phục nổi bật được khách hàng tin chọn nhiều nhất.",
+      "subtitle": "Khám phá các mẫu đồng phục nổi bật.",
+      "viewDetails": "Xem chi tiết",
+      "contactPrice": "Liên hệ",
+      "originalPrice": "Giá gốc",
       "viewAll": "Xem tất cả",
       "defaultApparelDesc": "Mẫu trang phục cao cấp được may đo tinh tế từ chất liệu vải chọn lọc, bền đẹp và co giãn tối ưu.",
       "defaultFootwearDesc": "Thiết kế giày thể thao êm ái, hỗ trợ chuyển động tối đa và bền bỉ trong mọi điều kiện.",
@@ -135,6 +157,7 @@
   },
   "product": {
     "details": {
+      "imageUnavailable": "Chưa có hình ảnh sản phẩm",
       "inStock": "Còn hàng - Sẵn sàng vận chuyển",
       "outOfStock": "Hết hàng",
       "color": "Màu sắc",

@@ -1,4 +1,23 @@
 {
+  "pageLoading": { "label": "Loading content…" },
+  "orderIntake": {
+    "notice": "This website is displaying products and is temporarily not accepting orders. Please check back later.",
+    "unavailable": "Order availability could not be confirmed. Please try again later.",
+    "pausedLabel": "Orders temporarily paused"
+  },
+  "adminOrderIntake": {
+    "title": "Pause order intake",
+    "description": "Customers can browse products while paused, but cannot place new orders or create payment links. Existing orders can still be processed.",
+    "loading": "Loading status…",
+    "paused": "Order intake is paused",
+    "open": "Accepting orders",
+    "pause": "Pause order intake",
+    "resume": "Resume order intake",
+    "resumeConfirm": "Resume accepting orders? Make sure the website is ready to sell and inventory has been updated.",
+    "saved": "Order intake status updated.",
+    "unconfigured": "Order intake configuration is missing or invalid. Orders remain paused until it is restored.",
+    "inventoryNote": "This setting does not change prices or stock. Restore actual inventory separately before reopening sales."
+  },
   "auth": {
     "loginTitle": "SPORT PRO",
     "loginSubtitle": "Sign in to your athlete profile",
@@ -91,7 +110,10 @@
     },
     "featured": {
       "title": "Featured This Week",
-      "subtitle": "Our most popular custom uniform and apparel designs.",
+      "subtitle": "Explore our featured uniform and apparel designs.",
+      "viewDetails": "View details",
+      "contactPrice": "Contact us",
+      "originalPrice": "Original price",
       "viewAll": "View All",
       "defaultApparelDesc": "Premium apparel custom designed with high-quality fabric, comfortable fit, and custom print options.",
       "defaultFootwearDesc": "Athletic footwear featuring maximum foot support and long-lasting durability.",
@@ -135,6 +157,7 @@
   },
   "product": {
     "details": {
+      "imageUnavailable": "Product image unavailable",
       "inStock": "In Stock - Ready to Ship",
       "outOfStock": "Out of Stock",
       "color": "Color",
