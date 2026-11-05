@@ -1,7 +1,9 @@
 "use client";
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
 import React, { useState, useEffect } from "react";
-import { Loader2, Image as ImageIcon, Paintbrush } from "lucide-react";
+import { Image as ImageIcon, Paintbrush } from "lucide-react";
 import { PublicConfig } from "@/services/adminService";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
@@ -99,10 +101,10 @@ export function PublicConfigFormModal({
           <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
             {t("admin.publicConfigs.form.cancel")}
           </Button>
-          <Button onClick={handleSubmit} disabled={isSubmitting} className="gap-2">
-            {isSubmitting && <Loader2 size={16} className="animate-spin" />}
+          <LoadingButton loading={isSubmitting} onClick={handleSubmit} disabled={isSubmitting} className="gap-2">
+
             {initialData ? t("admin.publicConfigs.form.save") : t("admin.publicConfigs.form.create")}
-          </Button>
+          </LoadingButton>
         </>
       }
     >

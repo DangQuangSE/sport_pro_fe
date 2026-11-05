@@ -1,5 +1,9 @@
 "use client";
 
+import { DesignPreviewSkeleton } from "@/components/loading/ContentSkeleton";
+
+import { PageContentSkeleton } from "@/components/loading/PageSkeleton";
+
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -9,7 +13,6 @@ import {
   Truck,
   Package,
   ChevronLeft,
-  Loader2,
   CheckCircle,
   XCircle,
   MapPin,
@@ -201,12 +204,7 @@ export default function AdminOrderDetailPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="space-y-8 py-20 flex flex-col items-center justify-center text-on-surface-variant">
-        <Loader2 size={36} className="animate-spin text-primary" />
-        <p className="text-xs font-black uppercase tracking-widest italic">{t("admin.orders.detail.loading")}</p>
-      </div>
-    );
+    return <PageContentSkeleton variant="detail" />;
   }
 
   if (error || !order) {
@@ -232,7 +230,7 @@ export default function AdminOrderDetailPage() {
     : `${Number(value).toLocaleString(locale === "vi" ? "vi-VN" : "en-US")} ₫`;
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 text-left">
+    <div className="space-y-8  text-left">
       
       {/* Navigation Breadcrumb */}
       <div className="flex items-center gap-2 text-xs font-medium text-on-surface-variant uppercase tracking-widest">
@@ -507,12 +505,7 @@ export default function AdminOrderDetailPage() {
         className="max-w-2xl text-on-surface"
       >
         {isDesignLoading ? (
-          <div className="flex flex-col items-center justify-center py-12 text-on-surface-variant gap-4">
-            <Loader2 size={32} className="animate-spin text-primary" />
-            <p className="text-[10px] font-black uppercase tracking-widest italic">
-              {t("admin.orders.detail.loadingDetails")}
-            </p>
-          </div>
+          <DesignPreviewSkeleton />
         ) : selectedDesign ? (() => {
           let metadata: any = null;
           try {

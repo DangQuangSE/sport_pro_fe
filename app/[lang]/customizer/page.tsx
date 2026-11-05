@@ -1,9 +1,13 @@
 "use client";
 
+import { Spinner } from "@/components/ui/spinner";
+
+import { CustomizerSkeleton } from "@/components/loading/ContentSkeleton";
+
 import React, { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Wrench, Loader2, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Wrench, CheckCircle2 } from "lucide-react";
 import { BRAND_CONFIG } from "@/constants/brand";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -102,14 +106,7 @@ export default function ProductCustomizerPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen space-y-6 bg-[#f9f9fe]">
-        <Loader2 size={48} className="animate-spin text-primary" />
-        <p className="font-mono text-sm tracking-wider uppercase text-on-surface-variant">
-          {t("customizer.initializing") || "Initializing Customizer Workspace..."}
-        </p>
-      </div>
-    );
+    return <CustomizerSkeleton />;
   }
 
   return (
@@ -250,7 +247,7 @@ export default function ProductCustomizerPage() {
               className="w-full h-14 bg-gradient-to-r from-primary to-[#004493] hover:from-[#004493] hover:to-[#003675] text-white font-lexend font-black uppercase text-[10px] tracking-wider rounded-xl shadow-lg shadow-primary/10 transition-all duration-200 gap-2 items-center justify-center flex hover:scale-[1.02]"
             >
               {isSaving ? (
-                <Loader2 size={16} className="animate-spin" />
+                <Spinner size={16} />
               ) : (
                 <CheckCircle2 size={16} />
               )}

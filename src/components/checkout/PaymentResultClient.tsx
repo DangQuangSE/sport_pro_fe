@@ -1,8 +1,10 @@
 "use client";
 
+import { Spinner } from "@/components/ui/spinner";
+
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { AlertCircle, CheckCircle2, Clock3, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock3, } from "lucide-react";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { orderService, OrderResponse } from "@/services/orderService";
@@ -109,7 +111,7 @@ export default function PaymentResultClient({
     <main className="min-h-screen bg-[#f9f9fe] flex items-center justify-center px-6 py-16">
       <section className="max-w-xl w-full bg-white border border-[#e2e2e7] shadow-[0_8px_30px_rgba(0,0,0,0.06)] rounded-[2rem] p-10 text-center space-y-8">
         <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto ${iconClass}`}>
-          {isLoadingOrder ? <Loader2 size={52} className="animate-spin" /> : <Icon size={52} strokeWidth={1.5} />}
+          {isLoadingOrder ? <Spinner size={52} /> : <Icon size={52} strokeWidth={1.5} />}
         </div>
         <div className="space-y-3">
           <h1 className="text-3xl font-black italic uppercase tracking-tighter text-[#1a1c1f]" style={{ fontFamily: "var(--font-lexend)" }}>

@@ -1,7 +1,11 @@
 "use client";
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
+import { AddressListSkeleton } from "@/components/loading/ContentSkeleton";
+
 import React, { useState } from "react";
-import { Truck, Loader2, Plus, Check } from "lucide-react";
+import { Truck, Plus, Check } from "lucide-react";
 import { AddressRequest, AddressResponse } from "@/services/addressService";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -75,12 +79,7 @@ export function CheckoutAddressPicker({
 
       <div className="mt-6 space-y-3">
         {isLoadingAddresses ? (
-          <div className="flex items-center justify-center gap-2 py-10 text-on-surface-variant">
-            <Loader2 size={20} className="animate-spin text-primary" />
-            <span className="text-xs font-bold uppercase tracking-widest">
-              {t("profile.addresses.loading")}
-            </span>
-          </div>
+          <AddressListSkeleton />
         ) : (
           addresses.map((address) => {
             const isSelected = address.id === selectedAddressId;
@@ -143,15 +142,15 @@ export function CheckoutAddressPicker({
             <Button variant="outline" onClick={onCancelAddNew} disabled={isSubmittingNewAddress}>
               {t("profile.addresses.cancel")}
             </Button>
-            <Button
+            <LoadingButton loading={isSubmittingNewAddress}
               type="submit"
               form={NEW_ADDRESS_FORM_ID}
               disabled={isSubmittingNewAddress}
               className="gap-2"
             >
-              {isSubmittingNewAddress && <Loader2 size={16} className="animate-spin" />}
+
               {t("profile.addresses.save")}
-            </Button>
+            </LoadingButton>
           </>
         }
       >

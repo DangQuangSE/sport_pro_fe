@@ -1,6 +1,8 @@
 "use client";
 
-import { Loader2, Plus, RefreshCw, Trash2 } from "lucide-react";
+import { LoadingButton } from "@/components/ui/loading-button";
+
+import { Plus, RefreshCw, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -95,10 +97,10 @@ export function VariantsStep({ variants, colors, existingSkus, buildSku, isSubmi
             <Plus size={14} />{pf("addManual")}
           </Button>
         </div>
-        <Button onClick={onSave} disabled={isSubmitting || variants.length === 0} className="gap-2">
-          {isSubmitting && <Loader2 size={18} className="animate-spin" />}
+        <LoadingButton loading={isSubmitting} onClick={onSave} disabled={isSubmitting || variants.length === 0} className="gap-2">
+
           Next: Upload Images
-        </Button>
+        </LoadingButton>
       </div>
     </div>
   );

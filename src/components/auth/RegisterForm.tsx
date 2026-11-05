@@ -1,12 +1,13 @@
 "use client"
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
 import { useState, useEffect } from "react"
 import { useTranslation } from "@/hooks/useTranslation"
 import { useAuthForms } from "@/hooks/useAuthForms"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Mail, Lock, ArrowRight, Loader2, ShieldCheck, KeyRound } from "lucide-react"
+import { Mail, Lock, ArrowRight, ShieldCheck, KeyRound } from "lucide-react";
 import Link from "next/link"
 
 export function RegisterForm() {
@@ -59,14 +60,12 @@ export function RegisterForm() {
               )}
             </div>
 
-            <Button type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
-              {isLoading ? <Loader2 className="animate-spin w-5 h-5" /> : (
-                <>
+            <LoadingButton loading={isLoading} type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
+              <>
                   {t('auth.registerButton')}
                   <ArrowRight className="w-5 h-5" />
                 </>
-              )}
-            </Button>
+            </LoadingButton>
           </form>
         </>
       )}
@@ -93,14 +92,12 @@ export function RegisterForm() {
               )}
             </div>
 
-            <Button type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
-              {isLoading ? <Loader2 className="animate-spin w-5 h-5" /> : (
-                <>
+            <LoadingButton loading={isLoading} type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
+              <>
                   {t('auth.verifyButton')}
                   <ArrowRight className="w-5 h-5" />
                 </>
-              )}
-            </Button>
+            </LoadingButton>
 
             <div className="text-center mt-6">
               <button
@@ -152,14 +149,12 @@ export function RegisterForm() {
               )}
             </div>
 
-            <Button type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
-              {isLoading ? <Loader2 className="animate-spin w-5 h-5" /> : (
-                <>
+            <LoadingButton loading={isLoading} type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
+              <>
                   {t('auth.registerButton')}
                   <ArrowRight className="w-5 h-5" />
                 </>
-              )}
-            </Button>
+            </LoadingButton>
           </form>
         </>
       )}

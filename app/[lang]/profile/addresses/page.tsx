@@ -1,8 +1,10 @@
 "use client";
 
+import { StorefrontLoading } from "@/components/loading/StorefrontLoading";
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
@@ -39,15 +41,7 @@ export default function AddressBookPage() {
   }, [isLoadingAuth, isLoggedIn, locale, router]);
 
   if (isLoadingAuth) {
-    return (
-      <div className="flex flex-col min-h-screen bg-surface">
-        <Navbar />
-        <main className="flex-grow flex items-center justify-center pt-32 pb-20">
-          <Loader2 size={40} className="animate-spin text-primary" />
-        </main>
-        <Footer />
-      </div>
-    );
+    return <StorefrontLoading variant="addresses" />;
   }
 
   const handleOpenCreate = () => {
@@ -101,7 +95,7 @@ export default function AddressBookPage() {
     <div className="flex flex-col min-h-screen bg-surface">
       <Navbar />
 
-      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1000px] mx-auto w-full animate-in fade-in duration-700">
+      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1000px] mx-auto w-full ">
         <div className="mb-6">
           <Breadcrumbs
             items={[

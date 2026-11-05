@@ -1,5 +1,7 @@
 "use client";
 
+import { TableSkeletonRows } from "@/components/loading/ContentSkeleton";
+
 import React from "react";
 import { Image as ImageIcon, ExternalLink, Check, X } from "lucide-react";
 import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
@@ -13,7 +15,6 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "@/hooks/useTranslation";
 
 interface PublicConfigTableProps {
@@ -110,15 +111,9 @@ export function PublicConfigTable({
             <TableHead className="text-right">{t("admin.publicConfigs.table.actions")}</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody aria-busy={isLoading}>
           {isLoading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                {Array.from({ length: 8 }).map((_, j) => (
-                  <TableCell key={j}><Skeleton className="h-6 w-full" /></TableCell>
-                ))}
-              </TableRow>
-            ))
+            <TableSkeletonRows columns={8} />
           ) : configs.length === 0 ? (
             <TableRow>
               <TableCell colSpan={8} className="h-32 text-center text-on-surface-variant italic">

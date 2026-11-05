@@ -1,7 +1,9 @@
 "use client";
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
 import React, { useState, useEffect } from "react";
-import { Loader2, Save } from "lucide-react";
+import { Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -75,14 +77,14 @@ export default function PriceConfigModal({
           >
             Cancel
           </Button>
-          <Button 
+          <LoadingButton loading={isSubmitting}
             onClick={handleSubmit}
             className="rounded-xl font-bold h-11 shadow-md gap-2 bg-primary text-on-primary hover:bg-primary/95"
             disabled={isSubmitting}
           >
-            {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+            <Save size={16} />
             Save
-          </Button>
+          </LoadingButton>
         </>
       }
     >

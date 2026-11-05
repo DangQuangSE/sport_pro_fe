@@ -1,5 +1,7 @@
 "use client";
 
+import { StorefrontLoading } from "@/components/loading/StorefrontLoading";
+
 import React from "react";
 import Link from "next/link";
 import { 
@@ -9,7 +11,6 @@ import {
   Plus, 
   ArrowRight, 
   ChevronLeft,
-  Loader2,
   PackageCheck,
   Wrench
 } from "lucide-react";
@@ -17,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
@@ -25,6 +27,7 @@ import { apiClient, ApiResponse } from "@/lib/api-client";
 import { cartService } from "@/services/cartService";
 
 export default function CartPage() {
+  const { isLoading: isAuthLoading } = useAuth();
   const { cart, isLoading, updateQuantity, removeFromCart, refreshCart } = useCart();
   const { t, locale } = useTranslation();
   const [selectedIds, setSelectedIds] = React.useState<number[]>([]);
@@ -168,21 +171,8 @@ export default function CartPage() {
     }
   };
 
-  if (isLoading && !cart) {
-    return (
-      <div className="flex flex-col min-h-screen bg-surface">
-        <Navbar />
-        <main className="flex-grow flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <Loader2 size={48} className="animate-spin text-primary" />
-            <p className="font-lexend font-bold uppercase tracking-widest text-xs text-on-surface-variant">
-              {t("checkout.cart.syncing")}
-            </p>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
+  if (isAuthLoading || (isLoading && !cart)) {
+    return <StorefrontLoading variant="cart" />;
   }
 
   const isEmpty = !cart || cart.items.length === 0;
@@ -191,7 +181,7 @@ export default function CartPage() {
     <div className="flex flex-col min-h-screen bg-surface">
       <Navbar />
 
-      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1280px] mx-auto w-full animate-in fade-in duration-700">
+      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1280px] mx-auto w-full ">
         <Breadcrumbs items={[{ label: locale === "vi" ? "Giỏ hàng" : "Your Bag" }]} />
         <div className="flex flex-col lg:flex-row gap-16 mt-8">
           {/* Left: Items List */}

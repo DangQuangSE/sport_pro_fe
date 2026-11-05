@@ -1,11 +1,12 @@
 "use client";
 
+import { ProductGridSkeleton } from "@/components/loading/ContentSkeleton";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 import { productService, ProductListResponse } from "@/services/productService";
-import { Loader2 } from "lucide-react";
 
 interface RelatedProductsProps {
   categoryId?: number;
@@ -36,11 +37,7 @@ export default function RelatedProducts({ categoryId }: Readonly<RelatedProducts
   }, [categoryId]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center py-20">
-        <Loader2 className="animate-spin text-primary" size={32} />
-      </div>
-    );
+    return <ProductGridSkeleton />;
   }
 
   if (products.length === 0) return null;

@@ -1,5 +1,7 @@
 "use client";
 
+import { TableSkeletonRows } from "@/components/loading/ContentSkeleton";
+
 import React from "react";
 import { FolderTree } from "lucide-react";
 import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
@@ -14,7 +16,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface CategoryTableProps {
   readonly categories: Category[];
@@ -44,15 +45,9 @@ export function CategoryTable({
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody aria-busy={isLoading}>
           {isLoading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                {Array.from({ length: 8 }).map((_, j) => (
-                  <TableCell key={j}><Skeleton className="h-6 w-full" /></TableCell>
-                ))}
-              </TableRow>
-            ))
+            <TableSkeletonRows columns={8} />
           ) : categories.length === 0 ? (
             <TableRow>
               <TableCell colSpan={8} className="h-32 text-center text-on-surface-variant italic">

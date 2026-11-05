@@ -1,11 +1,12 @@
 "use client"
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
 import { useTranslation } from "@/hooks/useTranslation"
 import { useAuthForms } from "@/hooks/useAuthForms"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react"
+import { Mail, Lock, ArrowRight, } from "lucide-react";
 import Link from "next/link"
 
 export function LoginForm() {
@@ -54,14 +55,12 @@ export function LoginForm() {
           )}
         </div>
 
-        <Button type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
-          {isLoading ? <Loader2 className="animate-spin w-5 h-5" /> : (
-            <>
+        <LoadingButton loading={isLoading} type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
+          <>
               {t('auth.signInButton')}
               <ArrowRight className="w-5 h-5" />
             </>
-          )}
-        </Button>
+        </LoadingButton>
       </form>
 
       <p className="mt-8 text-center font-body-sm text-body-sm text-on-surface-variant">

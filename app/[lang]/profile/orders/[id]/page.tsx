@@ -1,5 +1,9 @@
 "use client";
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
+import { StorefrontLoading } from "@/components/loading/StorefrontLoading";
+
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -9,7 +13,6 @@ import {
   Truck,
   Package,
   ChevronLeft,
-  Loader2,
   CheckCircle,
   XCircle,
   MapPin,
@@ -179,16 +182,7 @@ export default function OrderDetailPage() {
     : `${Number(value).toLocaleString(locale === "vi" ? "vi-VN" : "en-US")} ₫`;
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col min-h-screen bg-surface">
-        <Navbar />
-        <main className="flex-grow pt-32 pb-20 px-8 flex flex-col items-center justify-center gap-4 text-on-surface-variant">
-          <Loader2 size={36} className="animate-spin text-primary" />
-          <p className="text-xs font-bold uppercase tracking-widest italic">{t("profile.orders.loadingDetail")}</p>
-        </main>
-        <Footer />
-      </div>
-    );
+    return <StorefrontLoading variant="detail" />;
   }
 
   if (error || !order) {
@@ -216,7 +210,7 @@ export default function OrderDetailPage() {
     <div className="flex flex-col min-h-screen bg-surface">
       <Navbar />
 
-      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1000px] mx-auto w-full animate-in fade-in duration-700">
+      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1000px] mx-auto w-full ">
         
         {/* Navigation Breadcrumb & Back button */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-6 border-b border-outline-variant/40">
@@ -416,14 +410,14 @@ export default function OrderDetailPage() {
             >
               {t("profile.orders.reviewModal.cancel") || "Cancel"}
             </Button>
-            <Button 
+            <LoadingButton loading={isSubmittingReview}
               onClick={handleSubmitReview}
               className="rounded-xl font-bold h-11 shadow-md bg-primary text-on-primary hover:bg-primary/95"
               disabled={isSubmittingReview}
             >
-              {isSubmittingReview && <Loader2 size={16} className="animate-spin mr-1.5" />}
+
               {t("profile.orders.reviewModal.submit") || "Submit Review"}
-            </Button>
+            </LoadingButton>
           </>
         }
       >

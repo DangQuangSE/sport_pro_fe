@@ -1,6 +1,10 @@
 "use client";
 
-import { ChevronLeft, Package, Layers, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
+
+import { PageContentSkeleton } from "@/components/loading/PageSkeleton";
+
+import { ChevronLeft, Package, Layers, Image as ImageIcon, } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { useRouter } from "next/navigation";
@@ -23,16 +27,11 @@ export default function EditProductPage() {
   ];
 
   if (h.isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
-        <Loader2 size={48} className="animate-spin text-primary" />
-        <p className="text-on-surface-variant font-medium">{t("admin.productForm.loadingData")}</p>
-      </div>
-    );
+    return <PageContentSkeleton variant="detail" />;
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500">
+    <div className="max-w-5xl mx-auto space-y-8 ">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-6">
           <Button variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-outline-variant hover:border-primary hover:text-primary transition-all shadow-sm" onClick={() => router.back()}>
@@ -62,7 +61,7 @@ export default function EditProductPage() {
         {h.isSubmitting && (
           <div className="absolute inset-0 bg-surface/60 backdrop-blur-[2px] z-50 flex items-center justify-center">
             <div className="bg-surface p-6 rounded-3xl border border-outline-variant shadow-2xl flex items-center gap-4">
-              <Loader2 size={24} className="animate-spin text-primary" />
+              <Spinner size={24} className="text-primary" />
               <span className="font-bold uppercase tracking-widest text-xs">{t("admin.productForm.syncingBackend")}</span>
             </div>
           </div>

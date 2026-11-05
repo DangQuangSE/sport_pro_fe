@@ -1,8 +1,10 @@
 "use client";
 
+import { Spinner } from "@/components/ui/spinner";
+
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Wrench, CheckCircle2, Loader2, Tag, X } from "lucide-react";
+import { Wrench, CheckCircle2, Tag, X } from "lucide-react";
 import { CartResponse } from "@/services/cartService";
 
 interface CustomDesignInfo {
@@ -140,7 +142,7 @@ export function OrderOverviewCard({
                   disabled={isApplyingCoupon || !couponCode.trim()}
                   className="h-10 px-4 rounded-lg bg-[#1a1c1f] text-white text-[10px] font-black uppercase tracking-widest disabled:opacity-50 flex items-center gap-1.5 shrink-0"
                 >
-                  {isApplyingCoupon ? <Loader2 size={14} className="animate-spin" /> : <Tag size={14} />}
+                  {isApplyingCoupon ? <Spinner size={14} /> : <Tag size={14} />}
                   {t("checkout.applyCoupon")}
                 </button>
               </div>
@@ -197,7 +199,7 @@ export function OrderOverviewCard({
               className="w-full h-14 bg-[#fe9400] hover:bg-[#e08200] text-white font-black uppercase text-[10px] tracking-widest rounded-xl flex items-center justify-center gap-2.5 transition-colors shadow-lg shadow-[#fe9400]/10 disabled:opacity-50"
             >
               {isSubmitting ? (
-                <Loader2 size={16} className="animate-spin" />
+                <Spinner size={16} />
               ) : (
                 <CheckCircle2 size={16} />
               )}

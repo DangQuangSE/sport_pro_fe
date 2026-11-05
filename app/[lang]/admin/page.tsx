@@ -1,5 +1,7 @@
 "use client";
 
+import { PageContentSkeleton } from "@/components/loading/PageSkeleton";
+
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -11,7 +13,6 @@ import {
   TrendingUp,
   ArrowUpRight,
   ArrowDownRight,
-  Loader2,
   Calendar,
   Layers
 } from "lucide-react";
@@ -213,12 +214,7 @@ export default function AdminDashboardPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-[500px] flex flex-col items-center justify-center gap-4 text-on-surface-variant">
-        <Loader2 size={40} className="animate-spin text-primary" />
-        <p className="text-xs font-bold uppercase tracking-widest italic animate-pulse">{t("admin.dashboard.syncing") || "Syncing Command Operations..."}</p>
-      </div>
-    );
+    return <PageContentSkeleton variant="dashboard" />;
   }
 
   const stats = [
@@ -253,7 +249,7 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 ">
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 mb-2 font-bold text-[10px] text-on-surface-variant uppercase tracking-[0.15em]">
         <Link href={`/${locale}`} className="hover:text-primary transition-colors flex items-center gap-1">

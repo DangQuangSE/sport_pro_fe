@@ -1,7 +1,8 @@
 "use client";
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
 import React from "react";
-import { Loader2 } from "lucide-react";
 import { AddressRequest, AddressResponse } from "@/services/addressService";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
@@ -37,10 +38,10 @@ export function AddressFormModal({
           <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
             {t("profile.addresses.cancel")}
           </Button>
-          <Button type="submit" form={FORM_ID} disabled={isSubmitting} className="gap-2">
-            {isSubmitting && <Loader2 size={16} className="animate-spin" />}
+          <LoadingButton loading={isSubmitting} type="submit" form={FORM_ID} disabled={isSubmitting} className="gap-2">
+
             {t("profile.addresses.save")}
-          </Button>
+          </LoadingButton>
         </>
       }
     >

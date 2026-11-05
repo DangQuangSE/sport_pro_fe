@@ -1,8 +1,8 @@
 "use client";
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
 import { FormEvent } from "react";
-import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Category, Brand, SizeGroup } from "@/services/adminService";
@@ -85,10 +85,10 @@ export function BasicInfoStep({ basicInfo, onChange, categories, brands, sizeGro
         </div>
       </div>
       <div className="flex justify-end pt-4">
-        <Button type="submit" disabled={isSubmitting} className="gap-2">
-          {isSubmitting && <Loader2 size={18} className="animate-spin" />}
+        <LoadingButton loading={isSubmitting} type="submit" disabled={isSubmitting} className="gap-2">
+
           Next: Add Variants
-        </Button>
+        </LoadingButton>
       </div>
     </form>
   );

@@ -1,7 +1,9 @@
 "use client";
 
+import { Spinner } from "@/components/ui/spinner";
+
 import { ChangeEvent } from "react";
-import { Image as ImageIcon, Plus, Trash2, Loader2 } from "lucide-react";
+import { Image as ImageIcon, Plus, Trash2, } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -62,7 +64,7 @@ export function ImagesStep({ images, isSubmitting, onUpload, onDelete, onBack, o
 
       {isSubmitting && (
         <div className="flex items-center gap-2 text-primary font-medium text-sm">
-          <Loader2 size={16} className="animate-spin" />
+          <Spinner size={16} />
           Processing assets, please wait...
         </div>
       )}

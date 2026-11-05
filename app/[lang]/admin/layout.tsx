@@ -7,6 +7,7 @@ import LanguageToggle from "@/components/ui/LanguageToggle";
 import Sidebar from "@/components/admin/Sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "@/hooks/useTranslation";
+import { PageContentSkeleton } from "@/components/loading/PageSkeleton";
 
 export default function AdminLayout({
   children,
@@ -31,14 +32,14 @@ export default function AdminLayout({
 
   if (isLoading || !isLoggedIn || user?.role !== "ADMIN") {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-surface">
-        <div className="space-y-4 w-full max-w-md px-8">
-          <Skeleton className="h-12 w-full" />
-          <Skeleton className="h-64 w-full" />
-          <div className="flex gap-4">
-            <Skeleton className="h-10 w-1/2" />
-            <Skeleton className="h-10 w-1/2" />
-          </div>
+      <div className="flex min-h-screen w-full bg-surface">
+        <aside aria-hidden="true" className="hidden w-64 shrink-0 space-y-6 border-r border-outline-variant p-6 md:block">
+          <Skeleton className="mb-10 h-12 w-full" />
+          {Array.from({ length: 6 }, (_, i) => <Skeleton key={i} className="h-9 w-full" />)}
+        </aside>
+        <div className="min-w-0 flex-1">
+          <div aria-hidden="true" className="flex h-20 items-center justify-between border-b border-outline-variant px-8"><Skeleton className="h-6 w-40" /><Skeleton className="h-8 w-24" /></div>
+          <main className="p-8"><PageContentSkeleton variant="table" /></main>
         </div>
       </div>
     );

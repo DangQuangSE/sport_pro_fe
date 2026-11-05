@@ -1,7 +1,9 @@
 "use client";
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
 import React, { useState, useEffect } from "react";
-import { Loader2, Image as ImageIcon } from "lucide-react";
+import { Image as ImageIcon } from "lucide-react";
 import { Brand, BrandRequest } from "@/services/adminService";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
@@ -68,10 +70,10 @@ export function BrandFormModal({
           <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={isSubmitting} className="gap-2">
-            {isSubmitting && <Loader2 size={16} className="animate-spin" />}
+          <LoadingButton loading={isSubmitting} onClick={handleSubmit} disabled={isSubmitting} className="gap-2">
+
             {initialData ? "Save Changes" : "Create Brand"}
-          </Button>
+          </LoadingButton>
         </>
       }
     >

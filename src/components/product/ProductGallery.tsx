@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ProductImageResponse } from "@/services/productService";
+import { ImageOff } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface ProductGalleryProps {
   images: ProductImageResponse[];
@@ -12,6 +14,7 @@ interface ProductGalleryProps {
 export default function ProductGallery({
   images,
 }: Readonly<ProductGalleryProps>) {
+  const { t } = useTranslation();
   const sortedImages = [...images].sort((a, b) => a.sortOrder - b.sortOrder);
   const mainThumbnail = sortedImages.find(img => img.isThumbnail) || sortedImages[0];
   
@@ -26,7 +29,10 @@ export default function ProductGallery({
 
   if (!sortedImages.length) {
     return (
-      <div className="flex-1 aspect-[4/5] bg-surface-container-low rounded-2xl animate-pulse" />
+      <div className="flex flex-1 aspect-[4/5] flex-col items-center justify-center gap-3 rounded-2xl bg-surface-container-low text-on-surface-variant">
+        <ImageOff aria-hidden="true" size={40} />
+        <p className="text-sm">{t("product.details.imageUnavailable")}</p>
+      </div>
     );
   }
 

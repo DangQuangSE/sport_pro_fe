@@ -1,5 +1,9 @@
 "use client";
 
+import { Spinner } from "@/components/ui/spinner";
+
+import { StorefrontLoading } from "@/components/loading/StorefrontLoading";
+
 import React, { useEffect, useState, useRef } from "react";
 import Navbar from "@/components/home/Navbar";
 import Footer from "@/components/home/Footer";
@@ -15,7 +19,6 @@ import {
   Award, 
   Lock, 
   Camera, 
-  Loader2, 
   TrendingUp, 
   Sparkles, 
   ShieldCheck, 
@@ -79,16 +82,7 @@ export default function UserProfilePage() {
   }, [isLoadingAuth, isLoggedIn, locale, router]);
 
   if (isLoadingAuth) {
-    return (
-      <div className="flex flex-col min-h-screen bg-surface">
-        <Navbar />
-        <div className="flex-grow flex flex-col items-center justify-center pt-32 pb-20 gap-4 text-on-surface-variant">
-          <Loader2 size={40} className="animate-spin text-primary" />
-          <p className="text-xs font-bold uppercase tracking-widest italic">{t("profile.loading.session")}</p>
-        </div>
-        <Footer />
-      </div>
-    );
+    return <StorefrontLoading variant="profile" />;
   }
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
@@ -148,16 +142,7 @@ export default function UserProfilePage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col min-h-screen bg-surface">
-        <Navbar />
-        <div className="flex-grow flex flex-col items-center justify-center pt-32 pb-20 gap-4 text-on-surface-variant">
-          <Loader2 size={40} className="animate-spin text-primary" />
-          <p className="text-xs font-bold uppercase tracking-widest italic">{t("profile.loading.file")}</p>
-        </div>
-        <Footer />
-      </div>
-    );
+    return <StorefrontLoading variant="profile" />;
   }
 
   if (!profile) {
@@ -210,7 +195,7 @@ export default function UserProfilePage() {
     <div className="flex flex-col min-h-screen bg-surface">
       <Navbar />
 
-      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1200px] mx-auto w-full animate-in fade-in duration-700">
+      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1200px] mx-auto w-full ">
         {/* Navigation Breadcrumb */}
         <div className="mb-6">
           <Breadcrumbs items={[{ label: t("profile.title") || "Profile" }]} />
@@ -389,7 +374,7 @@ export default function UserProfilePage() {
                   <div className="w-28 h-28 rounded-full border-4 border-primary/20 overflow-hidden bg-surface-container-highest flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-105">
                     {isUploading ? (
                       <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                        <Loader2 size={24} className="animate-spin text-white" />
+                        <Spinner size={24} className="text-white" />
                       </div>
                     ) : null}
                     
@@ -479,7 +464,7 @@ export default function UserProfilePage() {
                 >
                   {isSaving ? (
                     <>
-                      <Loader2 size={16} className="animate-spin" />
+                      <Spinner size={16} />
                       {t("profile.saving")}
                     </>
                   ) : (

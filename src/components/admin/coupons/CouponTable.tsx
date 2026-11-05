@@ -1,7 +1,11 @@
 "use client";
 
+import { Spinner } from "@/components/ui/spinner";
+
+import { TableSkeletonRows } from "@/components/loading/ContentSkeleton";
+
 import React from "react";
-import { Ticket, Power, PowerOff, Loader2 } from "lucide-react";
+import { Ticket, Power, PowerOff, } from "lucide-react";
 import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
 import { Coupon, DiscountType } from "@/services/couponService";
 import {
@@ -14,7 +18,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface CouponTableProps {
   readonly coupons: Coupon[];
@@ -49,15 +52,9 @@ export function CouponTable({ coupons, isLoading, onEdit, onDelete, onToggleActi
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody aria-busy={isLoading}>
           {isLoading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                {Array.from({ length: 6 }).map((_, j) => (
-                  <TableCell key={j}><Skeleton className="h-6 w-full" /></TableCell>
-                ))}
-              </TableRow>
-            ))
+            <TableSkeletonRows columns={6} />
           ) : coupons.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="h-32 text-center text-on-surface-variant italic">
@@ -96,7 +93,7 @@ export function CouponTable({ coupons, isLoading, onEdit, onDelete, onToggleActi
                       title={coupon.isActive ? "Deactivate" : "Activate"}
                     >
                       {togglingIds.has(coupon.id) ? (
-                        <Loader2 size={14} className="animate-spin" />
+                        <Spinner size={14} />
                       ) : coupon.isActive ? (
                         <PowerOff size={14} />
                       ) : (

@@ -1,5 +1,7 @@
 "use client";
 
+import { TableSkeletonRows } from "@/components/loading/ContentSkeleton";
+
 import React from "react";
 import { Package, Star, MoreVertical, RotateCcw } from "lucide-react";
 import { AdminActionButtons } from "@/components/admin/shared/AdminActionButtons";
@@ -14,7 +16,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -59,15 +60,9 @@ export function ProductTable({
             <TableHead className="text-right font-lexend font-bold uppercase tracking-widest text-[11px] text-on-surface-variant">{t("admin.products.table.actions") || "Actions"}</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody aria-busy={isLoading}>
           {isLoading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                {Array.from({ length: 7 }).map((_, j) => (
-                  <TableCell key={j}><Skeleton className="h-10 w-full" /></TableCell>
-                ))}
-              </TableRow>
-            ))
+            <TableSkeletonRows columns={7} />
           ) : products.length === 0 ? (
             <TableRow>
               <TableCell colSpan={7} className="h-32 text-center text-on-surface-variant italic font-inter">

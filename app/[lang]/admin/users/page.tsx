@@ -1,9 +1,13 @@
 "use client";
 
+import { Spinner } from "@/components/ui/spinner";
+
+import { PageContentSkeleton } from "@/components/loading/PageSkeleton";
+
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  Users, Loader2, Mail, User as UserIcon,
+  Users, Mail, User as UserIcon,
   ShieldAlert, ShieldCheck, ShieldOff, Trash2, UserX, UserCheck
 } from "lucide-react";
 import { toast } from "sonner";
@@ -112,16 +116,11 @@ export default function AdminUsersPage() {
     new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 }).format(value);
 
   if (isLoading) {
-    return (
-      <div className="min-h-[400px] flex flex-col items-center justify-center gap-4 text-on-surface-variant">
-        <Loader2 size={40} className="animate-spin text-primary" />
-        <p className="text-xs font-bold uppercase tracking-widest italic animate-pulse">{t("admin.users.loading")}</p>
-      </div>
-    );
+    return <PageContentSkeleton variant="table" />;
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 ">
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 font-bold text-[10px] text-on-surface-variant uppercase tracking-[0.15em]">
         <Link href={`/${locale}/admin`} className="hover:text-primary transition-colors flex items-center gap-1">
@@ -233,7 +232,7 @@ export default function AdminUsersPage() {
                       <TableCell className="py-4 pr-6">
                         <div className="flex items-center justify-end gap-1.5">
                           {isRowLoading ? (
-                            <Loader2 size={16} className="animate-spin text-primary" />
+                            <Spinner size={16} className="text-primary" />
                           ) : (
                             <>
                               {/* Toggle Role */}

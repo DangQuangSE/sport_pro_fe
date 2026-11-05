@@ -1,7 +1,9 @@
 "use client";
 
+import { AddressListSkeleton } from "@/components/loading/ContentSkeleton";
+
 import React from "react";
-import { Loader2, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { AddressResponse } from "@/services/addressService";
 import { AddressListItem } from "./AddressListItem";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -18,12 +20,7 @@ export function AddressList({ addresses, isLoading, onEdit, onDelete, onSetDefau
   const { t } = useTranslation();
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-3 py-16 text-on-surface-variant">
-        <Loader2 size={32} className="animate-spin text-primary" />
-        <p className="text-xs font-bold uppercase tracking-widest">{t("profile.addresses.loading")}</p>
-      </div>
-    );
+    return <AddressListSkeleton />;
   }
 
   if (addresses.length === 0) {

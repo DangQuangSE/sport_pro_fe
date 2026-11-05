@@ -1,10 +1,13 @@
 "use client";
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
+import { PageContentSkeleton } from "@/components/loading/PageSkeleton";
+
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   Plus,
-  Loader2,
   Palette,
   ArrowLeft,
   Save,
@@ -136,21 +139,11 @@ export default function AdminColorsPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-6 animate-in fade-in duration-300">
-        <div className="relative flex items-center justify-center">
-          <Loader2 size={48} className="animate-spin text-primary relative z-10" />
-          <div className="absolute w-12 h-12 rounded-full border-4 border-primary/20 animate-ping" />
-        </div>
-        <p className="text-on-surface-variant font-mono font-medium text-sm tracking-wider uppercase">
-          {t("admin.colors.loading") || t("admin.productForm.loadingData") || "Loading color swatches..."}
-        </p>
-      </div>
-    );
+    return <PageContentSkeleton variant="table" />;
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 px-4 sm:px-6 animate-in fade-in duration-500">
+    <div className="max-w-5xl mx-auto space-y-8 px-4 sm:px-6 ">
       
       {/* Header Panel */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 border-b border-outline-variant pb-6">
@@ -353,14 +346,14 @@ export default function AdminColorsPage() {
             >
               {t("admin.colors.cancel") || "Cancel"}
             </Button>
-            <Button 
+            <LoadingButton loading={isSubmitting}
               onClick={handleSaveColor}
               className="rounded-xl font-bold h-11 shadow-md gap-2 bg-primary text-on-primary hover:bg-primary/95"
               disabled={isSubmitting}
             >
-              {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+              <Save size={16} />
               {t("admin.colors.save") || "Save"}
-            </Button>
+            </LoadingButton>
           </>
         }
       >
@@ -447,15 +440,15 @@ export default function AdminColorsPage() {
             >
               {t("admin.colors.cancel") || "Cancel"}
             </Button>
-            <Button 
+            <LoadingButton loading={isSubmitting}
               variant="destructive"
               onClick={handleConfirmDelete}
               className="rounded-xl font-bold h-11 shadow-md gap-2"
               disabled={isSubmitting}
             >
-              {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+              <Trash2 size={16} />
               {t("admin.colors.confirm") || "Confirm"}
-            </Button>
+            </LoadingButton>
           </>
         }
       >

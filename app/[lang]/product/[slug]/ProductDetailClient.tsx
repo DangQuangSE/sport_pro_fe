@@ -1,5 +1,9 @@
 "use client";
 
+import { ReviewsSkeleton } from "@/components/loading/ContentSkeleton";
+
+import { StorefrontLoading } from "@/components/loading/StorefrontLoading";
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -10,7 +14,7 @@ import ProductInfo from "@/components/product/ProductInfo";
 import RelatedProducts from "@/components/product/RelatedProducts";
 import { productService, ProductDetailResponse } from "@/services/productService";
 import { reviewService, ReviewResponse } from "@/services/reviewService";
-import { Loader2, AlertCircle, Star, User, Calendar, ArrowLeft } from "lucide-react";
+import { AlertCircle, Star, User, Calendar, ArrowLeft } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -82,18 +86,7 @@ export default function ProductDetailClient({
   }, [initialProduct, slug]);
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col min-h-screen bg-surface">
-        <Navbar />
-        <main className="flex-grow flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <Loader2 size={48} className="animate-spin text-primary" />
-            <p className="font-lexend font-black uppercase tracking-widest text-xs text-on-surface-variant">Calibrating Performance Data...</p>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
+    return <StorefrontLoading variant="product" />;
   }
 
   if (error || !product) {
@@ -126,7 +119,7 @@ export default function ProductDetailClient({
     <div className="flex flex-col min-h-screen bg-surface">
       <Navbar />
 
-      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1280px] mx-auto w-full animate-in fade-in duration-700">
+      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1280px] mx-auto w-full ">
         
         {/* Breadcrumb Navigation & Back Button */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-outline-variant/40">
@@ -170,9 +163,7 @@ export default function ProductDetailClient({
           </div>
 
           {reviewsLoading && reviews.length === 0 ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="animate-spin text-primary" size={24} />
-            </div>
+            <ReviewsSkeleton />
           ) : reviews.length === 0 ? (
             <div className="bg-surface-variant/20 border border-outline-variant rounded-3xl p-8 text-center text-on-surface-variant font-medium italic">
               {t("product.reviews.noReviews") || "No reviews yet. Be the first to field test this gear!"}

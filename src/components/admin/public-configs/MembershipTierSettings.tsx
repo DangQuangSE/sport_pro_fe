@@ -1,7 +1,11 @@
 "use client";
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
+import { TableSkeletonRows } from "@/components/loading/ContentSkeleton";
+
 import { useCallback, useEffect, useState } from "react";
-import { Loader2, Pencil, Plus, RefreshCcw, ToggleLeft, ToggleRight, Trash2 } from "lucide-react";
+import { Pencil, Plus, RefreshCcw, ToggleLeft, ToggleRight, Trash2 } from "lucide-react";
 import { adminService, MembershipTierAdmin, MembershipTierRequest } from "@/services/adminService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -148,8 +152,8 @@ export function MembershipTierSettings() {
               <th className="p-4 text-right">{t("admin.membershipTiers.columns.actions")}</th>
             </tr>
           </thead>
-          <tbody>
-            {isLoading ? <tr><td colSpan={7} className="p-8 text-center"><Loader2 className="mx-auto animate-spin" /></td></tr> : tiers.map((tier) => (
+          <tbody aria-busy={isLoading}>
+            {isLoading ? <TableSkeletonRows columns={7} /> : tiers.map((tier) => (
               <tr key={tier.code} className="border-t border-outline-variant/60">
                 <td className="p-4 font-black">
                   {tier.code}
@@ -194,7 +198,7 @@ export function MembershipTierSettings() {
           <label className="flex items-center gap-2 text-xs font-bold"><input type="checkbox" checked={draft.freeShipping} onChange={(e) => setDraft({ ...draft, freeShipping: e.target.checked })} /> {t("admin.membershipTiers.fields.freeShipping")}</label>
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => { setEditing(null); setIsModalOpen(false); }}>{t("admin.membershipTiers.buttons.cancel")}</Button>
-            <Button type="submit" disabled={isSaving}>{isSaving && <Loader2 size={14} className="mr-2 animate-spin" />} {t("admin.membershipTiers.buttons.save")}</Button>
+            <LoadingButton loading={isSaving} type="submit" disabled={isSaving}> {t("admin.membershipTiers.buttons.save")}</LoadingButton>
           </div>
         </form>
       </Modal>

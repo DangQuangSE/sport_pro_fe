@@ -1,5 +1,8 @@
 "use client";
 
+import { PageContentSkeleton } from "@/components/loading/PageSkeleton";
+import { StorefrontLoading } from "@/components/loading/StorefrontLoading";
+
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,7 +13,6 @@ import {
   Truck,
   Package,
   ChevronRight,
-  Loader2,
   AlertCircle,
   Clock,
   CheckCircle,
@@ -61,18 +63,7 @@ export default function OrderHistoryPage() {
   }, [isLoadingAuth, isLoggedIn, locale, router]);
 
   if (isLoadingAuth) {
-    return (
-      <div className="flex flex-col min-h-screen bg-surface">
-        <Navbar />
-        <main className="flex-grow flex items-center justify-center pt-32 pb-20">
-          <div className="flex flex-col items-center gap-4">
-            <Loader2 size={48} className="animate-spin text-primary" />
-            <p className="font-lexend font-bold uppercase tracking-widest text-xs text-on-surface-variant">{t("profile.orders.syncing")}</p>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
+    return <StorefrontLoading variant="orders" />;
   }
 
   const getStatusIcon = (status: OrderStatus) => {
@@ -118,7 +109,7 @@ export default function OrderHistoryPage() {
     <div className="flex flex-col min-h-screen bg-surface">
       <Navbar />
 
-      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1000px] mx-auto w-full animate-in fade-in duration-700">
+      <main className="flex-grow pt-24 sm:pt-32 pb-20 px-4 sm:px-8 max-w-[1000px] mx-auto w-full ">
         
         {/* Navigation Breadcrumb */}
         <div className="mb-6">
@@ -167,10 +158,7 @@ export default function OrderHistoryPage() {
 
         {/* Order Listing Area */}
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-4 text-on-surface-variant">
-            <Loader2 size={36} className="animate-spin text-primary" />
-            <p className="text-xs font-bold uppercase tracking-widest italic">{t("profile.orders.loading")}</p>
-          </div>
+          <PageContentSkeleton variant="orders" />
         ) : error ? (
           <div className="bg-error/5 border border-error/20 rounded-2xl p-8 flex flex-col items-center text-center gap-4 my-8">
             <AlertCircle size={40} className="text-error" />

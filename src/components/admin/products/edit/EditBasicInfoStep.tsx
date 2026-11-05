@@ -1,8 +1,9 @@
 "use client";
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
 import { FormEvent } from "react";
-import { Save, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Save, } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Category, Brand, SizeGroup } from "@/services/adminService";
@@ -80,10 +81,10 @@ export function EditBasicInfoStep({ basicInfo, onChange, categories, brands, siz
         </div>
       </div>
       <div className="flex justify-end pt-6 border-t border-outline-variant">
-        <Button type="submit" disabled={isSubmitting} className="h-14 px-10 rounded-2xl bg-primary hover:bg-primary/90 text-on-primary font-lexend font-black uppercase tracking-widest text-xs gap-3 shadow-lg shadow-primary/20">
-          {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+        <LoadingButton loading={isSubmitting} type="submit" disabled={isSubmitting} className="h-14 px-10 rounded-2xl bg-primary hover:bg-primary/90 text-on-primary font-lexend font-black uppercase tracking-widest text-xs gap-3 shadow-lg shadow-primary/20">
+          <Save size={18} />
           {t("admin.productForm.updateCoreSpecs")}
-        </Button>
+        </LoadingButton>
       </div>
     </form>
   );

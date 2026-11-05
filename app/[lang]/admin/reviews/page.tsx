@@ -1,12 +1,15 @@
 "use client";
 
+import { Spinner } from "@/components/ui/spinner";
+
+import { PageContentSkeleton } from "@/components/loading/PageSkeleton";
+
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { 
   MessageSquare, 
   Trash2, 
   CornerDownRight, 
-  Loader2, 
   Star,
   ArrowLeft,
   Calendar,
@@ -137,18 +140,11 @@ export default function AdminReviewsPage() {
   };
 
   if (isLoading && reviews.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-6 animate-in fade-in duration-300">
-        <Loader2 size={40} className="animate-spin text-primary" />
-        <p className="text-on-surface-variant font-mono font-medium text-sm tracking-wider uppercase">
-          {t("admin.reviews.loading") || "Loading athlete feedback..."}
-        </p>
-      </div>
-    );
+    return <PageContentSkeleton variant="table" />;
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 px-4 sm:px-6 animate-in fade-in duration-500 text-left">
+    <div className="max-w-6xl mx-auto space-y-8 px-4 sm:px-6  text-left">
       {/* Header Panel */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 border-b border-outline-variant pb-6">
         <div className="flex items-center gap-6">
@@ -337,7 +333,7 @@ export default function AdminReviewsPage() {
               className="rounded-xl font-bold h-11 shadow-md bg-primary text-on-primary hover:bg-primary/95"
               disabled={isSubmitting}
             >
-              {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : null}
+              {isSubmitting ? <Spinner size={16} /> : null}
               {t("admin.reviews.replyModal.submit") || "Send Reply"}
             </Button>
           </>
@@ -385,7 +381,7 @@ export default function AdminReviewsPage() {
               className="rounded-xl font-bold h-11 shadow-md"
               disabled={isSubmitting}
             >
-              {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : null}
+              {isSubmitting ? <Spinner size={16} /> : null}
               {t("admin.reviews.deleteModalConfirm") || "Confirm Delete"}
             </Button>
           </>

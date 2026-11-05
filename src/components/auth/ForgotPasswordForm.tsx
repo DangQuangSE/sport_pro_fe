@@ -1,12 +1,13 @@
 "use client"
 
+import { LoadingButton } from "@/components/ui/loading-button";
+
 import { useState, useEffect } from "react"
 import { useTranslation } from "@/hooks/useTranslation"
 import { useForgotPasswordForms } from "@/hooks/useForgotPasswordForms"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Mail, Lock, ArrowRight, Loader2, ShieldCheck, KeyRound, ArrowLeft } from "lucide-react"
+import { Mail, Lock, ArrowRight, ShieldCheck, KeyRound, ArrowLeft } from "lucide-react";
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -86,14 +87,12 @@ export function ForgotPasswordForm() {
                 )}
               </div>
 
-              <Button type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
-                {isLoading ? <Loader2 className="animate-spin w-5 h-5" /> : (
-                  <>
+              <LoadingButton loading={isLoading} type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
+                <>
                     {t('auth.forgotPasswordRequestButton')}
                     <ArrowRight className="w-5 h-5" />
                   </>
-                )}
-              </Button>
+              </LoadingButton>
             </form>
           </motion.div>
         )}
@@ -141,14 +140,12 @@ export function ForgotPasswordForm() {
                 )}
               </div>
 
-              <Button type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
-                {isLoading ? <Loader2 className="animate-spin w-5 h-5" /> : (
-                  <>
+              <LoadingButton loading={isLoading} type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
+                <>
                     {t('auth.verifyButton')}
                     <ArrowRight className="w-5 h-5" />
                   </>
-                )}
-              </Button>
+              </LoadingButton>
 
               <div className="text-center mt-6">
                 <button
@@ -210,14 +207,12 @@ export function ForgotPasswordForm() {
                 )}
               </div>
 
-              <Button type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
-                {isLoading ? <Loader2 className="animate-spin w-5 h-5" /> : (
-                  <>
+              <LoadingButton loading={isLoading} type="submit" className="w-full mt-8 flex items-center justify-center gap-2" disabled={isLoading}>
+                <>
                     {t('auth.resetPasswordButton')}
                     <ArrowRight className="w-5 h-5" />
                   </>
-                )}
-              </Button>
+              </LoadingButton>
             </form>
           </motion.div>
         )}
